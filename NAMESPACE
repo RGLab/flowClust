@@ -1,0 +1,13 @@
+useDynLib("flowClust")
+
+import(methods)
+importFrom(stats, density)
+importFrom(graphics, plot, hist)
+import(flowCore)
+
+## export anything w/out a dot in front. 
+exportPattern("^[^\\.]")
+
+exportClasses(flowClust, tmixFilter, tmixFilterResult)
+exportMethods(filter, "%in%", "[", coerce, "coerce<-", Subset, split, ruleOutliers, "ruleOutliers<-", Map)
+exportMethods(show, summary, plot, density, hist)

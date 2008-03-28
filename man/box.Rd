@@ -1,0 +1,53 @@
+\name{box}
+\alias{box}
+
+\title{Box-Cox Transformation} 
+
+\description{
+This function performs Box-Cox transformation on the inputted data matrix.
+}
+
+\usage{
+box(data, lambda)
+}
+
+\arguments{
+\item{data}{A numeric vector, matrix or data frame of observations.  Negative data values are permitted.}
+\item{lambda}{The transformation to be applied to the data.  If negative data values are present, \code{lambda} has to be positive.}
+}
+
+\details{
+To allow for negative data values, a slightly modified version of the original Box-Cox (1964) is used here.  This modified version originated from Bickel and Doksum (1981), taking the following form:
+\deqn{f(y) = \frac{\mathrm{sgn}(y)|y|^\lambda-1}{\lambda}}{f(y) = ( sgn(y) abs(y)^(lambda) -1 ) / lambda}
+When negative data values are involved, the transformation parameter, \eqn{\lambda}{\code{lambda}}, has to be positive in order to avoid discontinuity across zero.
+}
+
+\value{
+A numeric vector, matrix or data frame of the same dimension as \code{data} is returned.
+}
+
+\references{
+Bickel, P. J. and Doksum, K. A. (1981) An Analysis of Transformations Revisited. \emph{J. Amer. Statist. Assoc.} \bold{76}(374), 296-311.
+
+Box, G. E. P. and Cox, D. R. (1964) An Analysis of Transformations. \emph{J. R. Statist. Soc. B} \bold{26}, 211-252.
+}
+
+\seealso{
+\code{\link{rbox}}
+}
+
+\examples{
+data(rituximab)
+data <- exprs(rituximab)
+summary(data)
+# Transform data using Box-Cox with lambda=0.3
+dataTrans <- box(data, 0.3)
+# Reverse transform data; this should return back to the original rituximab data
+summary(rbox(dataTrans, 0.3))
+}
+
+\keyword{math}
+
+
+
+
