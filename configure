@@ -4620,9 +4620,7 @@ _ACEOF
         :
 else
         acx_blas_ok=no
-        { { echo "$as_me:$LINENO: error: Did not found any BLAS libraries" >&5
-echo "$as_me: error: Did not found any BLAS libraries" >&2;}
-   { (exit 1); exit 1; }; }
+        BLAS_LIBS="${BLAS_LIBS} -lgslcblas"
 fi
 
 
@@ -4834,7 +4832,7 @@ fi
   if test "x$no_gsl" = x ; then
      echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
-     LIBS="${LIBS} -lgsl"
+     LIBS="${LIBS} ${BLAS_LIBS} -lgsl"
   else
      echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
@@ -4932,6 +4930,7 @@ echo "$as_me: error: Cannot find Gnu Scientific Library >=1.8" >&2;}
   rm -f conf.gsltest
 
 
+
 # : ${R_HOME=`R RHOME`}
 # if test -z "${R_HOME}"; then
 # 	echo "could not determine R_HOME"
@@ -4945,7 +4944,8 @@ echo "$as_me: error: Cannot find Gnu Scientific Library >=1.8" >&2;}
 # 	else
 # 	LIBS="-lgsl $BLAS_LIBS"
 # fi
-LIBS="-lgsl $BLAS_LIBS"
+# LIBS="${LIBS} $BLAS_LIBS"
+
           ac_config_files="$ac_config_files src/Makevars"
 
 cat >confcache <<\_ACEOF
