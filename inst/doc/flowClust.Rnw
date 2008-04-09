@@ -1,7 +1,5 @@
 %\VignetteIndexEntry{flowClust package}
 %\VignetteKeywords{Preprocessing,statistics}
-%\VignetteDepends{flowClust}
-%\VignettePackage{flowClust}
 
 
 \documentclass{article}

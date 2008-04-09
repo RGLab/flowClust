@@ -187,7 +187,8 @@ setMethod("ruleOutliers", signature("flowClust"),
 setGeneric("ruleOutliers<-",function(object,value) standardGeneric("ruleOutliers<-"))
 
 setReplaceMethod("ruleOutliers", signature("flowClust","list"),
-    function(object,value=list(level=NULL, u.cutoff=NULL, z.cutoff=NULL)) {
+    function(object,value) {
+#    function(object,value=list(level=NULL, u.cutoff=NULL, z.cutoff=NULL)) {
 	    if (is.null(value$u.cutoff) && !is.null(value$level)) object@ruleOutliers[1:2] <- c(0, value$level)  else if (!is.null(value$u.cutoff)) object@ruleOutliers[1:2] <- c(1, value$u.cutoff)
 	    if (!is.null(value$z.cutoff)) object@ruleOutliers[3] <- value$z.cutoff
 
