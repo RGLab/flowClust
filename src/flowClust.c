@@ -13,11 +13,12 @@ static const R_CMethodDef CEntries[] = {
   {NULL, NULL, 0}
 };
 
-void R_init_BAC(DllInfo *dll)
+// intended to comment out R_init_flowClust. We do not encourage users to call the C routines in R.  We have already defined the corresponding R functions for users to use.
+/* void R_init_flowClust(DllInfo *dll)
 {
     R_registerRoutines(dll, CEntries, NULL, NULL, NULL);
     // R_useDynamicSymbols(dll, FALSE);
-}
+} */
 
 void flowClust(double *y, int *ly, int *py, double *mu, double *precision, double *w, double *z, double *u, double *lambda, int *label, double *uncertainty, double *cutoff, double *z_cutoff, int *flagOutliers, int *K, double *nu, int *B, double *tol, int *transform, double *logLike)
 {
