@@ -129,16 +129,16 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
   logLike=as.double(0),
   package="flowClust")
 
-  # I am not sure this is in the right order
   ### This could be done in C
   sigma<-array(0,c(K,py,py))
   precision<-matrix(obj$precision,K,py*py,byrow=TRUE)
-  for(k in 1:K)
-  {
-    cholPrecision<-matrix(precision[k,],py,py)
-    cholPrecision[outer(1:py, 1:py, "<")]<-0
-    sigma[k,,]<-solve(cholPrecision%*%t(cholPrecision))
-  }
+#  for(k in 1:K)
+#  {
+#    cholPrecision<-matrix(precision[k,],py,py)
+#    cholPrecision[outer(1:py, 1:py, "<")]<-0
+#    sigma[k,,]<-solve(cholPrecision%*%t(cholPrecision))
+#  }
+  for(k in 1:K) sigma[k,,]<-matrix(precision[k,],py,py,byrow=TRUE)
 
   BIC<-2*obj$logLike-log(ly)*(K*(py+1)*py/2+K*py+K-1+as.integer(trans))
   z<-matrix(obj$z,ly,K,byrow=TRUE)

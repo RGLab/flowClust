@@ -36,8 +36,8 @@ double BoxCoxGradient(double x, void *params)
             gsl_matrix_set(Yo,i,j,(sgn(Yoriginal)*pow(fabs(Yoriginal),x)-1.0)/x);
             for(k=0;k<K;k++)
             {
-                gsl_matrix_set(WeightedY,i,k*py+j,gsl_matrix_get(Weight,i,k)*gsl_matrix_get(Yo,i,j));
-                gsl_matrix_set(WeightedY1,i,k*py+j,gsl_matrix_get(Weight,i,k)*(sgn(Yoriginal)*pow(fabs(Yoriginal),x)*log(fabs(Yoriginal))*x-(sgn(Yoriginal)*pow(fabs(Yoriginal),x)-1))/(x*x));
+                gsl_matrix_set(WeightedY,i,k*py+j,gsl_matrix_get(Weight,i,k)* gsl_matrix_get(Yo,i,j));
+                gsl_matrix_set(WeightedY1,i,k*py+j,gsl_matrix_get(Weight,i,k)* ( sgn(Yoriginal)*pow(fabs(Yoriginal),x) * (log(fabs(Yoriginal))*x-1) +1) /(x*x));
             }
             logJacobian+=log(fabs(Yoriginal));
         }
@@ -48,23 +48,20 @@ double BoxCoxGradient(double x, void *params)
 
     for(k=0;k<K;k++)
     { 
-        col=gsl_matrix_column(Weight,k);            
         row=gsl_matrix_row(Precision,k);
         Prow=gsl_matrix_view_vector(&row.vector,py, py);            
+        /* Update Mu*/
         row=gsl_matrix_row(Mu,k);
         gsl_blas_dscal(1./gsl_vector_get(SumWZ,k),&row.vector);
-        YY=gsl_matrix_submatrix(WeightedY, 0, k*py, ly, py);  
-        YY1=gsl_matrix_submatrix(WeightedY1, 0, k*py, ly, py);               
-        /* Update Mu*/
-        /* up_date_mu(&Y.matrix, &row.vector, &col.vector, gsl_vector_get(SumWZ,k)); */
-        /* Update Precision */
+		/* Update Precision (cluster specific) */
         /* Compute the estimate of Sigma inverse */                         
-            
-        up_date_precision(&YY.matrix, &row.vector, &Prow.matrix, &col.vector, gsl_vector_get(SumZ,k), gsl_vector_get(SumWZ,k), DiagOne);
+        YY=gsl_matrix_submatrix(WeightedY, 0, k*py, ly, py);  
+        up_date_precision(&YY.matrix, &row.vector, &Prow.matrix, /*&col.vector,*/ gsl_vector_get(SumZ,k), gsl_vector_get(SumWZ,k), DiagOne);
+        /* Update Mixing Proportions */
         gsl_vector_set(W,k,gsl_vector_get(SumZ,k)/ly);
 
+        YY1=gsl_matrix_submatrix(WeightedY1, 0, k*py, ly, py);               
         gsl_blas_dtrmm(CblasRight, CblasLower, CblasNoTrans, CblasNonUnit, 1.0, &Prow.matrix, &YY1.matrix);        
-		/*		gsl_blas_dtrmm(CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit, 1.0, &Prow.matrix, &YY1.matrix); */
         gsl_blas_dtrmm(CblasRight, CblasLower, CblasNoTrans, CblasNonUnit, 1.0, &Prow.matrix, &YY.matrix);                
 		for(i=0;i<ly;i++)
 		{
@@ -77,12 +74,13 @@ double BoxCoxGradient(double x, void *params)
 		gsl_vector_memcpy(SMu, &row.vector);
         gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, &Prow.matrix, SMu);
         gsl_blas_dgemv(CblasNoTrans, 1.0, &YY1.matrix, SMu, 0.0, YTmp);
+        col=gsl_matrix_column(Weight,k);            
         gsl_blas_ddot(YTmp, &col.vector, &Tmp);
 		logLike+=Tmp;               
     }
     
     logLike+=logJacobian;     
-	  gsl_vector_free(SMu);
+	gsl_vector_free(SMu);
     gsl_vector_free(YTmp);
     gsl_matrix_free(Yo);
     gsl_matrix_free(WeightedY1);
