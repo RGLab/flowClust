@@ -53,6 +53,7 @@ double gsl_ran_mvngaussian_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precis
 	return(pdf);
 }
 
+
 double gsl_ran_mvnt_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol, int is_log)
 {
 	int i=0,n=(*Mu).size;
@@ -61,15 +62,14 @@ double gsl_ran_mvnt_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precision, do
 	gsl_vector *YTilde=gsl_vector_calloc(n);  
 	double sum_square=0;
 
-
-/* Check if the cholesky decomposition has already been computed */
-/* This is a bit inefficient and you should do the decomposition before */
+    /* Check if the cholesky decomposition has already been computed */
+    /* This is a bit inefficient and you should do the decomposition before */
 	if(is_chol==0)
 	{	  
 		PrecisionTmp=gsl_matrix_calloc(n,n);
-/* Store the original Precision matrix */
+        /* Store the original Precision matrix */
 		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
-/* Perform the cholesky decomposition*/
+        /* Perform the cholesky decomposition*/
 		gsl_linalg_cholesky_decomp(Precision);
 	}
 
@@ -138,14 +138,14 @@ void gsl_ran_mvnt(gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol,
 	int i=0,n=(*Mu).size;
 	gsl_matrix *PrecisionTmp;
 
-  /* Check if the cholesky decomposition has already been computed */
-  /* This is a bit inefficient and you should do the decomposition before */
+    /* Check if the cholesky decomposition has already been computed */
+    /* This is a bit inefficient and you should do the decomposition before */
   	if(is_chol==0)
   	{	  
 		PrecisionTmp=gsl_matrix_calloc(n,n);
-  /* Store the original Precision matrix */
+        /* Store the original Precision matrix */
   		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
-  /* Perform the cholesky decomposition*/
+        /* Perform the cholesky decomposition*/
   		gsl_linalg_cholesky_decomp(Precision);
   	}
   	
@@ -157,7 +157,7 @@ void gsl_ran_mvnt(gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol,
 	gsl_vector_scale(Y,1./gsl_ran_gamma(r,nu/2.,2./nu));
 		if(is_chol==0)
   	{
-  /*    Go back to the original matrix, before chol decomposition   */
+        /* Go back to the original matrix, before chol decomposition */
   		gsl_matrix_memcpy(Precision,PrecisionTmp);
   		gsl_matrix_free(PrecisionTmp);
   	}
@@ -171,14 +171,14 @@ double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int
 	gsl_vector *YTilde=gsl_vector_calloc(n);  
 	double sum_square=0;
 
-  /* Check if the cholesky decomposition has already been computed */
-  /* This is a bit inefficient and you should do the decomposition before */
+    /* Check if the cholesky decomposition has already been computed */
+    /* This is a bit inefficient and you should do the decomposition before */
   	if(is_chol==0)
   	{	  
 		PrecisionTmp=gsl_matrix_calloc(n,n);
-  /* Store the original Precision matrix */
+        /* Store the original Precision matrix */
   		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
-  /* Perform the cholesky decomposition*/
+        /* Perform the cholesky decomposition*/
   		gsl_linalg_cholesky_decomp(Precision);
   	}
 	for(i=0;i<n;i++)
@@ -194,7 +194,7 @@ double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int
 
 	if(is_chol==0)
   	{
-  /*    Go back to the original matrix, before chol decomposition   */
+    /*  Go back to the original matrix, before chol decomposition  */
   		gsl_matrix_memcpy(Precision,PrecisionTmp);
   		gsl_matrix_free(PrecisionTmp);
   	}
