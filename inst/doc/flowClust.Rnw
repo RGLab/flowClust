@@ -59,7 +59,7 @@ which will tell {\bf R} where your GSL and BLAS libraries (see below for more de
 
 Now you are ready to install the package: \\[6pt]
 \texttt{R CMD INSTALL flowClust\_x.y.z.tar.gz}\\[6pt]
-The package will look for a BLAS library on your system, and by default it will choose the first one it finds, which might not be optimized for your system.  To use an optimized BLAS library, you can use the \texttt{-{}-with-blas} argument which will be passed to the \texttt{configure.ac} file.  For example, on a Mac with vecLib pre-installed the package may be installed via: \\[6pt]
+The package will look for a BLAS library on your system, and by default it will choose gslcblas, which is not optimized for your system.  To use an optimized BLAS library, you can use the \texttt{-{}-with-blas} argument which will be passed to the \texttt{configure.ac} file.  For example, on a Mac with vecLib pre-installed the package may be installed via: \\[6pt]
 \texttt{R CMD INSTALL flowClust\_x.y.z.tar.gz -{}-configure-args="-{}-with-blas='-framework vecLib'"}\\[6pt]
 On a 64-bit Intel machine which has MKL as the optimized BLAS library, the command may look like: \\[6pt]
 \texttt{R CMD INSTALL flowClust\_x.y.z.tar.gz -{}-configure-args="-{}-with-blas='-L/usr/local/mkl/lib/em64t/ -lmkl -lguide -lpthread'"}\\[6pt]
