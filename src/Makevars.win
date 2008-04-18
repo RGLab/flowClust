@@ -1,3 +1,7 @@
-PKG_LIBS=-LF:/MinGW/usr/local/lib -lgsl -lgslcblas
-# CPPFLAGS=-I$(R_HOME)/include -IF:/MinGW/usr/local/include
-PKG_CPPFLAGS=-IF:/MinGW/usr/local/include
+PKG_LIBS='$GSL_LIB -lgsl -lgslcblas'
+CFLAGS='$CFLAGS $GSL_INC'
+CXXFLAGS=$CFLAGS
+CPPFLAGS=$CXXFLAGS
+PKG_CFLAGS='$PKG_CFLAGS $GSL_INC'
+PKG_CXXFLAGS=$PKG_CFLAGS
+PKG_CPPFLAGS=$PKG_CXXFLAGS
