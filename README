@@ -6,7 +6,7 @@ export $GSL_LIB='-L/path/to/your/gsl/lib/directory'
 export $GSL_INC='-I/path/to/your/gsl/include/directory'
 
 Unix/Linux/Mac users: The package will look for a BLAS library on your system, and by default it will 
-use the one that R uses, which might not be optimized for your system. To 
+use gslcblas, which is not optimized for your system. To 
 use an optimized BLAS library, you can use the --with-blas argument which 
 will be passed to the configure.ac file. For example, on a Mac with vecLib 
 pre-installed the package may be installed via: 
