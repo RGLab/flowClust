@@ -3,7 +3,8 @@ useDynLib(flowClust)
 import(methods)
 importFrom(stats, density)
 importFrom(graphics, plot, hist)
-import(flowCore)
+importClassesFrom(flowCore, flowFrame, filterSet, filter, concreteFilter, parameterFilter, rectangleGate, polygonGate, polytopeGate, ellipsoidGate, sampleFilter, filterResult, randomFilterResult, logicalFilterResult, multipleFilterResult, manyFilterResult, setOperationFilter, subsetFilter, intersectFilter, complementFilter, unionFilter, norm2Filter, kmeansFilter, expressionFilter, curv2Filter, curv1Filter, quadGate)
+importMethodsFrom(flowCore, "%in%", "%subset%", "%on%", "exprs", "filter", "Subset")
 
 ## export anything w/out a dot in front. 
 exportPattern("^[^\\.]")
