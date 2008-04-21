@@ -1208,8 +1208,8 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-blas             use system R BLAS library (if available), or specify
-                          it [no]
+  --with-blas             use system gsl BLAS library (if available), or
+                          specify it [no]
   --with-gsl-prefix=PFX   Prefix where GSL is installed (optional)
   --with-gsl-exec-prefix=PFX Exec prefix where GSL is installed (optional)
 
@@ -1645,11 +1645,11 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-: ${R_HOME=`R RHOME`}
-if test -z "${R_HOME}"; then
-	echo "could not determine R_HOME"
-	exit 1
-fi
+# : ${R_HOME=`R RHOME`}
+# if test -z "${R_HOME}"; then
+#   echo "could not determine R_HOME"
+#   exit 1
+# fi
 
 ## BLAS.
 
@@ -1657,14 +1657,14 @@ fi
 if test "${with_blas+set}" = set; then
   withval=$with_blas; BLAS_LIBS=$with_blas
 else
-  BLAS_LIBS=`"${R_HOME}/bin/R" CMD config BLAS_LIBS`
+  BLAS_LIBS=`-lgslcblas`
 fi
 
 
 # I did not find any BLAS libraries, (R is probably not well configured)
-if test "${BLAS_LIBS}" = ""; then
-	BLAS_LIBS="-lgslcblas"
-fi
+# if test "${BLAS_LIBS}" = ""; then
+#   BLAS_LIBS="-lgslcblas"
+# fi
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
