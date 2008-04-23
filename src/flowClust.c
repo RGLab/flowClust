@@ -206,9 +206,9 @@ void flowClust(double *y, int *ly, int *py, double *mu, double *precision, doubl
 		Diff=fabs(*logLike-logLikeOld)/fabs(logLikeOld);
 		iter++; 
 	}
-	printf("The EM required %d iterations\n",iter);
-	printf("The tolerance is %g\n",Diff);
-
+	/*	printf("The EM required %d iterations\n",iter);
+	printf("The tolerance is %g\n",Diff); */
+	
 	/* One more iteration to compute the final weight and u's */
 	up_date_z_weight(&Y.matrix, YTrans, /*WeightedY,*/ &Mu.matrix, &Precision.matrix, &W.vector, &Z.matrix, &Weight.matrix, SumZ, SumWZ, *nu, *lambda, logLike, 1, *transform);      
 
@@ -284,7 +284,7 @@ void up_date_precision(gsl_matrix *Y, gsl_vector *Mu, gsl_matrix *Precision, /* 
 void up_date_z_weight(gsl_matrix *Y, gsl_matrix *YTrans, /*gsl_matrix *WeightedY,*/ gsl_matrix *Mu, gsl_matrix *Precision, gsl_vector *W, gsl_matrix *Z, gsl_matrix *Weight, gsl_vector *SumZ, gsl_vector *SumWZ, double nu, double lambda, double *logLike, int last, int transform)
 {
 	int i=0,j=0,k=0,ly=(*Y).size1,py=(*Y).size2,K=(*Mu).size1;
-	gsl_vector_view row,row1,row2,row3,row4;
+	gsl_vector_view row,row1,row2;
 	gsl_matrix_view Prow;
 	double normConstant=0;
 	double like=0,tmpLike=0,logJacobian=0;
