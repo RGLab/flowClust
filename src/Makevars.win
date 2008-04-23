@@ -1,4 +1,2 @@
-PKG_LIBS=`${GSL_LIB} -lgsl -lgslcblas -lm`
-# CFLAGS=`${GSL_INC}`
-PKG_CFLAGS=`${GSL_INC}`
-
+PKG_LIBS += $(GSL_LIB) -lgsl -lgslcblas -lm
+PKG_CFLAGS += -I$(RHOME)/src/include $(GSL_INC)
