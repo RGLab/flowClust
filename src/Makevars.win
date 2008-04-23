@@ -1,4 +1,4 @@
 PKG_LIBS=`${GSL_LIB} -lgsl -lgslcblas -lm`
-CFLAGS=`${CFLAGS} ${GSL_INC}`
-PKG_CFLAGS=`${PKG_CFLAGS} ${GSL_INC}`
+# CFLAGS=`${GSL_INC}`
+PKG_CFLAGS=`${GSL_INC}`
 
