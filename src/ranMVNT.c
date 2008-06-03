@@ -153,11 +153,6 @@ void gsl_ran_mvnt(gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol,
 		/* Perform the cholesky decomposition*/
 		gsl_linalg_cholesky_decomp(Precision);
 	}
-	else
-	{
-		/** In this case I just set it to zero **/
-		PrecisionTmp=gsl_matrix_calloc(1,1);
-	}
 
 	for(i=0;i<n;i++)
 		gsl_vector_set(Y,i,gsl_ran_gaussian(r,1));
@@ -192,11 +187,6 @@ double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int
 		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
 				/* Perform the cholesky decomposition*/
 		gsl_linalg_cholesky_decomp(Precision);
-	}
-	else
-	{
-		/** In this case I just set it to zero **/		
-		PrecisionTmp=gsl_matrix_calloc(1,1);
 	}
 
 	for(i=0;i<n;i++)
