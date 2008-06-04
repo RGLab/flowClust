@@ -44,10 +44,9 @@ double gsl_ran_mvngaussian_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precis
 
 	if(is_chol==0)
 	{
-		gsl_matrix_free(PrecisionTmp);
 		/* Go back to the original matrix, before chol decomposition */
 		gsl_matrix_memcpy(Precision,PrecisionTmp);
-
+		gsl_matrix_free(PrecisionTmp);
 	}
 	gsl_vector_free(YTilde);
 
@@ -162,9 +161,9 @@ void gsl_ran_mvnt(gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol,
 	gsl_vector_scale(Y,1./gsl_ran_gamma(r,nu/2.,2./nu));
 	if(is_chol==0)
 	{
-		gsl_matrix_free(PrecisionTmp);
 		/* Go back to the original matrix, before chol decomposition */
 		gsl_matrix_memcpy(Precision,PrecisionTmp);
+		gsl_matrix_free(PrecisionTmp);
 	}
 	
 
@@ -202,9 +201,9 @@ double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int
 
 	if(is_chol==0)
 	{
-		gsl_matrix_free(PrecisionTmp);
 		/*  Go back to the original matrix, before chol decomposition  */
 		gsl_matrix_memcpy(Precision,PrecisionTmp);
+		gsl_matrix_free(PrecisionTmp);		
 	}
 
 	gsl_vector_free(YTilde);
