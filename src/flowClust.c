@@ -374,3 +374,62 @@ double log_likelihood(gsl_matrix *Y, gsl_matrix *Mu, gsl_matrix *Precision, gsl_
 }
 
 
+void getEstimates(double *y, int *ly, int *py, double *mu, double *precision, double *z, double *u, int *K, double *nu)
+{
+	
+	int i=0,j=0,k=0;
+	gsl_vector *SumZ=gsl_vector_calloc(*K), *SumWZ=gsl_vector_calloc(*K);
+	gsl_matrix *Weight=gsl_matrix_calloc(*ly,*K);
+	gsl_matrix *TempMatrix=gsl_matrix_calloc(*py,*py);
+	gsl_matrix *DiagOne=gsl_matrix_calloc(*py,*py);
+	gsl_matrix *WeightedY=gsl_matrix_calloc(*ly,*py);
+	gsl_matrix_view Y, Mu, Precision, Z, U, Prow;
+	gsl_vector_view row,row1;
+	
+	/* Create matrix and vector views*/  
+	Y=gsl_matrix_view_array(y,*ly,*py);
+	Mu=gsl_matrix_view_array(mu,*K,*py);
+	Precision=gsl_matrix_view_array(precision,*K,*py**py);
+	Z=gsl_matrix_view_array(z,*ly,*K);
+	U=gsl_matrix_view_array(u,*ly,*K);
+    gsl_matrix_set_identity(DiagOne);
+
+    gsl_matrix_memcpy(Weight, &U.matrix); 
+    gsl_matrix_mul_elements(Weight, &Z.matrix);
+	for(i=0;i<*ly;i++)
+	{        
+    	for(k=0;k<*K;k++)
+	    {
+		    gsl_vector_set(SumZ,k,gsl_vector_get(SumZ,k)+gsl_matrix_get(&Z.matrix,i,k));
+            gsl_vector_set(SumWZ,k,gsl_vector_get(SumWZ,k)+gsl_matrix_get(Weight,i,k));
+	    }
+    }
+
+	/* Mu using BLAS */
+	gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0, Weight, &Y.matrix, 0.0, &Mu.matrix);        
+	for(k=0;k<*K;k++)
+	{
+		row=gsl_matrix_row(&Precision.matrix,k);
+		Prow=gsl_matrix_view_vector(&row.vector,*py,*py);            
+		row=gsl_matrix_row(&Mu.matrix,k);
+		gsl_blas_dscal(1./gsl_vector_get(SumWZ,k),&row.vector);    
+
+        gsl_matrix_memcpy(WeightedY, &Y.matrix); 
+        for(i=0;i<*ly;i++)
+        {
+            row1=gsl_matrix_row(WeightedY,i);
+            gsl_blas_dscal(gsl_matrix_get(Weight,i,k),&row1.vector);
+        }
+        gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0/gsl_vector_get(SumZ,k), WeightedY, &Y.matrix, 0.0, TempMatrix);
+    	gsl_blas_dsyr(CblasLower, -gsl_vector_get(SumWZ,k)/gsl_vector_get(SumZ,k), &row.vector, TempMatrix);    
+        gsl_blas_dsymm(CblasLeft, CblasLower, *nu/(*nu-2.0), TempMatrix, DiagOne, 0.0, &Prow.matrix);
+	}
+
+    gsl_vector_free(SumZ);
+    gsl_vector_free(SumWZ);
+    gsl_matrix_free(Weight);
+    gsl_matrix_free(TempMatrix);
+    gsl_matrix_free(DiagOne);
+    gsl_matrix_free(WeightedY);
+
+}
