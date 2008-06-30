@@ -234,6 +234,45 @@ importance <- function(object, assign=FALSE) {
 
 uncertainty <- function(object)  object@uncertainty
 
-getEstimates <- function(object) {
-    list(locations=rbox(object@mu, object@lambda), proportions=object@w)
+getEstimates <- function(object, data) {
+    if (!missing(data)) {
+        if(is(data,"flowFrame"))
+        {
+            y<-as.matrix(exprs(data)[,object@varNames])
+        }
+        else if(is(data,"matrix"))
+        {
+            if(object@varNames=="Not Available") y<-data  else y<-as.matrix(data[,object@varNames])
+        }
+        else if(is(data,"data.frame"))
+        {
+            y<-as.matrix(data[,object@varNames])
+        }
+        else if(is(data,"vector"))
+        {
+            y<-matrix(data)
+        }    
+    
+        include <- !is.na(object@uncertainty)
+        y <- as.matrix(y[include,])
+        z <- as.matrix(object@z[include,])
+        u <- as.matrix(object@u[include,])
+        ly<-nrow(y)
+        py<-ncol(y)
+        K<-object@K
+        obj <- .C("getEstimates", as.double(t(y)), as.integer(ly), as.integer(py), mu=rep(0.0,K*py), precision=rep(0.0,K*py*py), as.double(t(z)), as.double(t(u)), as.integer(K), as.double(object@nu))
+    }
+    
+    if (missing(data))
+    {
+        list(proportions=object@w, locations=rbox(object@mu, object@lambda))
+    }
+    else
+    {
+        sigma <- array(0,c(K,py,py))
+        precision <- matrix(obj$precision, K, py*py, byrow=TRUE)
+        for(k in 1:K) sigma[k,,] <- matrix(precision[k,], py, py, byrow=TRUE)
+        # list(proportions=object@w, locations=rbox(object@mu, object@lambda), dispersion=sigma)
+        list(proportions=object@w, locations=rbox(object@mu, object@lambda), locationsC=matrix(obj$mu,K,py,byrow=TRUE), dispersion=sigma)
+    }
 }

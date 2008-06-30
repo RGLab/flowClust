@@ -38,3 +38,4 @@ void gsl_ran_mvnt(gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol,
 double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int is_chol);
 
 void flowClust(double *y, int *ly, int *py, double *mu, double *precision, double *w, double *z, double *u, double *lambda, int *label, double *uncertainty, double *u_cutoff, double *z_cutoff, int *flagOutliers, int *K, double *nu, int *B, double *tol, int *transform, double *logLike);
+void getEstimates(double *y, int *ly, int *py, double *mu, double *precision, double *z, double *u, int *K, double *nu);
