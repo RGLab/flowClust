@@ -19,7 +19,7 @@ This method generates a one-dimensional density plot for the specified dimension
 \item{x}{Object returned from \code{\link{flowClust}} or from running \code{\link[=filter.flowFrame]{filter}} on a \code{flowFrame} object.}
 \item{data}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}. This is the object on which \code{flowClust} or \code{filter} was performed.}
 \item{subset}{An integer indicating which variable is selected for the plot.  Alternatively, a character string containing the name of the variable is allowed if \code{x@varNames} is not \code{NULL}.}
-\item{include}{A numeric vector specifying which clusters will be shown on the plot.  By default, all clusters are included.}
+\item{include}{A numeric vector specifying which clusters are shown on the plot.  By default, all clusters are included.}
 \item{histogram}{A logical value indicating whether a histogram of the actual data is made in addition to the density plot or not.}
 \item{labels}{A logical value indicating whether information about cluster assignment is shown or not.}
 \item{xlim}{The range of \eqn{x}-values for the plot.  If \code{NULL}, the data range will be used.}

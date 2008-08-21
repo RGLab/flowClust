@@ -31,9 +31,10 @@ These functions are written to retrieve various slots contained in the object re
 Denote by \eqn{K} the number of clusters, \eqn{N} the number of observations, and \eqn{P} the number of variables.  For \code{posterior} and \code{importance}, a matrix of size \eqn{N \times K}{N x K} is returned if \code{assign=FALSE} (default).  Otherwise, a vector of size \eqn{N} is outputted.  \code{uncertainty} always outputs a vector of size \eqn{N}.  \code{getEstimates} returns a list with named elements, \code{proportions}, \code{locations} and, if the data object is provided, \code{dispersion}.  \code{proportions} is a vector of size \eqn{P} and contains the estimates of the \eqn{K} cluster proportions.  \code{locations} is a matrix of size \eqn{K \times P}{K x P} and contains the estimates of the \eqn{K} mean vectors transformed back to the original scale (i.e., \code{rbox(object@mu, object@lambda)}).  \code{dispersion} is an array of dimensions \eqn{K \times P \times P}{K x P x P}, containing the approximate estimates of the \eqn{K} covariance matrices on the original scale.
 }
 
-% \note{
+\note{
+When \code{object@nu=Inf}, the Mahalanobis distances instead of the \dQuote{weights} are stored in \code{object@u}.  Hence, \code{importance} will retrieve information corresponding to the Mahalanobis distances.
 % If the \code{assign} argument is set to \code{TRUE}, only the quantities corresponding to assigned observations will be returned.  Quantities corresponding to unassigned observations (outliers and filtered observations) will be reported as \code{NA}.  Hence, A change in the rule to call outliers will incur a change in the number of \code{NA} values returned.
-% }
+}
 
 \author{
 Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo <\email{c.lo@stat.ubc.ca}>

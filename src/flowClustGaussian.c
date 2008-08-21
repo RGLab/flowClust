@@ -6,31 +6,17 @@
 #include <R_ext/Rdynload.h>
 #include <R_ext/Print.h>
 
-
-static const R_CMethodDef CEntries[] = {
-  {"flowClust", (DL_FUNC)&flowClust, 20},
-  {NULL, NULL, 0}
-};
-
-// intended to comment out R_init_flowClust. We do not encourage users to call the C routines in R.  We have already defined the corresponding R functions for users to use.
-/* void R_init_flowClust(DllInfo *dll)
-{
-    R_registerRoutines(dll, CEntries, NULL, NULL, NULL);
-    // R_useDynamicSymbols(dll, FALSE);
-} */
-
-void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, double *precision, double *lambda, double *nu, double *z, double *u, int *label, double *uncertainty, double *u_cutoff, double *z_cutoff, int *flagOutliers, int *B, double *tol, int *transform, double *logLike)
+void flowClustGaussian(double *y, int *ly, int *py, int *K, double *w, double *mu, double *precision, double *lambda, double *z, double *u, int *label, double *uncertainty, double *q_cutoff, double *z_cutoff, int *flagOutliers, int *B, double *tol, int *transform, double *logLike)
 {
 
     gsl_matrix_view Y, Mu, Precision, Z, U;
     gsl_vector_view W;
 	gsl_matrix *YTrans=gsl_matrix_alloc(*ly,*py);
-	gsl_matrix *ZUY=gsl_matrix_calloc(*ly,*K**py);
+	gsl_matrix *ZY=gsl_matrix_calloc(*ly,*K**py);
 	gsl_matrix *DiagOne=gsl_matrix_calloc(*py,*py);
 	gsl_vector *SumZ=gsl_vector_calloc(*K);
-	gsl_vector *SumZU=gsl_vector_calloc(*K);
-    gsl_vector_view rowMu, rowPrecision, rowYTrans, rowZUY, subRowZUY, rowZ;
-    gsl_matrix_view matrixPrecision, matrixZUY;
+    gsl_vector_view rowMu, rowPrecision, rowYTrans, rowZY, subRowZY, rowZ;
+    gsl_matrix_view matrixPrecision, matrixZY;
 	int i=0, j=0, k=0;
     double logLikeOld=0;
     double Diff=100.0;  // difference between logLike and logLikeOld
@@ -49,7 +35,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 	int iterSolveMax=50;    // max no. of iterations for the Brent's algorithm in each M-step;
 	double lambdaHat=0;    // current estimate of lambda
 	double xLow=.1, xUp=1;  // initial search interval of Brent's algorithm
-	double x_lo=.1, x_hi=1;    // current bracketing interval for solver
+	double x_lo= .1, x_hi=1;    // current bracketing interval for solver
     int status=0;   // status of the solver (an error indicator)    
     
     
@@ -86,29 +72,28 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 			gsl_matrix_set(&Z.matrix,i,label[i]-1,1.0);
 			gsl_vector_set(SumZ,label[i]-1,gsl_vector_get(SumZ,label[i]-1)+1.0);
 		}
-		/* Initialize ZUY-matrix */
-		rowZUY=gsl_matrix_row(ZUY,i);
+		/* Initialize ZY-matrix */
+		rowZY=gsl_matrix_row(ZY,i);
 		rowYTrans=gsl_matrix_row(YTrans,i);        
 		for(k=0;k<*K;k++)
 		{
-			subRowZUY=gsl_vector_subvector(&rowZUY.vector, k**py, *py);
-			gsl_blas_dcopy(&rowYTrans.vector,&subRowZUY.vector);
-			gsl_blas_dscal(gsl_matrix_get(&Z.matrix,i,k), &subRowZUY.vector);
+			subRowZY=gsl_vector_subvector(&rowZY.vector, k**py, *py);
+			gsl_blas_dcopy(&rowYTrans.vector,&subRowZY.vector);
+			gsl_blas_dscal(gsl_matrix_get(&Z.matrix,i,k), &subRowZY.vector);
 		}
 	}
-    gsl_blas_dcopy(SumZ,SumZU);
 
 	/* Initialize Mu using BLAS */
 	gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0, &Z.matrix, YTrans, 0, &Mu.matrix);
 	for(k=0;k<*K;k++)
 	{
 		rowMu=gsl_matrix_row(&Mu.matrix,k);
-		gsl_blas_dscal(1./gsl_vector_get(SumZU,k),&rowMu.vector);
+		gsl_blas_dscal(1./gsl_vector_get(SumZ,k),&rowMu.vector);
 		/* Initialize Precision (cluster specific) */
 		rowPrecision=gsl_matrix_row(&Precision.matrix,k);
 		matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector,*py,*py);            
-		matrixZUY=gsl_matrix_submatrix(ZUY, 0, k**py, *ly, *py);      
-		up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);            
+		matrixZY=gsl_matrix_submatrix(ZY, 0, k**py, *ly, *py);      
+		up_date_precision(&matrixZY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZ,k), DiagOne);            
         /* Initialize Mixing Proportions */
 		gsl_vector_set(&W.vector,k,gsl_vector_get(SumZ,k)/(*ly));
 	}
@@ -138,8 +123,8 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 	{		
 		logLikeOld=*logLike;
 
-		/* E step -- Compute Z, U and also YTrans, SumZ, SumZU, logLike */
-		up_date_z_u(&Y.matrix, YTrans, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, SumZU, *nu, *lambda, logLike, *transform, 0);      
+		/* E step -- Compute Z, U and also YTrans, SumZ, logLike */
+		up_date_z_u_gaussian(&Y.matrix, YTrans, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, *lambda, logLike, *transform, 0);      
 
 		/* M step*/        
 
@@ -155,9 +140,9 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
     		params.Precision=&Precision.matrix;    // will be updated
 	    	params.Z=&Z.matrix;
 		    params.U=&U.matrix;
-    		params.ZUY=ZUY;         // will be updated
+    		params.ZUY=ZY;         // will be updated
 	    	params.SumZ=SumZ;
-		    params.SumZU=SumZU;
+		    params.SumZU=SumZ;
     		params.DiagOne=DiagOne;        
 	    	params.lambda=*lambda;
 
@@ -198,19 +183,19 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 		    }
 		}
 
-        /* Update ZUY, Mu, Precision and W */
+        /* Update ZY, Mu, Precision and W */
 		if((*transform==0) || ((*transform==1) && (status!=0)))
 		{
-			/* Update ZUY-matrix */
+			/* Update ZY-matrix */
 			for(i=0;i<*ly;i++)
 			{
 				rowYTrans=gsl_matrix_row(YTrans,i);
-				rowZUY=gsl_matrix_row(ZUY,i);                    
+				rowZY=gsl_matrix_row(ZY,i);                    
 				for(k=0;k<*K;k++)
 				{                        
-					subRowZUY=gsl_vector_subvector(&rowZUY.vector, k**py, *py);
-					gsl_blas_dcopy(&rowYTrans.vector,&subRowZUY.vector);                        
-					gsl_blas_dscal(gsl_matrix_get(&U.matrix,i,k), &subRowZUY.vector);                        
+					subRowZY=gsl_vector_subvector(&rowZY.vector, k**py, *py);
+					gsl_blas_dcopy(&rowYTrans.vector,&subRowZY.vector);                        
+					gsl_blas_dscal(gsl_matrix_get(&U.matrix,i,k), &subRowZY.vector);                        
 				}
 			}
 
@@ -219,12 +204,12 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 			for(k=0;k<*K;k++)
 			{
 				rowMu=gsl_matrix_row(&Mu.matrix,k);
-				gsl_blas_dscal(1./gsl_vector_get(SumZU,k),&rowMu.vector);    
+				gsl_blas_dscal(1./gsl_vector_get(SumZ,k),&rowMu.vector);    
 		        /* Update Precision (cluster specific) */
 				rowPrecision=gsl_matrix_row(&Precision.matrix,k);
 				matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector, *py,*py);            
-				matrixZUY=gsl_matrix_submatrix(ZUY, 0, k**py, *ly, *py);
-				up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);                        
+				matrixZY=gsl_matrix_submatrix(ZY, 0, k**py, *ly, *py);
+				up_date_precision(&matrixZY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZ,k), DiagOne);                        
                 /* Update Mixing Proportions */
 				gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ,k)/(*ly));            
 			}
@@ -237,7 +222,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 	// Rprintf("The tolerance is %g\n",Diff);
 
 	/* One more E-step to compute the final z's and u's */
-	up_date_z_u(&Y.matrix, YTrans, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, SumZU, *nu, *lambda, logLike, *transform, 1);      
+	up_date_z_u_gaussian(&Y.matrix, YTrans, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, *lambda, logLike, *transform, 1);      
 
     /* Output Precision to be the covariance matrix */
 	for(k=0;k<*K;k++)
@@ -255,7 +240,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 		rowZ=gsl_matrix_row(&Z.matrix,i);
 		label[i]=gsl_vector_max_index(&rowZ.vector);
 		uncertainty[i]=1-gsl_vector_get(&rowZ.vector,label[i]);
-		if(gsl_matrix_get(&U.matrix,i,label[i])<*u_cutoff || gsl_matrix_get(&Z.matrix,i,label[i])<*z_cutoff)
+		if((*q_cutoff!=-1 && gsl_matrix_get(&U.matrix,i,label[i])>*q_cutoff) || gsl_matrix_get(&Z.matrix,i,label[i])<*z_cutoff)
 			flagOutliers[i]=1;
         /*	else
 			flagOutliers[i]=0; */
@@ -263,45 +248,16 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 	
 	
 	gsl_vector_free(SumZ);
-	gsl_vector_free(SumZU);
 	gsl_matrix_free(DiagOne);
-	gsl_matrix_free(ZUY);
+	gsl_matrix_free(ZY);
 	gsl_matrix_free(YTrans);
 	gsl_root_fsolver_free(s);
 }
 
 
 
-/* Compute the precision matrix and its cholesky decomposition */
-void up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, double SumZ, double SumZU, gsl_matrix *DiagOne)
-{
-	int status=0;
-	gsl_matrix_set_identity(DiagOne);
-
-	gsl_blas_dsyrk(CblasLower, CblasTrans, 1./SumZ, ZUY, 0.0, Precision);
-	gsl_blas_dsyr(CblasLower, -SumZU/SumZ, Mu, Precision);    
-	/* Compute the cholesky decomposition of the covariance matrix = LL'*/
-	status=gsl_linalg_cholesky_decomp(Precision);
-	if(status!=0)
-	{
-		error("\n The covariance matrix is near singular! \n Try running the program with a different initial configuration or less clusters \n");		
-	}
-	/* Compute L'^{-1} */
-	gsl_blas_dtrsm(CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, 1.0, Precision, DiagOne);
-	/* Compute Precision=L'^{-1}L^{-1} */
-	gsl_blas_dgemm(CblasNoTrans, CblasTrans, 1.0, DiagOne, DiagOne, 0.0, Precision);
-	/* Compute the cholesky decomposition of the precision matrix */
-	status=gsl_linalg_cholesky_decomp(Precision);
-	if(status!=0)
-	{
-		error("\n The covariance matrix is near singular! \n Try running the program with a different initial configuration or less clusters \n");		
-	}
-}
-
-
-
-/* Compute Z, U and also YTrans, SumZ, SumZU, logLike */
-void up_date_z_u(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *Mu, gsl_matrix *Precision, gsl_matrix *Z, gsl_matrix *U, gsl_vector *SumZ, gsl_vector *SumZU, double nu, double lambda, double *logLike, int transform, int last)
+/* Compute Z, U and also YTrans, SumZ, logLike */
+void up_date_z_u_gaussian(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *Mu, gsl_matrix *Precision, gsl_matrix *Z, gsl_matrix *U, gsl_vector *SumZ, double lambda, double *logLike, int transform, int last)
 {
 	int i=0,j=0,k=0, ly=(*Y).size1, py=(*Y).size2, K=(*Mu).size1;
 	gsl_vector_view rowYTrans, rowMu, rowPrecision, rowZ;
@@ -314,7 +270,6 @@ void up_date_z_u(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *M
 	/*	Initialize elements to zero*/
 	*logLike=0;
 	gsl_vector_set_zero(SumZ);
-	gsl_vector_set_zero(SumZU);
 
 	for(i=0;i<ly;i++)
 	{        
@@ -336,13 +291,13 @@ void up_date_z_u(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *M
 			matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector,py,py);
 			/* Here I assume the cholesky decomposition has been done */
 			/* Compute W * density function */
-			tmpLike=gsl_vector_get(W,k) * gsl_ran_mvnt_pdf(&rowYTrans.vector,&rowMu.vector,&matrixPrecision.matrix,nu,1,0);            
+			tmpLike=gsl_vector_get(W,k) * gsl_ran_mvngaussian_pdf(&rowYTrans.vector,&rowMu.vector,&matrixPrecision.matrix,1,0);            
 			/* E[Z|y] (un-normalized) */
 			gsl_matrix_set(Z,i,k,tmpLike);
 			/* Compute the normalizing constant (for Z) */
 			normConstant+=gsl_matrix_get(Z,i,k);
-			/* Compute E[u|y,z] */
-			gsl_matrix_set(U,i,k,(py+nu) / (gsl_pow_2(gsl_mahalanobis(&matrixPrecision.matrix, &rowYTrans.vector, &rowMu.vector, 1))+nu));
+			/* Compute U = Mahalanobis distance */
+			if(last==1) gsl_matrix_set(U,i,k,gsl_pow_2(gsl_mahalanobis(&matrixPrecision.matrix, &rowYTrans.vector, &rowMu.vector, 1)));
 			/*  Compute the likelihood wrt to one observation*/
 			like+=tmpLike;
 		}
@@ -360,10 +315,7 @@ void up_date_z_u(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *M
 			if(last==0)    // last=0 means not the final EM iteration
 			{
 				gsl_vector_set(SumZ, k, gsl_vector_get(SumZ,k) + gsl_matrix_get(Z,i,k));
-                /* Compute ZU */
-				gsl_matrix_set(Z,i,k, gsl_matrix_get(Z,i,k) * gsl_matrix_get(U,i,k));
-				gsl_vector_set(SumZU, k, gsl_vector_get(SumZU,k) + gsl_matrix_get(Z,i,k));
-                /* Compute (ZU)^(1/2) */
+                /* Compute U=Z^(1/2) */
 				gsl_matrix_set(U,i,k,sqrt(gsl_matrix_get(Z,i,k)));
 			}
 		}
@@ -377,43 +329,14 @@ void up_date_z_u(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *M
 
 
 
-double log_likelihood(gsl_matrix *Y, gsl_matrix *Mu, gsl_matrix *Precision, gsl_vector *W, double nu)
-{
-	int i=0,k=0;
-	int ly=(*Y).size1, py=(*Y).size2, K=(*W).size;
-	double log_like=0, like=0;
-	gsl_vector_view row,MuRow,YRow;  
-	gsl_matrix_view Prow;
-
-	for(i=0;i<ly;i++)
-	{
-		like=0;
-		YRow=gsl_matrix_row(Y,i);
-		for(k=0;k<K;k++)
-		{	  			
-			MuRow=gsl_matrix_row(Mu,k);
-			row=gsl_matrix_row(Precision,k);
-			Prow=gsl_matrix_view_vector(&row.vector,py,py);
-			/* Here I assume the cholesky decomposition has been done */
-			like+=gsl_vector_get(W,k)*gsl_ran_mvnt_pdf(&YRow.vector,&MuRow.vector, &Prow.matrix, nu, 1, 0); 
-
-		}
-		log_like+=log(like);
-	}  
-	return(log_like);
-}
-
-
-
-void getEstimates(double *y, int *ly, int *py, int *K, double *mu, double *precision, double *nu, double *z, double *u)
+void getEstimatesGaussian(double *y, int *ly, int *py, int *K, double *mu, double *precision, double *z)
 {	
 	int i=0,j=0,k=0;
-	gsl_vector *SumZ=gsl_vector_calloc(*K), *SumZU=gsl_vector_calloc(*K);
-	gsl_matrix *Weight=gsl_matrix_calloc(*ly,*K);   // Weight = Z*U
+	gsl_vector *SumZ=gsl_vector_calloc(*K);
 	gsl_matrix *TempMatrix=gsl_matrix_calloc(*py,*py);
 	gsl_matrix *DiagOne=gsl_matrix_calloc(*py,*py);
-	gsl_matrix *WeightedY=gsl_matrix_calloc(*ly,*py);    // WeightedY = ZU*Y
-	gsl_matrix_view Y, Mu, Precision, Z, U, matrixPrecision;
+	gsl_matrix *WeightedY=gsl_matrix_calloc(*ly,*py);    // WeightedY = Z*Y
+	gsl_matrix_view Y, Mu, Precision, Z, matrixPrecision;
 	gsl_vector_view rowMu, rowPrecision, rowWeightedY;
 	
 	/* Create matrix and vector views*/  
@@ -421,47 +344,40 @@ void getEstimates(double *y, int *ly, int *py, int *K, double *mu, double *preci
 	Mu=gsl_matrix_view_array(mu,*K,*py);
 	Precision=gsl_matrix_view_array(precision,*K,*py**py);
 	Z=gsl_matrix_view_array(z,*ly,*K);
-	U=gsl_matrix_view_array(u,*ly,*K);
     gsl_matrix_set_identity(DiagOne);
 
-    /* Compute Weight = Z*U */
-    gsl_matrix_memcpy(Weight, &U.matrix); 
-    gsl_matrix_mul_elements(Weight, &Z.matrix);
 	for(i=0;i<*ly;i++)
 	{        
     	for(k=0;k<*K;k++)
 	    {
 		    gsl_vector_set(SumZ, k, gsl_vector_get(SumZ,k) + gsl_matrix_get(&Z.matrix,i,k));
-            gsl_vector_set(SumZU, k, gsl_vector_get(SumZU,k) + gsl_matrix_get(Weight,i,k));
 	    }
     }
 
 	/* Compute Mu using BLAS */
-	gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0, Weight, &Y.matrix, 0.0, &Mu.matrix);        
+	gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0, &Z.matrix, &Y.matrix, 0.0, &Mu.matrix);        
 	for(k=0;k<*K;k++)
 	{
 		rowMu=gsl_matrix_row(&Mu.matrix,k);
-		gsl_blas_dscal(1./gsl_vector_get(SumZU,k),&rowMu.vector);    
+		gsl_blas_dscal(1./gsl_vector_get(SumZ,k),&rowMu.vector);    
 
-        /* Compute WeightedY = ZU*Y */
+        /* Compute WeightedY = Z*Y */
         gsl_matrix_memcpy(WeightedY, &Y.matrix); 
         for(i=0;i<*ly;i++)
         {
             rowWeightedY=gsl_matrix_row(WeightedY,i);
-            gsl_blas_dscal(gsl_matrix_get(Weight,i,k),&rowWeightedY.vector);
+            gsl_blas_dscal(gsl_matrix_get(&Z.matrix,i,k),&rowWeightedY.vector);
         }
         
 		/* Compute Precision (cluster specific) */
 		rowPrecision=gsl_matrix_row(&Precision.matrix,k);
 		matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector,*py,*py);            
         gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0/gsl_vector_get(SumZ,k), WeightedY, &Y.matrix, 0.0, TempMatrix);
-    	gsl_blas_dsyr(CblasLower, -gsl_vector_get(SumZU,k)/gsl_vector_get(SumZ,k), &rowMu.vector, TempMatrix);    
-        gsl_blas_dsymm(CblasLeft, CblasLower, *nu/(*nu-2.0), TempMatrix, DiagOne, 0.0, &matrixPrecision.matrix);
+    	gsl_blas_dsyr(CblasLower, -1., &rowMu.vector, TempMatrix);    
+        gsl_blas_dsymm(CblasLeft, CblasLower, 1.0, TempMatrix, DiagOne, 0.0, &matrixPrecision.matrix);
 	}
 
     gsl_vector_free(SumZ);
-    gsl_vector_free(SumZU);
-    gsl_matrix_free(Weight);
     gsl_matrix_free(TempMatrix);
     gsl_matrix_free(DiagOne);
     gsl_matrix_free(WeightedY);

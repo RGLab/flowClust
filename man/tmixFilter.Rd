@@ -14,7 +14,7 @@
 \title{Creating Filters and Filtering Flow Cytometry Data}
 
 \description{
-The \code{tmixFilter} function creates a filter object which is then passed to the \code{filter} method that performs filtering on a \code{flowFrame} object.  This method pair is provided to let \pkg{flowClust} highly integrate with the \pkg{flowCore} package.
+The \code{tmixFilter} function creates a filter object which is then passed to the \code{filter} method that performs filtering on a \code{flowFrame} object.  This method pair is provided to let \pkg{flowClust} integrate with the \pkg{flowCore} package.
 }
 
 \usage{
@@ -25,8 +25,8 @@ tmixFilter(filterId="tmixFilter", parameters="", \dots)
 
 \arguments{
 \item{filterId}{A character string that identifies the filter created.}
-\item{parameters}{A character vector specifying the variables to be used in filtering.  When it is left unspecified, all the variables of the \code{flowFrame} object will be used when running \code{filter}.  Note that its content will be passed to the \code{varNames} argument of \code{\link{flowClust}} when running \code{filter}.}
-\item{\dots}{Other arguments passed to the \code{\link{flowClust}} function when running \code{filter}, namely, \code{expName}, \code{K}, \code{B}, \code{tol}, \code{nu}, \code{lambda}, \code{trans}, \code{min.count}, \code{max.count}, \code{min}, \code{max}, \code{level}, \code{u.cutoff}, \code{z.cutoff} and \code{randomStart}.  All arguments are optional except \code{K} that specifies the number of clusters.}
+\item{parameters}{A character vector specifying the variables to be used in filtering.  When it is left unspecified, all the variables of the \code{flowFrame} object are used when running \code{filter}.  Note that its content will be passed to the \code{varNames} argument of \code{\link{flowClust}} when running \code{filter}.}
+\item{\dots}{Other arguments passed to the \code{\link{flowClust}} function when running \code{filter}, namely, \code{expName}, \code{K}, \code{B}, \code{tol}, \code{nu}, \code{lambda}, \code{trans}, \code{min.count}, \code{max.count}, \code{min}, \code{max}, \code{level}, \code{u.cutoff}, \code{z.cutoff}, \code{randomStart} and \code{seed}.  All arguments are optional except \code{K} that specifies the number of clusters.}
 \item{x}{Object of class \code{flowFrame}.}
 \item{filter}{Object returned from \code{tmixFilter}.}
 }

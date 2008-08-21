@@ -28,7 +28,7 @@ This method splits data according to results of the clustering (filtering) opera
 \item{f}{Object returned from \code{flowClust} or \code{filter}.}
 \item{split}{An optional argument which specifies how to split the data.  If specified, it takes a list object with named or unnamed elements each of which is a numeric vector specifying which clusters are included.  When this argument is missing, the data object will be split into \code{K} subsets each of which is formed by one out of the \code{K} clusters used to model the data.  See examples for more details.}
 \item{select}{An optional argument which facilitates the selection of columns.  If specified, it either takes a numeric (not supported when \code{x} is of class \code{flowFrame}) or character vector.}
-\item{rm.outliers}{A logical value indicating whether outliers will be removed or not.}
+\item{rm.outliers}{A logical value indicating whether outliers are removed or not.}
 }
 
 \value{
