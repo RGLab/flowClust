@@ -8,7 +8,7 @@ This function can be used to generate a sample from a multivariate \eqn{t} mixtu
 }
 
 \usage{
-SimulateMixture(N, nu=100, mu, sigma, w)
+SimulateMixture(N, nu=4, mu, sigma, w)
 }
 
 \arguments{

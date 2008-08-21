@@ -20,7 +20,7 @@ This method constructs the \code{flowDens} object which is used to generate a co
 \item{x}{Object returned from \code{\link{flowClust}} or from running \code{\link[=filter.flowFrame]{filter}} on a \code{flowFrame} object.}
 \item{data}{A matrix, data frame of observations, or object of class \code{flowFrame}.  This is the object on which \code{flowClust} or \code{filter} was performed.  If this argument is not specified, the grid square upon which densities will be computed must be provided (through arguments \code{from} and \code{to}).}
 \item{subset}{A numeric vector of length two indicating which two variables are selected for the scatterplot.  Alternatively, a character vector containing the names of the two variables is allowed if \code{x@varNames} is not \code{NULL}.}
-\item{include}{A numeric vector specifying which clusters will be included to compute the density values.  By default, all clusters are included.}
+\item{include}{A numeric vector specifying which clusters are included to compute the density values.  By default, all clusters are included.}
 \item{npoints}{A numeric vector of size two specifying the number of grid points in \eqn{x} (horizontal) and \eqn{y} (vertical) directions respectively.}
 \item{from}{A numeric vector of size two specifying the coordinates of the lower left point of the grid square.  Note that, if this (and \code{to}) is not specified, \code{data} must be provided such that the range in the two variables (dimensions) selected will be used to define the grid square.}
 \item{to}{A numeric vector of size two specifying the co-ordinates of the upper right point of the grid square.}

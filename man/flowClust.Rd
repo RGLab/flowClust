@@ -14,7 +14,7 @@ This function performs automated clustering for identifying cell populations in 
 flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500, 
           tol=1e-5, nu=4, lambda=1, trans=TRUE, min.count=10, 
           max.count=10, min=NULL, max=NULL, level=0.9, 
-          u.cutoff=NULL, z.cutoff=0, randomStart=FALSE)
+          u.cutoff=NULL, z.cutoff=0, randomStart=FALSE, seed=1)
 }
 
 \arguments{
@@ -24,7 +24,7 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
 \item{K}{An integer indicating the number of clusters.}
 \item{B}{The maximum number of EM iterations.}
 \item{tol}{The tolerance used to assess the convergence of the EM.}
-\item{nu}{The degrees of freedom used for the \eqn{t} distribution.  Default is 4.}
+\item{nu}{The degrees of freedom used for the \eqn{t} distribution.  Default is 4.  If \code{nu=Inf}, Gaussian distribution will be used.}
 \item{lambda}{The initial transformation to be applied to the data.}
 \item{trans}{A logical value indicating whether the Box-Cox transformation parameter is estimated from the data.}
 \item{min.count}{An integer specifying the threshold count for filtering data points from below.  The default is 10, meaning that if 10 or more data points are smaller than or equal to \code{min}, they will be excluded from the analysis.  If \code{min} is \code{NULL}, then the minimum of data as per each variable will be used.  To suppress filtering, set it as -1.}
@@ -35,6 +35,7 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
 \item{u.cutoff}{Another criterion used to identify outliers.  If this is \code{NULL}, then \code{level} will be used.  Otherwise, this specifies the threshold (e.g., 0.5) for \eqn{u}, a quantity used to measure the degree of \dQuote{outlyingness} based on the Mahalanobis distance.  Please refer to Lo et al. (2008) for more details.}
 \item{z.cutoff}{A numeric value between 0 and 1 underlying a criterion which may be used together with \code{level}/\code{u.cutoff} to identify outliers.  A point with the probability of assignment \eqn{z} (i.e., the posterior probability that a data point belongs to the cluster assigned) smaller than \code{z.cutoff} will be called an outlier.  The default is 0, meaning that assignment will be made no matter how small the associated probability is, and outliers will be identified solely based on the rule set by \code{level} or \code{cutoff}.}
 \item{randomStart}{A logical value indicating whether a random parition of the data is applied for initialization.  The default is \code{FALSE}, which means hierarchical clustering is used instead.}
+\item{seed}{An integer giving the seed number used when \code{randomStart} is \code{TRUE}.}
 }
 
 \details{
@@ -57,19 +58,19 @@ An object of class \code{flowClust} containing the following slots, where \eqn{K
 \item{expName}{Content of the \code{expName} argument.}
 \item{varNames}{Content of the \code{varNames} argument if provided; generated if available otherwise.}
 \item{K}{An integer showing the number of clusters.}
+\item{w}{A vector of length \eqn{K}, containing the estimates of the \eqn{K} cluster proportions.}
 \item{mu}{A matrix of size \eqn{K \times P}{K x P}, containing the estimates of the \eqn{K} mean vectors.}
 \item{sigma}{An array of dimension \eqn{K \times P \times P}{K x P x P}, containing the estimates of the \eqn{K} covariance matrices.}
-\item{w}{A vector of length \eqn{K}, containing the estimates of the \eqn{K} cluster proportions.}
+\item{lambda}{The Box-Cox transformation parameter estimate.}
+\item{nu}{The degrees of freedom used for the \eqn{t} distribution.}
 \item{z}{A matrix of size \eqn{N \times K}{N x K}, containing the posterior probabilities of cluster memberships.  The probabilities in each row sum up to one.}
-\item{u}{A matrix of size \eqn{N \times K}{N x K}, containing the \dQuote{weights} (the contribution for computing cluster mean and covariance matrix) of each data point in each cluster.  Since this quantity decreases monotonically with the Mahalanobis distance, it can also be interpreted as the level of \dQuote{outlyingness} of a data point.}
-\item{label}{A vector of size \eqn{N}, showing the cluster membership according to the initial partition (i.e., hierarchical clustering if \code{randomStart} is \code{FALSE}).  Filtered observations will be labelled as \code{NA}.}
+\item{u}{A matrix of size \eqn{N \times K}{N x K}, containing the \dQuote{weights} (the contribution for computing cluster mean and covariance matrix) of each data point in each cluster.  Since this quantity decreases monotonically with the Mahalanobis distance, it can also be interpreted as the level of \dQuote{outlyingness} of a data point.  Note that, when \code{nu=Inf}, this slot is used to store the Mahalanobis distances instead.}
+\item{label}{A vector of size \eqn{N}, showing the cluster membership according to the initial partition (i.e., hierarchical clustering if \code{randomStart} is \code{FALSE}).  Filtered observations will be labelled as \code{NA}.  Unassigned observations (which may occur since only 1500 observations at maximum are taken for hierarchical clustering) will be labelled as 0.}
 \item{uncertainty}{A vector of size \eqn{N}, containing the uncertainty about the cluster assignment.  Uncertainty is defined as 1 minus the posterior probability that a data point belongs to the cluster to which it is assigned.}
-\item{ruleOutliers}{A numeric vector of size 3, storing the rule used to call outliers.  The first element is 0 if the criterion is set by the \code{level} argument, or 1 if it is set by \code{u.cutoff}.  The third element copies the content of the \code{z.cutoff} argument.  For instance, if points will be called outliers if they lie outside the 90\% quantile region or have assignment probabilities less than 0.5, then \code{ruleOutliers} is \code{c(0, 0.9, 0.5)}.  If points will be called outliers only if their \dQuote{weights} in the assigned clusters are less than 0.5 regardless of the assignment probabilities, then \code{ruleOutliers} becomes \code{c(1, 0.5, 0)}.}
+\item{ruleOutliers}{A numeric vector of size 3, storing the rule used to call outliers.  The first element is 0 if the criterion is set by the \code{level} argument, or 1 if it is set by \code{u.cutoff}.  The second element copies the content of either the \code{level} or \code{u.cutoff} argument.  The third element copies the content of the \code{z.cutoff} argument.  For instance, if points are called outliers when they lie outside the 90\% quantile region or have assignment probabilities less than 0.5, then \code{ruleOutliers} is \code{c(0, 0.9, 0.5)}.  If points are called outliers only if their \dQuote{weights} in the assigned clusters are less than 0.5 regardless of the assignment probabilities, then \code{ruleOutliers} becomes \code{c(1, 0.5, 0)}.}
 \item{flagOutliers}{A logical vector of size \eqn{N}, showing whether each data point is called an outlier or not based on the rule defined by \code{level}/\code{u.cutoff} and \code{z.cutoff}.}
 \item{rm.min}{Number of points filtered from below.}
 \item{rm.max}{Number of points filtered from above.}
-\item{lambda}{The Box-Cox transformation parameter estimate.}
-\item{nu}{The degrees of freedom used for the \eqn{t} distribution.}
 \item{logLike}{The log-likelihood of the fitted mixture model.}
 \item{BIC}{The Bayesian Information Criterion for the fitted mixture model.}
 \item{ICL}{The Integrated Completed Likelihood for the fitted mixture model.}

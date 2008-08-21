@@ -15,7 +15,7 @@ dmvt(x, mu, sigma, nu, log=FALSE)
 \item{x}{A matrix or data frame of size \eqn{N \times P}{N x P}, where \eqn{N} is the number of observations and \eqn{P} is the dimension.  Each row corresponds to one observation.}
 \item{mu}{A numeric vector of length \eqn{P} specifying the mean.}
 \item{sigma}{A matrix of size \eqn{P \times P}{P x P} specifying the covariance matrix.}
-\item{nu}{The degrees of freedom used for the \eqn{t} distribution.}
+\item{nu}{The degrees of freedom used for the \eqn{t} distribution.  If \code{nu=Inf}, Gaussian distribution will be used.}
 \item{log}{A logical value.  If \code{TRUE} then the logarithm of the densities is returned.}
 }
 

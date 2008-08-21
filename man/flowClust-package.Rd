@@ -11,7 +11,7 @@ Robust model-based clustering using a \eqn{t} mixture model with Box-Cox transfo
 \tabular{ll}{
 Package: \tab flowClust\cr
 Type: \tab Package\cr
-Version: \tab 1.0.0\cr
+Version: \tab 1.6.0\cr
 Depends: \tab R(>= 2.5.0), methods, mnormt, mclust, ellipse, flowCore\cr
 Collate: \tab SetClasses.R SetMethods.R plot.R flowClust.R SimulateMixture.R\cr
 biocViews: \tab Clustering, Statistics, Visualization\cr
