@@ -9,6 +9,7 @@ double BoxCoxGradient(double x, void *params)
     gsl_matrix *Precision  = p->Precision;  // will be updated
     gsl_matrix *Z = p->Z;
     gsl_matrix *U = p->U;
+    gsl_matrix *YTrans = p->YTrans;    // will be updated
     gsl_matrix *ZUY = p->ZUY;   // will be updated
     gsl_vector *SumZ = p->SumZ;    
     gsl_vector *SumZU = p->SumZU;                
@@ -19,10 +20,9 @@ double BoxCoxGradient(double x, void *params)
     int k=0, K=Mu->size1;
  
     double Yoriginal=0,Tmp=0,Tmp1=0,Tmp2=0,Tmp3=0;
-    double logJacobian=0;    // derivative of log(Jacobian)
+    double logJacobian=0;    // derivative of log(Jacobian) wrt lambda
     double logLike=0;   // derivative of loglikelihood wrt lambda
-    gsl_matrix *YTrans=gsl_matrix_alloc(ly,py);
-    gsl_matrix *Y1 = gsl_matrix_alloc(ly,py);    // derivative of Y wrt lambda
+    gsl_matrix *Y1 = gsl_matrix_alloc(ly,py);    // derivative of YTrans wrt lambda
     gsl_matrix *ZUY1 = gsl_matrix_alloc(ly,K*py);
     gsl_matrix *PrecisionYTrans = gsl_matrix_alloc(ly,py);
     gsl_vector *Y1Sum = gsl_vector_alloc(py);     
@@ -35,7 +35,7 @@ double BoxCoxGradient(double x, void *params)
     {
         for(j=0;j<py;j++)
         {
-            /* Transform Y */
+            /* Compute YTrans */
             Yoriginal=gsl_matrix_get(Y,i,j);
             Tmp1=sgn(Yoriginal)*pow(fabs(Yoriginal),x);
             gsl_matrix_set(YTrans,i,j,(Tmp1-1.0)/x);
@@ -121,7 +121,6 @@ double BoxCoxGradient(double x, void *params)
 
     gsl_vector_free(Y1Sum);
 	gsl_vector_free(SMu);
-    gsl_matrix_free(YTrans);
     gsl_matrix_free(Y1);
     gsl_matrix_free(PrecisionYTrans);
     gsl_matrix_free(ZUY1);

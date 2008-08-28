@@ -9,12 +9,14 @@
 void flowClustGaussian(double *y, int *ly, int *py, int *K, double *w, double *mu, double *precision, double *lambda, double *z, double *u, int *label, double *uncertainty, double *q_cutoff, double *z_cutoff, int *flagOutliers, int *B, double *tol, int *transform, double *logLike)
 {
 
-    gsl_matrix_view Y, Mu, Precision, Z, U;
+    gsl_matrix_view Y, Mu, Precision;
+    gsl_matrix_view Z;    // z
+    gsl_matrix_view U;    // sqrt(z) at intermediate steps; mahalanobis distance at output
     gsl_vector_view W;
 	gsl_matrix *YTrans=gsl_matrix_alloc(*ly,*py);
-	gsl_matrix *ZY=gsl_matrix_calloc(*ly,*K**py);
+	gsl_matrix *ZY=gsl_matrix_calloc(*ly,*K**py);    // sqrt(z) * YTrans
 	gsl_matrix *DiagOne=gsl_matrix_calloc(*py,*py);
-	gsl_vector *SumZ=gsl_vector_calloc(*K);
+	gsl_vector *SumZ=gsl_vector_calloc(*K);    // sum(z)
     gsl_vector_view rowMu, rowPrecision, rowYTrans, rowZY, subRowZY, rowZ;
     gsl_matrix_view matrixPrecision, matrixZY;
 	int i=0, j=0, k=0;
@@ -35,7 +37,7 @@ void flowClustGaussian(double *y, int *ly, int *py, int *K, double *w, double *m
 	int iterSolveMax=50;    // max no. of iterations for the Brent's algorithm in each M-step;
 	double lambdaHat=0;    // current estimate of lambda
 	double xLow=.1, xUp=1;  // initial search interval of Brent's algorithm
-	double x_lo= .1, x_hi=1;    // current bracketing interval for solver
+	double x_lo=.1, x_hi=1;    // current bracketing interval for solver
     int status=0;   // status of the solver (an error indicator)    
     
     
@@ -123,16 +125,13 @@ void flowClustGaussian(double *y, int *ly, int *py, int *K, double *w, double *m
 	{		
 		logLikeOld=*logLike;
 
-		/* E step -- Compute Z, U and also YTrans, SumZ, logLike */
+		/* E step -- Compute Z, U and also SumZ, logLike */
 		up_date_z_u_gaussian(&Y.matrix, YTrans, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, *lambda, logLike, *transform, 0);      
 
 		/* M step*/        
 
-		/* Only estimate lambda in the first 100 iterations */
-		if(iter>=BSolve) *transform=0;			
-			
         /* Solve for lambda */
-		if(*transform==1)
+		if((*transform==1) && (iter<BSolve))    // Only estimate lambda in the first 100(BSolve) iterations
 		{
     		params.Y=&Y.matrix;
 	    	params.W=&W.vector;     // will be updated when calling solver
@@ -140,6 +139,7 @@ void flowClustGaussian(double *y, int *ly, int *py, int *K, double *w, double *m
     		params.Precision=&Precision.matrix;    // will be updated
 	    	params.Z=&Z.matrix;
 		    params.U=&U.matrix;
+		    params.YTrans=YTrans;   // will be updated
     		params.ZUY=ZY;         // will be updated
 	    	params.SumZ=SumZ;
 		    params.SumZU=SumZ;
@@ -183,12 +183,21 @@ void flowClustGaussian(double *y, int *ly, int *py, int *K, double *w, double *m
 		    }
 		}
 
-        /* Update ZY, Mu, Precision and W */
-		if((*transform==0) || ((*transform==1) && (status!=0)))
+        /* Update YTrans, ZY, Mu, Precision and W */
+		if((*transform==0) || ((*transform==1) && (iter>=BSolve)) || ((*transform==1) && (status!=0)))
 		{
-			/* Update ZY-matrix */
+			/* Update YTrans & ZY-matrix */
 			for(i=0;i<*ly;i++)
 			{
+		        /* Update YTrans */
+                if (*transform==1)
+                {
+    		        for(j=0;j<*py;j++)
+	    	        {
+		    	        gsl_matrix_set(YTrans, i, j, (sgn(gsl_matrix_get(&Y.matrix,i,j)) * pow(fabs(gsl_matrix_get(&Y.matrix,i,j)),*lambda)-1) / (*lambda));
+		            }
+		        }
+		        /* Update ZY-matrix */
 				rowYTrans=gsl_matrix_row(YTrans,i);
 				rowZY=gsl_matrix_row(ZY,i);                    
 				for(k=0;k<*K;k++)
@@ -256,7 +265,7 @@ void flowClustGaussian(double *y, int *ly, int *py, int *K, double *w, double *m
 
 
 
-/* Compute Z, U and also YTrans, SumZ, logLike */
+/* Compute Z, U and also SumZ, logLike */
 void up_date_z_u_gaussian(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *Mu, gsl_matrix *Precision, gsl_matrix *Z, gsl_matrix *U, gsl_vector *SumZ, double lambda, double *logLike, int transform, int last)
 {
 	int i=0,j=0,k=0, ly=(*Y).size1, py=(*Y).size2, K=(*Mu).size1;
@@ -278,7 +287,6 @@ void up_date_z_u_gaussian(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_
     		for(j=0;j<py;j++)
 	    	{
 		    	logJacobian+=(lambda-1)*log(fabs(gsl_matrix_get(Y,i,j)));
-			    gsl_matrix_set(YTrans, i, j, (sgn(gsl_matrix_get(Y,i,j)) * pow(fabs(gsl_matrix_get(Y,i,j)),lambda)-1) / lambda);
 		    }
 		}
 		rowYTrans=gsl_matrix_row(YTrans,i);
@@ -309,8 +317,7 @@ void up_date_z_u_gaussian(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_
 		for(k=0;k<K;k++)
 		{
 			/* Here I assume the cholesky decomposition has been done */
-			/* Note that Z is used to store ZU */
-			/* Note that U is used to store (ZU)^(1/2) */						
+			/* Note that U is used to store Z^(1/2) */						
 			/* I store the square root for efficiency */
 			if(last==0)    // last=0 means not the final EM iteration
 			{
@@ -331,7 +338,7 @@ void up_date_z_u_gaussian(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_
 
 void getEstimatesGaussian(double *y, int *ly, int *py, int *K, double *mu, double *precision, double *z)
 {	
-	int i=0,j=0,k=0;
+	int i=0,k=0;
 	gsl_vector *SumZ=gsl_vector_calloc(*K);
 	gsl_matrix *TempMatrix=gsl_matrix_calloc(*py,*py);
 	gsl_matrix *DiagOne=gsl_matrix_calloc(*py,*py);

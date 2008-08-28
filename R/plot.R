@@ -109,7 +109,7 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
 
 # to compute the density of a multivariate t distribution
 dmvt <- function(x, mu, sigma, nu, log=FALSE) {
-    x <- as.matrix(x)
+    if (is.vector(x) && length(x)==length(mu)) x <- matrix(x,1) else x <- as.matrix(x)
     p <- ncol(x)
     M <- mahalanobis(x,mu,sigma)
     if (nu!=Inf) value <- lgamma((nu+p)/2) - 1/2*determinant(as.matrix(sigma),log=T)$modulus[1] - p/2*log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu)  else value <- -p/2*log(2*pi) - 1/2*determinant(as.matrix(sigma),log=T)$modulus[1] - 1/2*M
@@ -213,6 +213,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NU
     if (is.null(xlab) && x@varNames!="Not Available") xlab <- x@varNames[subset]
     if (!is.numeric(subset)) subset <- match(subset, x@varNames)
 
+    # look for highest density value
     data <- data[,subset]
     data1 <- data[!is.na(x@flagOutliers)]
     if (is.null(ylim)) {
@@ -220,6 +221,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NU
         ymax <- max(den(tseq[tseq!=0]))
     }
 
+    # look for highest point in histogram
     if (histogram) {
         data2 <- data[!is.na(x@flagOutliers) & is.element(map(x@z), include)]
         tbreaks <- hist(data1, breaks=breaks, plot=F)$breaks
@@ -227,16 +229,23 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NU
             tplot <- hist(data2, breaks=tbreaks, plot=F)
             ymax <- max(ymax, tplot$density)
         }
-        hist(data2, breaks=tbreaks, freq=F, xlim=(if (is.null(xlim)) range(data1) else xlim), ylim=(if (is.null(ylim)) c(0, ymax) else ylim), xlab=xlab, ylab=ylab, main=main, ...)
     }
 
-    curve(den, add=histogram, xlim=(if (is.null(xlim)) range(data1) else xlim), ylim=(if (is.null(ylim)) c(0, ymax) else ylim), xlab=xlab, ylab=ylab, main=main, ...)
+    if (is.null(xlim)) xlim <- range(data1)
+    if (is.null(ylim)) ylim <- c(0, ymax)
+    ymin <- ylim[1]
+    if (labels) ylim[1] <- ylim[1] - (ylim[2]-ylim[1])/100*length(include)
+    
+    if (histogram) hist(data2, breaks=tbreaks, freq=F, xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main, ...)
+
+    curve(den, add=histogram, xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main, ...)
 
     if (labels) {
         if (is.null(col)) {
-            if (x@K<=4) col <- c("red", "blue", "green", "black")  else col <- 2:(x@K+1)
-        } else col<-matrix(col, x@K)
-        for (k in include) points(cbind(data[map(x@z)==k],-(if (is.null(ylim)) ymax else ylim[2])/100), pch=pch, cex=cex, col=col[k])
+            if (length(include)<=4) col <- c("red", "blue", "green", "black")  else col <- 2:(length(include)+1)
+        } else col<-matrix(col, length(include))
+        j <- 0
+        for (k in include) stripchart(data[map(x@z)==k], add=T, at=ymin - (ylim[2]-ymin)/100*(j<-j+1), pch=pch, cex=cex, col=col[j])
     }
 }
 )

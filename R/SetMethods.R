@@ -197,7 +197,7 @@ setReplaceMethod("ruleOutliers", signature("flowClust","list"),
         } else {
             py <- ncol(object@mu)
             q.cutoff <- qchisq(object@ruleOutliers[2], py)
-            result <- ( importance(object, assign=T) > q.cutoff)
+            result <- (importance(object, assign=T) > q.cutoff)
         }
 
         if (object@ruleOutliers[3]>0) result <- result | (posterior(object, assign=T) < object@ruleOutliers[3])
