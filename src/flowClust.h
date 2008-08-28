@@ -16,7 +16,7 @@
 
 struct BoxCox_params
 {
-    gsl_matrix *Y, *Mu, *Precision, *Z, *U, *ZUY, *DiagOne;
+    gsl_matrix *Y, *Mu, *Precision, *Z, *U, *YTrans, *ZUY, *DiagOne;
     gsl_vector *W, *SumZ, *SumZU;
     double lambda;
 };
@@ -26,7 +26,6 @@ int sgn(double x);
 
 void up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, double SumZ, double SumZU, gsl_matrix *DiagOne);
 void up_date_z_u(gsl_matrix *Y, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *Mu, gsl_matrix *Precision, gsl_matrix *Z, gsl_matrix *U, gsl_vector *SumZ, gsl_vector *SumZU, double nu, double lambda, double *logLike, int transform, int last);
-double log_likelihood(gsl_matrix *Y, gsl_matrix *Mu, gsl_matrix *Precision, gsl_vector *W, double nu);
 
 double gsl_ran_mvngaussian_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precision, int is_chol, int is_log);
 double gsl_ran_mvnt_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol, int is_log);

@@ -45,7 +45,7 @@ This \texttt{flowClust} package consists of a core function to implement the afo
 
 \section{Installation}
 
-Before installing the \texttt{flowClust} package, make sure that the following is present in your system:
+To build the \texttt{flowClust} package from source, make sure that the following is present in your system:
 \begin{itemize}
 \item GNU Scientific Library (GSL)
 \item Basic Linear Algebra Subprograms (BLAS)
@@ -64,6 +64,8 @@ The package will look for a BLAS library on your system, and by default it will 
 On a 64-bit Intel machine which has MKL as the optimized BLAS library, the command may look like: \\[6pt]
 \texttt{R CMD INSTALL flowClust\_x.y.z.tar.gz -{}-configure-args="-{}-with-blas='-L/usr/local/mkl/lib/em64t/ -lmkl -lguide -lpthread'"}\\[6pt]
 where \texttt{/usr/local/mkl/lib/em64t/} is the path to MKL. 
+
+If you prefer to install a prebuilt binary, you need GSL for successful installation.
 
 
 \section{Example: clustering of the Rituximab dataset}
