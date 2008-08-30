@@ -9,6 +9,7 @@
 \alias{tmixFilterResult-class}
 \alias{\%in\%,ANY,tmixFilterResult-method}
 \alias{\%in\%,flowFrame,tmixFilterResult-method}
+\alias{\%in\%,flowFrame,tmixFilter-method}
 \alias{[,flowFrame,tmixFilterResult-method}
 
 \title{Creating Filters and Filtering Flow Cytometry Data}

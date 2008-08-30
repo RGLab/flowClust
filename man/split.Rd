@@ -6,6 +6,11 @@
 \alias{split.flowClust}
 \alias{split,flowFrame,tmixFilterResult,missing-method}
 \alias{split,flowFrame,tmixFilterResult-method}
+\alias{split,flowFrame,flowClust-method}
+\alias{split,data.frame,flowClust-method}
+\alias{split,matrix,flowClust-method}
+\alias{split,vector,flowClust-method}
+\alias{split,flowFrame,tmixFilterResult-method}
 \alias{split.flowFrame}
 \alias{split.tmixFilterResult}
 \alias{split.flowFrame.tmixFilterResult}

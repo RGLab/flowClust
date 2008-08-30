@@ -7,6 +7,12 @@
 \alias{Subset.flowFrame}
 \alias{Subset.tmixFilterResult}
 \alias{Subset.flowFrame.tmixFilterResult}
+\alias{Subset,flowFrame,flowClust-method}
+\alias{Subset,data.frame,flowClust-method}
+\alias{Subset,matrix,flowClust-method}
+\alias{Subset,vector,flowClust-method}
+\alias{Subset,flowFrame,tmixFilterResult-method}
+
 \alias{Subset}
 
 \title{Subsetting Data Based on Clustering Results} 
