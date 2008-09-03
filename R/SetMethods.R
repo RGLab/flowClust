@@ -118,7 +118,7 @@ setMethod("%in%", signature("ANY", "flowClust"),
 setMethod("%in%", signature("flowFrame", "tmixFilterResult"),
           function(x, table)
       {
-          callNextMethod()
+          selectMethod("%in%", c("ANY", "flowClust"))(x, table)
       })
 
 

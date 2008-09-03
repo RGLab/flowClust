@@ -90,7 +90,7 @@ summary(res2)
 
 # to demonstrate the use of the split method
 split(rituximab2, res2)
-split(rituximab2, res2, split=list(sc1=c(1,2), sc2=3))
+split(rituximab2, res2, population=list(sc1=c(1,2), sc2=3))
 
 # to show the cluster assignment of observations
 table(Map(res2))
