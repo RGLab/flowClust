@@ -5,7 +5,7 @@ double gsl_ran_mvngaussian_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precis
 {
 	int i=0, py=(*Mu).size;
 	double pdf=0;
-	gsl_matrix *PrecisionTmp=gsl_matrix_calloc(py,py);
+	gsl_matrix *PrecisionTmp=NULL;
 	gsl_vector *YTilde=gsl_vector_calloc(py);    // Y-Mu
 	double sum_square=0;   // store sqrt of Mahalanobis distance
 
@@ -13,6 +13,7 @@ double gsl_ran_mvngaussian_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precis
     /* This is a bit inefficient and you should do the decomposition before */
 	if(is_chol==0)
 	{	  
+		PrecisionTmp=gsl_matrix_calloc(py,py);
         /* Store the original Precision matrix */
 		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
         /* Perform the cholesky decomposition*/
@@ -58,7 +59,7 @@ double gsl_ran_mvnt_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precision, do
 {
 	int i=0, py=(*Mu).size;
 	double pdf=0;
-	gsl_matrix *PrecisionTmp=gsl_matrix_calloc(py,py);
+	gsl_matrix *PrecisionTmp=NULL;
 	gsl_vector *YTilde=gsl_vector_calloc(py);    // Y-Mu
 	double sum_square=0;   // store sqrt of Mahalanobis distance
 
@@ -66,6 +67,7 @@ double gsl_ran_mvnt_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precision, do
     /* This is a bit inefficient and you should do the decomposition before */
 	if(is_chol==0)
 	{	  
+		PrecisionTmp=gsl_matrix_calloc(py,py);
         /* Store the original Precision matrix */
 		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
         /* Perform the cholesky decomposition*/
@@ -109,12 +111,13 @@ double gsl_ran_mvnt_pdf(gsl_vector *Y, gsl_vector *Mu, gsl_matrix *Precision, do
 void gsl_ran_mvngaussian(gsl_vector *Mu, gsl_matrix *Precision, int is_chol, gsl_vector *Y, gsl_rng *r)
 {
 	int i=0, py=(*Mu).size;
-	gsl_matrix *PrecisionTmp=gsl_matrix_calloc(py,py);
+	gsl_matrix *PrecisionTmp=NULL;
 
     /* Check if the cholesky decomposition has already been computed */
     /* This is a bit inefficient and you should do the decomposition before */
 	if(is_chol==0)
 	{	  
+		PrecisionTmp=gsl_matrix_calloc(py,py);
         /* Store the original Precision matrix */
 		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
         /* Perform the cholesky decomposition */
@@ -139,12 +142,13 @@ void gsl_ran_mvngaussian(gsl_vector *Mu, gsl_matrix *Precision, int is_chol, gsl
 void gsl_ran_mvnt(gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol, gsl_vector *Y, gsl_rng *r)
 {
 	int i=0, py=(*Mu).size;
-	gsl_matrix *PrecisionTmp=gsl_matrix_calloc(py,py);
+	gsl_matrix *PrecisionTmp=NULL;
 
     /* Check if the cholesky decomposition has already been computed */
     /* This is a bit inefficient and you should do the decomposition before */
   	if(is_chol==0)
   	{	  
+		PrecisionTmp=gsl_matrix_calloc(py,py);
         /* Store the original Precision matrix */
   		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
         /* Perform the cholesky decomposition */
@@ -171,7 +175,7 @@ void gsl_ran_mvnt(gsl_vector *Mu, gsl_matrix *Precision, double nu, int is_chol,
 double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int is_chol)
 {
 	int i=0, py=(*Mu).size;
-	gsl_matrix *PrecisionTmp=gsl_matrix_calloc(py,py);
+	gsl_matrix *PrecisionTmp=NULL;
 	gsl_vector *YTilde=gsl_vector_calloc(py);    // Y-Mu
 	double sum_square=0;   // store sqrt of Mahalanobis distance
 
@@ -179,6 +183,7 @@ double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int
     /* This is a bit inefficient and you should do the decomposition before */
   	if(is_chol==0)
   	{	  
+		PrecisionTmp=gsl_matrix_calloc(py,py);
         /* Store the original Precision matrix */
   		gsl_matrix_memcpy(PrecisionTmp,Precision);  	
         /* Perform the cholesky decomposition*/
