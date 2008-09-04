@@ -394,6 +394,13 @@ setMethod("Map",
 
 
 ## helper functions
+
+criterion <- function(object, type="BIC")
+{
+    if (type=="BIC") object@BIC  else if (type=="ICL") object@ICL  else if (type=="logLike") object@logLike
+}
+
+
 posterior <- function(object, assign=FALSE)
 {
     if (!assign) object@z  else {
