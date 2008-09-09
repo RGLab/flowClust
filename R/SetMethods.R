@@ -203,19 +203,16 @@ setMethod("Subset",
 
 
 setMethod("Subset", signature("data.frame", "flowClust"),
-          function(x, subset, ..., select)
+          function(x, subset, ...)
       {
           object <- 
-              if (missing(select))
-                  as.data.frame(x[x %in% subset, , drop=FALSE])
-              else
-                  as.data.frame(x[x %in% subset, select, drop=FALSE])
+              as.data.frame(x[x %in% subset, , drop=FALSE])
           return(object)
       })
 
 
 setMethod("Subset", signature("matrix","flowClust"),
-          function(x, subset, ..., select)
+          function(x, subset, ...)
       {
           x <- as.data.frame(x)
           callGeneric()
@@ -252,7 +249,7 @@ setMethod("Subset", signature("vector","flowClust"),
 setMethod("split",
           signature(x="data.frame", f="flowClust", drop="ANY"),
           function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE)
+                   rm.outliers=TRUE, ...)
       {
           population <- .spltVsPop(population, split, f)
           object <- vector("list", length(population))
@@ -267,17 +264,17 @@ setMethod("split",
 setMethod("split",
           signature(x="matrix", f="flowClust", drop="ANY"),
           function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE)
+                   rm.outliers=TRUE, ...)
       {
           split(as.data.frame(x), f, drop=drop, population=population,
-                split=split, rm.outliers=rm.outliers)
+                split=split, rm.outliers=rm.outliers, ...)
       })
 
 
 setMethod("split",
           signature(x="vector", f="flowClust", drop="ANY"),
           function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE)
+                   rm.outliers=TRUE, ...)
       {
           population <- .spltVsPop(population, split, f)
           object <- vector("list", length(population))

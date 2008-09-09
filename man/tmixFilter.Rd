@@ -21,7 +21,7 @@ The \code{tmixFilter} function creates a filter object which is then passed to t
 \usage{
 tmixFilter(filterId="tmixFilter", parameters="", \dots)
 
-\S4method{filter}{flowFrame,tmixFilter}(x, filter)
+filter(x, filter)
 }
 
 \arguments{
@@ -42,7 +42,7 @@ The \code{filter} method returns an object of class \code{tmixFilterResult} that
 \note{
 The \code{tmixFilter} function returns an object of class \code{tmixFilter} that extends the virtual parent \code{\link[flowCore:filter-class]{filter}} class in the \pkg{flowCore} package.  Hence, the \link[flowCore:filter-class]{filter operators}, namely, \code{&}, \code{|}, \code{!} and \code{\%subset\%}, also work for the \code{tmixFilter} class.
 
-The \code{filter} method returns an object of class \code{tmixFilterResult}.  This class extends both the \code{\link[flowCore:filterResult-class]{filterResult}} class (in the \pkg{flowCore} package) and the \code{\link{flowClust}} class.  Operations defined for the \code{filterResult} class, like \code{\link[flowCore:filter-class]{\%in\%}}, \code{\link{Subset}} and \code{\link{split}}, also work for the \code{tmixFilterResult} class.  Likewise, methods or functions designed to retrieve filtering (clustering) information from a \code{\link{flowClust}} object can also be applied on a \code{tmixFilterResult} object.  These include \code{\link{ruleOutliers}}, \code{\link[=ruleOutliers]{ruleOutliers<-}}, \code{\link{Map}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}}.  Various functionalities for plotting the filtering results are also available (see the links below).
+The \code{filter} method returns an object of class \code{tmixFilterResult}.  This class extends both the \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}} class (in the \pkg{flowCore} package) and the \code{\link{flowClust}} class.  Operations defined for the \code{multipleFilterResult} class, like \code{\link[flowCore:filter-class]{\%in\%}}, \code{\link{Subset}} and \code{\link{split}}, also work for the \code{tmixFilterResult} class.  Likewise, methods or functions designed to retrieve filtering (clustering) information from a \code{\link{flowClust}} object can also be applied on a \code{tmixFilterResult} object.  These include \code{\link{criterion}}, \code{\link{ruleOutliers}}, \code{\link[=ruleOutliers]{ruleOutliers<-}}, \code{\link{Map}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}}.  Various functionalities for plotting the filtering results are also available (see the links below).
 }
 
 \author{
@@ -77,8 +77,8 @@ res1 <- filter(rituximab, s1filter)
 rituximab2 <- rituximab[rituximab \%in\% res1,]
 # a shorthand for the above line
 rituximab2 <- rituximab[res1,]
-# Subset has an optional select argument to select columns
-Subset(rituximab, res1, select=c("FSC.H", "SSC.H", "FL1.H", "FL3.H"))
+# this can also be done using the Subset method
+rituximab2 <- Subset(rituximab, res1)
 
 ### cluster the data using FL1.H and FL3.H (with 3 clusters)
 s2filter <- tmixFilter("s2", c("FL1.H", "FL3.H"), K=3)

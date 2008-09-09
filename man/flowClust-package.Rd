@@ -11,7 +11,7 @@ Robust model-based clustering using a \eqn{t} mixture model with Box-Cox transfo
 \tabular{ll}{
 Package: \tab flowClust\cr
 Type: \tab Package\cr
-Version: \tab 1.6.0\cr
+Version: \tab 1.6.1\cr
 Depends: \tab R(>= 2.5.0), methods, mnormt, mclust, ellipse, flowCore\cr
 Collate: \tab SetClasses.R SetMethods.R plot.R flowClust.R SimulateMixture.R\cr
 biocViews: \tab Clustering, Statistics, Visualization\cr
@@ -27,11 +27,10 @@ Built: \tab R 2.6.1; universal-apple-darwin8.10.1; 2008-03-26 20:54:42; unix\cr
 \item{\code{\link{flowClust}}}{Robust Model-based Clustering for Flow Cytometry}
 \item{\code{\link{hist,flowClust-method}}}{1-D Density Plot (Histogram) of Clustering Results}
 \item{\code{\link{Map,flowClust-method}}}{Cluster Assignment Based on Clustering Results}
-
+\item{\code{\link[=posterior]{miscellaneous}}}{Various Functions for Retrieving Information from Clustering Results}
 \item{\code{\link{plot,flowClust-method}}}{Scatterplot of Clustering Results}
 \item{\code{\link{plot,flowDens-method}}}{Contour or Image Plot of Clustering Results}
 \item{\code{\link{plot,flowFrame,tmixFilterResult-method}}}{Scatterplot / 1-D Density Plot of Filtering (Clustering) Results}
-\item{\code{\link{posterior}}}{Various Functions for Retrieving Information from Clustering Results}
 \item{\code{\link{rbox}}}{Reverse Box-Cox Transformation}
 \item{\code{\link{ruleOutliers,flowClust-method}}}{Showing or Modifying the Rule used to Identify Outliers}
 \item{\code{\link{show,flowClust-method}}}{Show Method for \code{flowClust} / \code{tmixFilterResult} Object}
