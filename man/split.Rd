@@ -2,14 +2,13 @@
 \docType{methods}
 \alias{split,flowClust-method}
 \alias{split.flowClust}
-\alias{split,data.frame,flowClust,ANY-method}
-\alias{split,matrix,flowClust,ANY-method}
-\alias{split,vector,flowClust,ANY-method}
-\alias{split,flowFrame,flowClust,ANY-method}
-\alias{split,flowFrame,tmixFilterResult,ANY-method}
+\alias{split,data.frame,flowClust-method}
+\alias{split,matrix,flowClust-method}
+\alias{split,vector,flowClust-method}
+\alias{split,flowFrame,flowClust-method}
+\alias{split,flowFrame,tmixFilterResult-method}
 \alias{split.flowFrame}
 \alias{split.tmixFilterResult}
-\alias{split.flowFrame.tmixFilterResult}
 \alias{split}
 
 \title{Splitting Data Based on Clustering Results} 
