@@ -159,12 +159,12 @@ As an example, the filtering operation that resembles the second-stage clusterin
 s2filter <- tmixFilter("s2filter", c("FL1.H", "FL3.H"), K=3, B=100)
 res2f <- filter(rituximab2, s2filter)
 @
-The object \texttt{res2f} is of class \texttt{tmixFilterResult}, which extends the \texttt{filterResult} class created by \texttt{flowCore}.  Users may apply various subsetting operations defined for the \texttt{filterResult} class in a similar manner on a \texttt{tmixFilterResult} object:
+The object \texttt{res2f} is of class \texttt{tmixFilterResult}, which extends the \texttt{multipleFilterResult} class created by \texttt{flowCore}.  Users may apply various subsetting operations defined for the \texttt{multipleFilterResult} class in a similar manner on a \texttt{tmixFilterResult} object:
 <<stage2fSubsetting>>=
-Subset(rituximab2, res2f, select=c("FL1.H", "FL3.H"))
-split(rituximab2, res2f, split=list(sc1=1:2, sc2=3), select=c("FL1.H", "FL3.H"))
+Subset(rituximab2, res2f)
+split(rituximab2, res2f, population=list(sc1=1:2, sc2=3))
 @
-The \texttt{Subset} method above returns a \texttt{flowFrame} object consisting of observations within the data-driven filter constructed.  The optional \texttt{select} argument specifies which columns to be included when creating the subset.  The \texttt{split} method splits the data into 2 populations upon the removal of outliers: the first population is formed by observations assigned to clusters 1 and 2 constructed by the filter, and the other population consists of observations assigned to cluster 3.  The two populations are returned as two \texttt{flowFrame} objects separately, which are stored inside a list and labelled with \texttt{sc1} and \texttt{sc2} respectively.
+The \texttt{Subset} method above returns a \texttt{flowFrame} object consisting of observations within the data-driven filter constructed.  The \texttt{split} method splits the data into 2 populations upon the removal of outliers: the first population is formed by observations assigned to clusters 1 and 2 constructed by the filter, and the other population consists of observations assigned to cluster 3.  The two populations are returned as two \texttt{flowFrame} objects separately, which are stored inside a list and labelled with \texttt{sc1} and \texttt{sc2} respectively.
 
 The \texttt{\%in\%} operator is also defined for a \texttt{tmixFilterResult} object, which will return a logical vector in which a \texttt{TRUE} value means that the corresponding observation is accepted by the filter.  In fact, the implementation of the \texttt{Subset} method needs to call \texttt{\%in\%}.
 

@@ -46,7 +46,7 @@ The \pkg{flowClust} package makes extensive use of the GSL as well as BLAS.  If 
 Various operations have been defined for the object returned from \code{\link{flowClust}}.  These include:
 \tabular{ll}{
 Subsetting operations: \tab \code{\%in\%}, \code{\link{Subset}} and \code{\link{split}} \cr
-Slot retrieval operations: \tab \code{\link{ruleOutliers}}, \code{\link{Map}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}} \cr
+Slot retrieval operations: \tab \code{\link{ruleOutliers}}, \code{\link{Map}}, \code{\link{criterion}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}} \cr
 Graphical operations: \tab \code{\link[=plot,flowClust-method]{plot}}, \code{\link[=density,flowClust-method]{density}} and \code{\link[=hist,flowClust-method]{hist}} \cr
 }
 
@@ -100,8 +100,8 @@ res1 <- flowClust(rituximab, varNames=c("FSC.H", "SSC.H"), K=1)
 rituximab2 <- rituximab[rituximab \%in\% res1,]
 # a shorthand for the above line
 rituximab2 <- rituximab[res1,]
-# Subset has an optional select argument to select columns
-Subset(rituximab, res1, select=c("FSC.H", "SSC.H", "FL1.H", "FL3.H"))
+# this can also be done using the Subset method
+rituximab2 <- Subset(rituximab, res1)
 
 ### cluster the data using FL1.H and FL3.H (with 3 clusters)
 res2 <- flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=3)
@@ -110,7 +110,7 @@ summary(res2)
 
 # to demonstrate the use of the split method
 split(rituximab2, res2)
-split(rituximab2, res2, split=list(sc1=c(1,2), sc2=3))
+split(rituximab2, res2, population=list(sc1=c(1,2), sc2=3))
 
 # to show the cluster assignment of observations
 table(Map(res2))

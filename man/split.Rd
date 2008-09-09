@@ -1,16 +1,12 @@
 \name{split,flowClust-method}
 \docType{methods}
-\alias{split,ANY,flowClust,missing-method}
-\alias{split,ANY,flowClust-method}
 \alias{split,flowClust-method}
 \alias{split.flowClust}
-\alias{split,flowFrame,tmixFilterResult,missing-method}
-\alias{split,flowFrame,tmixFilterResult-method}
-\alias{split,flowFrame,flowClust-method}
-\alias{split,data.frame,flowClust-method}
-\alias{split,matrix,flowClust-method}
-\alias{split,vector,flowClust-method}
-\alias{split,flowFrame,tmixFilterResult-method}
+\alias{split,data.frame,flowClust,ANY-method}
+\alias{split,matrix,flowClust,ANY-method}
+\alias{split,vector,flowClust,ANY-method}
+\alias{split,flowFrame,flowClust,ANY-method}
+\alias{split,flowFrame,tmixFilterResult,ANY-method}
 \alias{split.flowFrame}
 \alias{split.tmixFilterResult}
 \alias{split.flowFrame.tmixFilterResult}
@@ -23,17 +19,17 @@ This method splits data according to results of the clustering (filtering) opera
 }
 
 \usage{
-\S4method{split}{ANY,flowClust}(x, f, split, select, rm.outliers=TRUE)
-
-\S4method{split}{flowFrame,tmixFilterResult}(x, f, split, select, rm.outliers=TRUE)
+split(x, f, drop=FALSE, population=NULL, split=NULL, rm.outliers=TRUE, \dots)
 }
 
 \arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}.  This is the object on which \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}} was performed.}
 \item{f}{Object returned from \code{flowClust} or \code{filter}.}
-\item{split}{An optional argument which specifies how to split the data.  If specified, it takes a list object with named or unnamed elements each of which is a numeric vector specifying which clusters are included.  When this argument is missing, the data object will be split into \code{K} subsets each of which is formed by one out of the \code{K} clusters used to model the data.  See examples for more details.}
-\item{select}{An optional argument which facilitates the selection of columns.  If specified, it either takes a numeric (not supported when \code{x} is of class \code{flowFrame}) or character vector.}
+\item{drop}{A logical value indicating whether to coerce a column matrix into a vector, if applicable.  Default is \code{FALSE}, meaning that a single-column matrix will be retained.}
+\item{population}{An optional argument which specifies how to split the data.  If specified, it takes a list object with named or unnamed elements each of which is a numeric vector specifying which clusters are included.  If this argument is left unspecified, the data object will be split into \code{K} subsets each of which is formed by one out of the \code{K} clusters used to model the data.  See examples for more details.}
+\item{split}{This argument is deprecated.  Should use \code{population} instead.}
 \item{rm.outliers}{A logical value indicating whether outliers are removed or not.}
+\item{\dots}{Further arguments to be passed to or from other methods.}
 }
 
 \value{

@@ -1,18 +1,15 @@
 \name{Subset,flowClust-method}
 \docType{methods}
-\alias{Subset,ANY,flowClust-method}
 \alias{Subset,flowClust-method}
 \alias{Subset.flowClust}
-\alias{Subset,flowFrame,tmixFilterResult-method}
 \alias{Subset.flowFrame}
 \alias{Subset.tmixFilterResult}
 \alias{Subset.flowFrame.tmixFilterResult}
 \alias{Subset,flowFrame,flowClust-method}
+\alias{Subset,flowFrame,tmixFilterResult-method}
 \alias{Subset,data.frame,flowClust-method}
 \alias{Subset,matrix,flowClust-method}
 \alias{Subset,vector,flowClust-method}
-\alias{Subset,flowFrame,tmixFilterResult-method}
-
 \alias{Subset}
 
 \title{Subsetting Data Based on Clustering Results} 
@@ -22,15 +19,13 @@ This method returns a subset of data upon the removal of outliers identified fro
 }
 
 \usage{
-\S4method{Subset}{ANY,flowClust}(x, subset, \dots)
-
-\S4method{Subset}{flowFrame,tmixFilterResult}(x, subset, \dots)
+Subset(x, subset, \dots)
 }
 
 \arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}.  This is the object on which \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}} was performed.}
 \item{subset}{Object returned from \code{flowClust} or \code{filter}.}
-\item{\dots}{Further arguments to be passed to or from other methods.  The selection of columns can be done by specifying the optional \code{select} argument that takes a numeric (not supported when \code{x} is of class \code{flowFrame}) or character vector.}
+\item{\dots}{Further arguments to be passed to or from other methods.}
 }
 
 \value{
