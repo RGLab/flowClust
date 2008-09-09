@@ -2,6 +2,11 @@
 \docType{methods}
 \alias{tmixFilter}
 \alias{filter,flowFrame,tmixFilter-method}
+\alias{filter,flowFrame,filter-method}
+\alias{filter,flowFrame,filterSet-method}
+\alias{filter,flowSet,filter-method}
+\alias{filter,flowSet,filterSet-method}
+\alias{filter,flowSet,list-method}
 \alias{filter-method}
 \alias{filter.flowFrame}
 \alias{filter}
