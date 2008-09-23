@@ -2,6 +2,7 @@
 \docType{methods}
 \alias{density-method}
 \alias{density,flowClust-method}
+\alias{density,flowClustList-method}
 \alias{flowDens-class}
 \alias{density.flowClust}
 

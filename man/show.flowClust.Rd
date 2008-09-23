@@ -1,8 +1,10 @@
 \name{show,flowClust-method}
 \docType{methods}
 \alias{show,flowClust-method}
+\alias{show,flowClustList-method}
 \alias{show.flowClust}
 \alias{show,tmixFilterResult-method}
+\alias{show,tmixFilterResultList-method}
 \alias{show.tmixFilterResult}
 
 \title{Show Method for flowClust / tmixFilterResult Object} 

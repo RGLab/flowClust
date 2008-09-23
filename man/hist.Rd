@@ -1,6 +1,7 @@
 \name{hist,flowClust-method}
 \docType{methods}
 \alias{hist,flowClust-method}
+\alias{hist,flowClustList-method}
 \alias{hist.flowClust}
 
 \title{1-D Density Plot (Histogram) of Clustering Results}

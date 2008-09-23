@@ -1,8 +1,12 @@
 \name{flowClust}
 \alias{flowClust}
 \alias{flowClust-class}
+\alias{flowClustList}
+\alias{flowClustList-class}
 \alias{\%in\%,ANY,flowClust-method}
+\alias{\%in\%,ANY,flowClustList-method}
 \alias{[,flowFrame,flowClust-method}
+\alias{[,flowFrame,flowClustList-method}
 
 \title{Robust Model-based Clustering for Flow Cytometry} 
 
@@ -14,14 +18,15 @@ This function performs automated clustering for identifying cell populations in 
 flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500, 
           tol=1e-5, nu=4, lambda=1, trans=TRUE, min.count=10, 
           max.count=10, min=NULL, max=NULL, level=0.9, 
-          u.cutoff=NULL, z.cutoff=0, randomStart=FALSE, seed=1)
+          u.cutoff=NULL, z.cutoff=0, randomStart=0, 
+          B.init=B, tol.init=1e-2, seed=1, criterion="BIC")
 }
 
 \arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}.  Rows correspond to observations and columns correspond to variables.}
 \item{expName}{A character string giving the name of the experiment.}
 \item{varNames}{A character vector specifying the variables (columns) to be included in clustering.  When it is left unspecified, all the variables will be used.}
-\item{K}{An integer indicating the number of clusters.}
+\item{K}{An integer vector indicating the numbers of clusters.}
 \item{B}{The maximum number of EM iterations.}
 \item{tol}{The tolerance used to assess the convergence of the EM.}
 \item{nu}{The degrees of freedom used for the \eqn{t} distribution.  Default is 4.  If \code{nu=Inf}, Gaussian distribution will be used.}
@@ -34,8 +39,11 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
 \item{level}{A numeric value between 0 and 1 specifying the threshold quantile level used to call a point an outlier.  The default is 0.9, meaning that any point outside the 90\% quantile region will be called an outlier.}
 \item{u.cutoff}{Another criterion used to identify outliers.  If this is \code{NULL}, then \code{level} will be used.  Otherwise, this specifies the threshold (e.g., 0.5) for \eqn{u}, a quantity used to measure the degree of \dQuote{outlyingness} based on the Mahalanobis distance.  Please refer to Lo et al. (2008) for more details.}
 \item{z.cutoff}{A numeric value between 0 and 1 underlying a criterion which may be used together with \code{level}/\code{u.cutoff} to identify outliers.  A point with the probability of assignment \eqn{z} (i.e., the posterior probability that a data point belongs to the cluster assigned) smaller than \code{z.cutoff} will be called an outlier.  The default is 0, meaning that assignment will be made no matter how small the associated probability is, and outliers will be identified solely based on the rule set by \code{level} or \code{cutoff}.}
-\item{randomStart}{A logical value indicating whether a random parition of the data is applied for initialization.  The default is \code{FALSE}, which means hierarchical clustering is used instead.}
-\item{seed}{An integer giving the seed number used when \code{randomStart} is \code{TRUE}.}
+\item{randomStart}{A numeric value indicating how many times a random parition of the data is generated for initialization.  For instance, if \code{randomStart} is 10, 10 random partitions of the data will be generated, each of which is followed by a short EM run.  The partition leading to the highest likelihood value will be adopted to be the initial partition for the eventual long EM run.  The default is 0, meaning that this initialization strategy is not applied and hierarchical clustering is used instead.}
+\item{B.init}{The maximum number of EM iterations following each random partition in random initialization.}
+\item{tol.init}{The tolerance used as the stopping criterion for the short EM runs in random initialization.}
+\item{seed}{An integer giving the seed number used when \code{randomStart>0}.}
+\item{criterion}{A character string stating the criterion used to choose the best model.  May take either \code{"BIC"} or \code{"ICL"}.  This argument is only relevant when \code{length(K)>1}.}
 }
 
 \details{
@@ -54,7 +62,7 @@ In addition, to facilitate the integration with the \pkg{flowCore} package for p
 }
 
 \value{
-An object of class \code{flowClust} containing the following slots, where \eqn{K} is the number of clusters, \eqn{N} is the number of observations and \eqn{P} is the number of variables:
+If \code{K} is of length 1, the function returns an object of class \code{flowClust} containing the following slots, where \eqn{K} is the number of clusters, \eqn{N} is the number of observations and \eqn{P} is the number of variables:
 \item{expName}{Content of the \code{expName} argument.}
 \item{varNames}{Content of the \code{varNames} argument if provided; generated if available otherwise.}
 \item{K}{An integer showing the number of clusters.}
@@ -74,6 +82,12 @@ An object of class \code{flowClust} containing the following slots, where \eqn{K
 \item{logLike}{The log-likelihood of the fitted mixture model.}
 \item{BIC}{The Bayesian Information Criterion for the fitted mixture model.}
 \item{ICL}{The Integrated Completed Likelihood for the fitted mixture model.}
+If \code{K} has a length >1, the function returns an object of class \code{flowClustList}.  Its data part is a list with the same length as \code{K}, each element of which is a \code{flowClust} object corresponding to a specific number of clusters.  In addition, the resultant \code{flowClustList} object contains the following slots:\cr
+
+\code{index} An integer giving the index of the list element corresponding to the best model as selected by \code{criterion}.\cr
+\code{criterion} The criterion used to choose the best model -- either \code{"BIC"} or \code{"ICL"}.\cr
+
+Note that when a \code{flowClustList} object is used in place of a \code{flowClust} object, in most cases the list element corresponding to the best model will be extracted and passed to the method/function call.
 }
 
 \author{

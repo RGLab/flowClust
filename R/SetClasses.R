@@ -19,6 +19,17 @@ setClass("flowClust",
                    ICL=numeric(0)))
 
 
+setClass("flowClustList",
+         representation("list", index="numeric", criterion="character"),
+         prototype(vector("list",0), index=numeric(0), criterion="BIC"),
+         validity=function(object)
+                  {
+                      if (!all(sapply(object@.Data, is, class2="flowClust")))
+                          return("Not a list of flowClust results!")
+                      else return(TRUE)
+                  })
+
+
 setClass("flowDens",
          representation(dx="matrix", dy="matrix", value="matrix"),
          prototype(dx=matrix(numeric(0), nrow=0, ncol=1),
@@ -49,3 +60,7 @@ tmixFilter <- function(filterId="tmixFilter", parameters="", ...)
 
 
 setClass("tmixFilterResult", contains=c("flowClust", "multipleFilterResult"))
+
+
+setClass("tmixFilterResultList",
+         contains=c("flowClustList", "multipleFilterResult"))

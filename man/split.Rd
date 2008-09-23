@@ -7,6 +7,11 @@
 \alias{split,vector,flowClust-method}
 \alias{split,flowFrame,flowClust-method}
 \alias{split,flowFrame,tmixFilterResult-method}
+\alias{split,data.frame,flowClustList-method}
+\alias{split,matrix,flowClustList-method}
+\alias{split,vector,flowClustList-method}
+\alias{split,flowFrame,flowClustList-method}
+\alias{split,flowFrame,tmixFilterResultList-method}
 \alias{split.flowFrame}
 \alias{split.tmixFilterResult}
 \alias{split}

@@ -10,6 +10,8 @@
 \alias{Subset,data.frame,flowClust-method}
 \alias{Subset,matrix,flowClust-method}
 \alias{Subset,vector,flowClust-method}
+\alias{Subset,ANY,flowClustList-method}
+\alias{Subset,flowFrame,tmixFilterResultList-method}
 \alias{Subset}
 
 \title{Subsetting Data Based on Clustering Results} 
