@@ -1,10 +1,11 @@
 \name{ruleOutliers,flowClust-method}
 \docType{methods}
 \alias{ruleOutliers,flowClust-method}
+\alias{ruleOutliers,flowClustList-method}
 \alias{ruleOutliers.flowClust}
 \alias{ruleOutliers}
 \alias{ruleOutliers<-,flowClust,list-method}
-\alias{ruleOutliers<-,flowClust-method}
+\alias{ruleOutliers<-,flowClustList,list-method}
 \alias{ruleOutliers<-}
 
 \title{Showing or Modifying the Rule used to Identify Outliers} 
@@ -24,7 +25,7 @@ ruleOutliers(object) <- value
 }
 
 \value{
-The replacement method modifies \code{object@ruleOutliers} AND updates the logical vector \code{object@flagOutliers} according to the new rule.
+The replacement method modifies \code{object@ruleOutliers} (or \code{object[[k]]@ruleOutliers} if \code{object} is of class \code{flowClustList} or \code{tmixFilterResultList}) AND updates the logical vector \code{object@flagOutliers} (or \code{object[[k]]@ruleOutliers}) according to the new rule.
 }
 
 \author{

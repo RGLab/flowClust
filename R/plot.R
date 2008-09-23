@@ -107,6 +107,16 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
 )
 
 
+setMethod("plot", signature(x="flowClustList", y="missing"),
+function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=1:(x@K), main=NULL, grayscale=F, col=(if (grayscale) gray(1/4) else 2:(length(include)+1)), pch=".", cex=0.6, col.outliers=gray(3/4), pch.outliers=".", cex.outliers=cex, col.rm=1, pch.rm=1, cex.rm=0.6, ecol=1, elty=1, level=NULL, u.cutoff=NULL, z.cutoff=NULL, npoints=501, add=F, ...)
+{
+    x <- as(x, "flowClust")
+    selectMethod("plot", signature(x="flowClust", y="missing"))(x=x, data=data, subset=subset, ellipse=ellipse, show.outliers=show.outliers, show.rm=show.rm, include=include, main=main, grayscale=grayscale, col=col, pch=pch, cex=cex, col.outliers=col.outliers, pch.outliers=pch.outliers, cex.outliers=cex.outliers, col.rm=col.rm, pch.rm=pch.rm, cex.rm=cex.rm, ecol=ecol, elty=elty, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, npoints=npoints, add=add, ...)
+}
+)
+
+
+
 # to compute the density of a multivariate t distribution
 dmvt <- function(x, mu, sigma, nu, log=FALSE) {
     if (is.vector(x) && length(x)==length(mu)) x <- matrix(x,1) else x <- as.matrix(x)
@@ -119,7 +129,7 @@ dmvt <- function(x, mu, sigma, nu, log=FALSE) {
 
 
 
-if(!isGeneric("density")) {setGeneric("density",useAsDefault=density)}
+if(!isGeneric("density")) setGeneric("density",useAsDefault=density)
 
 
 setMethod("density", signature(x="flowClust"),
@@ -167,6 +177,16 @@ function(x, data=NULL, subset=c(1,2), include=1:(x@K), npoints=c(100,100), from=
 )
 
 
+setMethod("density", signature(x="flowClustList"),
+function(x, data=NULL, subset=c(1,2), include=1:(x@K), npoints=c(100,100), from=NULL, to=NULL)
+{
+    x <- as(x, "flowClust")
+    callGeneric()
+}
+)
+
+
+
 setMethod("plot", signature(x="flowDens", y="missing"),
 function(x, type=c("contour", "image"), nlevels=30, scale=c("raw", "log", "sqrt"), color=c("rainbow", "heat.colors", "terrain.colors", "topo.colors", "cm.colors", "gray"), xlab=colnames(x@dx), ylab=colnames(x@dy), ...)
 {
@@ -185,7 +205,7 @@ function(x, type=c("contour", "image"), nlevels=30, scale=c("raw", "log", "sqrt"
 
 
 
-if(!isGeneric("hist")) {setGeneric("hist",useAsDefault=hist)}
+if(!isGeneric("hist")) setGeneric("hist",useAsDefault=hist)
 
 
 setMethod("hist", signature(x="flowClust"),
@@ -247,5 +267,14 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NU
         j <- 0
         for (k in include) stripchart(data[map(x@z)==k], add=T, at=ymin - (ylim[2]-ymin)/100*(j<-j+1), pch=pch, cex=cex, col=col[j])
     }
+}
+)
+
+
+setMethod("hist", signature(x="flowClustList"),
+function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NULL, ylim=NULL, xlab=(if (is.numeric(subset)) NULL else subset), ylab="Density", main=NULL, breaks=50, col=NULL, pch=20, cex=0.6, ...)
+{
+    x <- as(x, "flowClust")
+    callGeneric()
 }
 )

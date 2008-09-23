@@ -88,12 +88,11 @@ Next, we would like to proceed with an analysis using the two channels for the f
 
 <<stage2>>=
 rituximab2 <- rituximab[rituximab %in% res1,]
-res2 <- list()
-for (k in 1:6) res2[[k]] <- flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=k, B=100)
+res2 <- flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=1:6, B=100)
 @
-We select the best model based on the Bayesian Information Criterion (BIC).  The BIC value of a fitted model can be retrieved through the \texttt{BIC} slot.  By inspection, the BIC values stay relatively flat beyond three clusters.  We therefore choose the model with three clusters and print a summary of the corresponding clustering result:
+We select the best model based on the Bayesian Information Criterion (BIC).  The BIC value of a fitted model can be retrieved through the \texttt{criterion} method.  By inspection, the BIC values stay relatively flat beyond three clusters.  We therefore choose the model with three clusters and print a summary of the corresponding clustering result:
 <<stage2Result>>=
-for (k in 1:6) print(res2[[k]]@BIC)
+criterion(res2, "BIC")
 summary(res2[[3]])
 @
 The summary states that the rule used to identify outliers is ``\texttt{90\% quantile}", which means that a point outside the 90\% quantile region of the cluster to which it is assigned will be called an outlier.  To specify a different rule, we make use of the \texttt{ruleOutliers} replacement method.  The example below applies the more conservative ``\texttt{95\% quantile}" rule to identify outliers:

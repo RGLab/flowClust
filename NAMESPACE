@@ -3,12 +3,13 @@ useDynLib(flowClust)
 import(methods)
 importFrom(stats, density)
 importFrom(graphics, plot, hist)
+importClassesFrom(Biobase, AssayData)
 importClassesFrom(flowCore, flowFrame, filterSet, filter, concreteFilter, parameterFilter, rectangleGate, polygonGate, polytopeGate, ellipsoidGate, sampleFilter, filterResult, randomFilterResult, logicalFilterResult, multipleFilterResult, manyFilterResult, setOperationFilter, subsetFilter, intersectFilter, complementFilter, unionFilter, norm2Filter, kmeansFilter, expressionFilter)
 importMethodsFrom(flowCore, "%in%", "%subset%", "%on%", "exprs", "filter", "Subset")
 
 ## export anything w/out a dot in front. 
 exportPattern("^[^\\.]")
 
-exportClasses(flowClust, tmixFilter, tmixFilterResult)
-exportMethods(filter, "%in%", "[", coerce, "coerce<-", Subset, split, ruleOutliers, "ruleOutliers<-", Map)
+exportClasses(flowClust, flowClustList, tmixFilter, tmixFilterResult, tmixFilterResultList)
+exportMethods(filter, "%in%", "[", "[[", length, coerce, "coerce<-", Subset, split, ruleOutliers, "ruleOutliers<-", Map, criterion, "criterion<-")
 exportMethods(show, summary, plot, density, hist)

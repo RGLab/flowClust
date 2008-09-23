@@ -1,6 +1,7 @@
 \name{Map,flowClust-method}
 \docType{methods}
 \alias{Map,flowClust-method}
+\alias{Map,flowClustList-method}
 \alias{Map.flowClust}
 \alias{Map}
 

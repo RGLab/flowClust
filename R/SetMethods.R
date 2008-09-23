@@ -10,6 +10,17 @@ setMethod("show", "flowClust",
       })
 
 
+setMethod("show", "flowClustList",
+          function(object)
+      {
+          cat("Object of class 'flowClustList'","\n")
+          cat("This object consists of a list of 'flowClust' elements, each of which has the following slots:\n")
+          cat("expName, varNames, K, w, mu, sigma, lambda, nu, z, u, label,",
+              "uncertainty, ruleOutliers, flagOutliers, rm.min, rm.max,",
+              "logLike, BIC, ICL\n")
+      })
+
+
 setMethod("summary", "flowClust",
           function(object)
       {
@@ -43,6 +54,15 @@ setMethod("summary", "flowClust",
       })
 
 
+setMethod("summary", "flowClustList",
+          function(object)
+      {
+          cat("Summary of the best model selected by", object@criterion, "\n")
+          selectMethod("summary", "flowClust")(object[[object@index]])
+      })
+
+
+
 setMethod("show", signature("tmixFilter"),
           function(object)
       {
@@ -74,7 +94,7 @@ setMethod("show", signature("tmixFilter"),
           else
               cat(", probability of assignment <", round(object@z.cutoff, 2),
                   "\n")
-          })
+      })
 
 
 setMethod("show", signature("tmixFilterResult"),
@@ -84,17 +104,34 @@ setMethod("show", signature("tmixFilterResult"),
           cat("This object stores the result of applying a t-mixture filter",
               "named '", object@filterId, "' on ", object@frameId,
               ", which has an experiment name '", object@expName, "'\n", sep="")
-              cat("The following parameters have been used in filtering:\n")
-              cat("\t", paste(object@varNames, collapse=", "), "\n", sep="")
-              cat("\n")
-              cat("The 'tmixFilterResult' class extends the 'flowClust'",
+          cat("The following parameters have been used in filtering:\n")
+          cat("\t", paste(object@varNames, collapse=", "), "\n", sep="")
+          cat("\n")
+          cat("The 'tmixFilterResult' class extends the 'flowClust'",
                   "class, which contains the following slots:\n")
           cat("expName, varNames, K, w, mu, sigma, lambda, nu, z, u, label,",
               "uncertainty, ruleOutliers, flagOutliers, rm.min, rm.max,",
               "logLike, BIC, ICL\n")
-          })
+      })
 
 
+setMethod("show", signature("tmixFilterResultList"),
+          function(object)
+      {
+          cat("Object of class 'tmixFilterResultList'\n")
+          cat("This object stores the result of applying a t-mixture filter",
+              "named '", object@filterId, "' on ", object@frameId,
+              ", which has an experiment name '", object[[1]]@expName, "'\n", sep="")
+          cat("The following parameters have been used in filtering:\n")
+          cat("\t", paste(object[[1]]@varNames, collapse=", "), "\n", sep="")
+          cat("\n")
+          cat("This object consists of a list of 'flowClust' elements, each of which has the following slots:\n")
+          cat("expName, varNames, K, w, mu, sigma, lambda, nu, z, u, label,",
+              "uncertainty, ruleOutliers, flagOutliers, rm.min, rm.max,",
+              "logLike, BIC, ICL\n")
+      })
+      
+      
 setMethod("summary", signature("tmixFilterResult"),
           function(object)
       {
@@ -102,6 +139,11 @@ setMethod("summary", signature("tmixFilterResult"),
       })
 
 
+setMethod("summary", signature("tmixFilterResultList"),
+          function(object)
+      {
+          selectMethod("summary", "flowClustList")(object)
+      })
 
 
 
@@ -147,6 +189,17 @@ setMethod("%in%", signature("ANY", "tmixFilterResult"),
       })
 
 
+setMethod("%in%", signature("ANY", "flowClustList"),
+          function(x, table) 
+      {
+          x %in% table[[table@index]]
+      })    
+          
+setMethod("%in%", signature("ANY", "tmixFilterResultList"),
+          function(x, table)
+      {
+          x %in% table[[table@index]]
+      })
 
 
 
@@ -154,16 +207,31 @@ setMethod("%in%", signature("ANY", "tmixFilterResult"),
 ## Object coercion
 setAs("flowClust","logical", function(from) 1 %in% from )
 
-
 setAs("tmixFilterResult","logical", function(from) 1 %in% from)
-
 
 setAs("flowClust","filterResult", function(from)
       new("tmixFilterResult", from))
 
-
 setAs("flowClust","tmixFilterResult", function(from)
       new("tmixFilterResult", from, subSet=factor(Map(from))))
+
+
+setAs("flowClustList","flowClust", function(from) from[[from@index]] )
+
+setAs("flowClustList","logical", function(from) 1 %in% from )
+
+setAs("flowClustList","filterResult", function(from)
+      new("tmixFilterResultList", from))
+
+setAs("flowClustList","tmixFilterResult", function(from)
+      new("tmixFilterResult", from[[from@index]], subSet=factor(Map(from[[from@index]]))))
+
+
+setAs("tmixFilterResultList","tmixFilterResult", function(from)
+      new("tmixFilterResult", from[[from@index]], as(from, "multipleFilterResult")))
+
+setAs("tmixFilterResultList","logical", function(from) 1 %in% from)
+
 
 
 
@@ -173,7 +241,9 @@ setMethod("[",
           definition=function(x,i,j,...,drop=FALSE)
       {
           i <- as(i, "tmixFilterResult")
-          callGeneric(x,i,j,...,drop=drop)
+          selectMethod("[",
+                       c("flowFrame", "filterResult"))(x, i, j, ..., drop=drop)
+#          callGeneric(x,i,j,...,drop=drop)
       })
 
 
@@ -186,6 +256,41 @@ setMethod("[",
       })
 
 
+setMethod("[",
+          signature=signature("flowFrame","flowClustList"),
+          definition=function(x,i,j,...,drop=FALSE)
+      {
+          selectMethod("[",
+                       c("flowFrame", "filterResult"))(x, i, j, ..., drop=drop)
+      })
+
+
+setMethod("[",
+          signature=signature("flowFrame","tmixFilterResultList"),
+          definition=function(x,i,j,...,drop=FALSE)
+      {
+          selectMethod("[",
+                       c("flowFrame", "filterResult"))(x, i, j, ..., drop=drop)
+      })
+
+
+setMethod("[[",
+          signature=signature("tmixFilterResultList","ANY"),
+          definition=function(x,i,j,...,exact=TRUE)
+      {
+          if (missing(j)) x@.Data[[i,...,exact=exact]]  else x@.Data[[i,j,...,exact=exact]]
+      })
+
+
+setMethod("length", signature("tmixFilterResultList"),
+          function(x)
+      {
+          length(x@.Data)      
+      })
+
+
+
+
 setMethod("Subset", signature("flowFrame","flowClust"),
           function(x,subset,...)
       {
@@ -193,8 +298,7 @@ setMethod("Subset", signature("flowFrame","flowClust"),
           callGeneric()
       })
 
-setMethod("Subset",
-          signature("flowFrame", "tmixFilterResult"),
+setMethod("Subset", signature("flowFrame", "tmixFilterResult"),
           function(x,subset,...)
       {
           selectMethod("Subset",
@@ -205,8 +309,7 @@ setMethod("Subset",
 setMethod("Subset", signature("data.frame", "flowClust"),
           function(x, subset, ...)
       {
-          object <- 
-              as.data.frame(x[x %in% subset, , drop=FALSE])
+          object <- x[x %in% subset, , drop=FALSE]
           return(object)
       })
 
@@ -214,8 +317,8 @@ setMethod("Subset", signature("data.frame", "flowClust"),
 setMethod("Subset", signature("matrix","flowClust"),
           function(x, subset, ...)
       {
-          x <- as.data.frame(x)
-          callGeneric()
+          object <- x[x %in% subset,, drop=FALSE]
+          return(object)
       })
 
 
@@ -225,6 +328,14 @@ setMethod("Subset", signature("vector","flowClust"),
           object <- x[x %in% subset]       
           return(object)
       })
+
+
+setMethod("Subset", signature("ANY","flowClustList"),
+          function(x,subset,...) Subset(x, as(subset,"flowClust"), ...))
+
+setMethod("Subset", signature("flowFrame","tmixFilterResultList"),
+          function(x,subset,...) Subset(x, as(subset,"tmixFilterResult"), ...))
+
 
 
 
@@ -266,8 +377,13 @@ setMethod("split",
           function(x, f, drop=FALSE, population=NULL, split=NULL,
                    rm.outliers=TRUE, ...)
       {
-          split(as.data.frame(x), f, drop=drop, population=population,
-                split=split, rm.outliers=rm.outliers, ...)
+          population <- .spltVsPop(population, split, f)
+          object <- vector("list", length(population))
+          for (i in 1:length(population)) 
+              object[[i]] <- x[is.element(Map(f, rm.outliers),
+                                          population[[i]]),, drop=FALSE]
+          names(object) <- names(population)
+          return(object)
       })
 
 
@@ -312,13 +428,67 @@ setMethod("split",
       })
 
 
+setMethod("split",
+          signature(x="flowFrame", f="flowClustList", drop="ANY"),
+          function(x, f, drop=FALSE, population=NULL, split=NULL,
+                   rm.outliers=TRUE, ...)
+      {
+          f <- as(f, "flowClust")
+          selectMethod("split",
+                     c("flowFrame", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
+      })
+
+
+setMethod("split",
+          signature(x="data.frame", f="flowClustList", drop="ANY"),
+          function(x, f, drop=FALSE, population=NULL, split=NULL,
+                   rm.outliers=TRUE, ...)
+      {
+          f <- as(f, "flowClust")
+          selectMethod("split",
+                     c("data.frame", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
+      })
+
+
+setMethod("split",
+          signature(x="matrix", f="flowClustList", drop="ANY"),
+          function(x, f, drop=FALSE, population=NULL, split=NULL,
+                   rm.outliers=TRUE, ...)
+      {
+          f <- as(f, "flowClust")
+          selectMethod("split",
+                     c("matrix", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
+      })
+
+
+setMethod("split",
+          signature(x="vector", f="flowClustList", drop="ANY"),
+          function(x, f, drop=FALSE, population=NULL, split=NULL,
+                   rm.outliers=TRUE, ...)
+      {
+          f <- as(f, "flowClust")
+          selectMethod("split",
+                     c("vector", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
+      })
+
+
+setMethod("split",
+          signature(x="flowFrame", f="tmixFilterResultList", drop="ANY"),
+          function(x, f, drop=FALSE, population=NULL, split=NULL,
+                   rm.outliers=TRUE, ...)
+      {
+          f <- as(f, "tmixFilterResult")
+          selectMethod("split",
+                     c("flowFrame", "tmixFilterResult"))(x, f, drop=drop, population=population, split=split, rm.outliers=rm.outliers, ...)
+      })
+
+
+
 
 ## Misc methods
 setGeneric("ruleOutliers", function(object) standardGeneric("ruleOutliers"))
 
-
-setMethod("ruleOutliers",
-          signature("flowClust"),
+setMethod("ruleOutliers", signature("flowClust"),
           function(object)
       {
           cat("Rule of identifying outliers: ")
@@ -333,13 +503,13 @@ setMethod("ruleOutliers",
                   "assignment <", round(object@ruleOutliers[3], 2), "\n")
       })
 
+setMethod("ruleOutliers", signature("flowClustList"),
+          function(object) ruleOutliers(object[[object@index]]))
 
-setGeneric("ruleOutliers<-",
-           function(object,value) standardGeneric("ruleOutliers<-"))
 
+setGeneric("ruleOutliers<-", function(object,value) standardGeneric("ruleOutliers<-"))
 
-setReplaceMethod("ruleOutliers",
-                 signature("flowClust","list"),
+setReplaceMethod("ruleOutliers", signature("flowClust","list"),
                  function(object,value=list(level=NULL, u.cutoff=NULL,
                                  z.cutoff=NULL))
              {
@@ -372,34 +542,79 @@ setReplaceMethod("ruleOutliers",
                  object
              })
 
+setReplaceMethod("ruleOutliers", signature("flowClustList","list"),
+                 function(object,value=list(level=NULL, u.cutoff=NULL,
+                                 z.cutoff=NULL))
+             {
+                 for (i in 1:length(object)) ruleOutliers(object[[i]]) <- value
+                 object
+             })
+
+
+
 
 setGeneric("Map")
 
-
-setMethod("Map",
-          signature(f="flowClust"),
+setMethod("Map", signature(f="flowClust"),
           function(f, rm.outliers=TRUE, ...)
       {
-          result <- map(f@z)
+          result <- max.col(f@z, "first")
           if (rm.outliers) result[which(f@flagOutliers)] <- NA
           result
       })
 
-
+setMethod("Map", signature(f="flowClustList"),
+          function(f, rm.outliers=TRUE, ...) Map(as(f,"flowClust"), rm.outliers, ...))
 
 
 
 
 ## helper functions
 
-criterion <- function(object, type="BIC")
-{
-    if (type=="BIC") object@BIC  else if (type=="ICL") object@ICL  else if (type=="logLike") object@logLike
-}
+setGeneric("criterion", function(object, ...) standardGeneric("criterion"))
+
+setMethod("criterion", signature(object="flowClust"),
+          function(object, type="BIC")
+      {
+          if (type=="BIC") object@BIC  else if (type=="ICL") object@ICL  else if (type=="logLike") object@logLike
+      })
+
+setMethod("criterion", signature(object="flowClustList"),
+          function(object, type="BIC", max=FALSE, show.K=FALSE)
+      {
+          values <- rep(0, length(object))
+          if (show.K) K <- rep(0, length(object))
+          for (i in 1:length(object))
+          {
+              if (type=="BIC") values[i] <- object[[i]]@BIC else
+              if (type=="ICL") values[i] <- object[[i]]@ICL else
+              if (type=="logLike") values[i] <- object[[i]]@logLike
+              if (show.K) K[i] <- object[[i]]@K     
+          }
+          if (max)
+          {
+              if (show.K) K <- K[which.max(values)] else values <- max(values)
+          }
+          if (show.K) K else values
+      })
+
+
+setGeneric("criterion<-", function(object,value) standardGeneric("criterion<-"))
+
+setReplaceMethod("criterion", signature("flowClustList","character"),
+                 function(object,value)
+             {
+                 values <- criterion(object, value)
+                 object@index <- which.max(values)
+                 object@criterion <- value
+                 object
+             })
+
 
 
 posterior <- function(object, assign=FALSE)
 {
+    if (is(object,"flowClustList")) object <- object[[object@index]]
     if (!assign) object@z  else {
         result <- rep(NA, nrow(object@z))
         result[!is.na(object@flagOutliers)] <-
@@ -411,6 +626,7 @@ posterior <- function(object, assign=FALSE)
 
 importance <- function(object, assign=FALSE)
 {
+    if (is(object,"flowClustList")) object <- object[[object@index]]
     if (!assign) object@u  else {
         result <- rep(NA, nrow(object@u))
         result[!is.na(object@flagOutliers)] <-
@@ -420,11 +636,16 @@ importance <- function(object, assign=FALSE)
 }
 
 
-uncertainty <- function(object)  object@uncertainty
+uncertainty <- function(object)
+{
+    if (is(object,"flowClustList")) object <- object[[object@index]]
+    object@uncertainty
+}
 
 
 getEstimates <- function(object, data)
 {
+    if (is(object,"flowClustList")) object <- object[[object@index]]
     if (object@lambda==1)
         list(proportions=object@w, locations=object@mu,
              dispersion=object@sigma)
@@ -440,7 +661,7 @@ getEstimates <- function(object, data)
             }
             else if(is(data,"matrix"))
             {
-                if(object@varNames=="Not Available")
+                if(object@varNames[1]=="Not Available")
                     y<-data
                 else
                     y<-as.matrix(data[,object@varNames])
@@ -485,8 +706,7 @@ getEstimates <- function(object, data)
 
 
 
-setMethod("plot",
-          signature("flowFrame", "tmixFilterResult"),
+setMethod("plot", signature("flowFrame", "tmixFilterResult"),
           function(x, y, z=NULL, ...)
       {
           if(is.null(z))
@@ -501,5 +721,9 @@ setMethod("plot",
           else
               selectMethod("hist",
                            signature("flowClust"))(x=y, data=x, subset=z, ...)
-    }
+      }
 )
+
+setMethod("plot", signature("flowFrame", "tmixFilterResultList"),
+          function(x, y, z=NULL, ...) plot(x, as(y,"tmixFilterResult"), z, ...))
+          

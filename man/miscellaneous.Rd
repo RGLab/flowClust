@@ -1,5 +1,9 @@
 \name{miscellaneous}
 \alias{criterion}
+\alias{criterion,flowClust-method}
+\alias{criterion,flowClustList-method}
+\alias{criterion<-}
+\alias{criterion<-,flowClustList,character-method}
 \alias{posterior}
 \alias{importance}
 \alias{uncertainty}
@@ -13,6 +17,7 @@ Various functions are available to retrieve the information criteria (\code{crit
 
 \usage{
 criterion(object, type="BIC")
+criterion(object) <- value
 posterior(object, assign=FALSE)
 importance(object, assign=FALSE)
 uncertainty(object)
@@ -20,14 +25,15 @@ getEstimates(object, data)
 }
 
 \arguments{
-\item{object}{Object returned from \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}}.}
+\item{object}{Object returned from \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}}.  For the replacement method of \code{criterion}, the object must be of class \code{\link{flowClustList}} or \code{\link{tmixFilterResultList}}.}
 \item{type}{A character string.  May take \code{"BIC"}, \code{"ICL"} or \code{"logLike"}, to specify the criterion desired.}
+\item{value}{A character string stating the criterion used to choose the best model.  May take either \code{"BIC"} or \code{"ICL"}.}
 \item{assign}{A logical value.  If \code{TRUE}, only the quantity (\code{z} for \code{posterior} or \code{u} for \code{importance}) associated with the cluster to which an observation is assigned will be returned.  Default is \code{FALSE}, meaning that the quantities associated with all the clusters will be returned.}
 \item{data}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}; an optional argument.  This is the object on which \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}} was performed.}
 }
 
 \details{
-These functions are written to retrieve various slots contained in the object returned from the clustering operation.  \code{criterion} is to retrieve \code{object@BIC}, \code{object@ICL} or \code{object@logLike}.  \code{posterior} and \code{importance} provide a means to conveniently retrieve information stored in \code{object@z} and \code{object@u} respectively.  \code{uncertainty} is to retrieve \code{object@uncertainty}. \code{getEstimates} is to retrieve information stored in \code{object@mu} (transformed back to the original scale) and \code{object@w}; when the data object is provided, an approximate variance estimate (on the original scale, obtained by performing one M-step of the EM algorithm without taking the Box-Cox transformation) will also be computed.
+These functions are written to retrieve various slots contained in the object returned from the clustering operation.  \code{criterion} is to retrieve \code{object@BIC}, \code{object@ICL} or \code{object@logLike}.  It replacement method modifies \code{object@index} and \code{object@criterion} to select the best model according to the desired criterion.  \code{posterior} and \code{importance} provide a means to conveniently retrieve information stored in \code{object@z} and \code{object@u} respectively.  \code{uncertainty} is to retrieve \code{object@uncertainty}. \code{getEstimates} is to retrieve information stored in \code{object@mu} (transformed back to the original scale) and \code{object@w}; when the data object is provided, an approximate variance estimate (on the original scale, obtained by performing one M-step of the EM algorithm without taking the Box-Cox transformation) will also be computed.
 }
 
 \value{

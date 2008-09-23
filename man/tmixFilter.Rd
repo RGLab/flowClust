@@ -12,10 +12,15 @@
 \alias{filter}
 \alias{tmixFilter-class}
 \alias{tmixFilterResult-class}
+\alias{tmixFilterResultList}
+\alias{tmixFilterResultList-class}
+\alias{\%in\%,flowFrame,tmixFilter-method}
 \alias{\%in\%,ANY,tmixFilterResult-method}
 \alias{\%in\%,flowFrame,tmixFilterResult-method}
-\alias{\%in\%,flowFrame,tmixFilter-method}
+\alias{\%in\%,ANY,tmixFilterResultList-method}
 \alias{[,flowFrame,tmixFilterResult-method}
+\alias{[,flowFrame,tmixFilterResultList-method}
+\alias{[[,tmixFilterResultList,ANY-method}
 
 \title{Creating Filters and Filtering Flow Cytometry Data}
 
@@ -40,14 +45,16 @@ filter(x, filter)
 \value{
 The \code{tmixFilter} function returns an object of class \code{tmixFilter} that stores all the settings required for performing the \code{filter} operations.
 
-The \code{filter} method returns an object of class \code{tmixFilterResult} that stores the filtering results.  
+The \code{filter} method returns an object of class \code{tmixFilterResult} (or \code{tmixFilterResultList} if \code{filter@K} has a length >1) that stores the filtering results.  
 }
 
 
 \note{
 The \code{tmixFilter} function returns an object of class \code{tmixFilter} that extends the virtual parent \code{\link[flowCore:filter-class]{filter}} class in the \pkg{flowCore} package.  Hence, the \link[flowCore:filter-class]{filter operators}, namely, \code{&}, \code{|}, \code{!} and \code{\%subset\%}, also work for the \code{tmixFilter} class.
 
-The \code{filter} method returns an object of class \code{tmixFilterResult}.  This class extends both the \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}} class (in the \pkg{flowCore} package) and the \code{\link{flowClust}} class.  Operations defined for the \code{multipleFilterResult} class, like \code{\link[flowCore:filter-class]{\%in\%}}, \code{\link{Subset}} and \code{\link{split}}, also work for the \code{tmixFilterResult} class.  Likewise, methods or functions designed to retrieve filtering (clustering) information from a \code{\link{flowClust}} object can also be applied on a \code{tmixFilterResult} object.  These include \code{\link{criterion}}, \code{\link{ruleOutliers}}, \code{\link[=ruleOutliers]{ruleOutliers<-}}, \code{\link{Map}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}}.  Various functionalities for plotting the filtering results are also available (see the links below).
+If \code{filter@K} is of length 1, the \code{filter} method returns an object of class \code{tmixFilterResult}.  This class extends both the \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}} class (in the \pkg{flowCore} package) and the \code{\link{flowClust}} class.  Operations defined for the \code{multipleFilterResult} class, like \code{\link[flowCore:filter-class]{\%in\%}}, \code{\link{Subset}} and \code{\link{split}}, also work for the \code{tmixFilterResult} class.  Likewise, methods or functions designed to retrieve filtering (clustering) information from a \code{\link{flowClust}} object can also be applied on a \code{tmixFilterResult} object.  These include \code{\link{criterion}}, \code{\link{ruleOutliers}}, \code{\link[=ruleOutliers]{ruleOutliers<-}}, \code{\link{Map}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}}.  Various functionalities for plotting the filtering results are also available (see the links below).
+
+If \code{filter@K} has a length >1, the function returns an object of class \code{tmixFilterResultList}.  This class extends both the \code{\link{flowClustList}} class and the \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}} class.  Note that when a \code{tmixFilterResultList} object is used in place of a \code{tmixFilterResult} object, in most cases the list element corresponding to the best model will be extracted and passed to the method/function call.
 }
 
 \author{

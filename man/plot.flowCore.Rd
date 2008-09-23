@@ -1,6 +1,7 @@
 \name{plot,flowFrame,tmixFilterResult-method}
 \docType{methods}
 \alias{plot,flowFrame,tmixFilterResult-method}
+\alias{plot,flowFrame,tmixFilterResultList-method}
 \alias{plot,tmixFilterResult-method}
 \alias{plot.flowFrame.tmixFilterResult}
 \alias{plot.flowFrame}
@@ -18,7 +19,7 @@ Depending on the dimensions specified, this method generates either a scatterplo
 
 \arguments{
 \item{x}{Object of class \code{flowFrame}.  This is the data object on which \code{\link[=tmixFilter]{filter}} was performed.}
-\item{y}{Object of class \code{tmixFilterResult} returned from running \code{\link[=tmixFilter]{filter}}.}
+\item{y}{Object of class \code{tmixFilterResult} or \code{tmixFilterResultList} returned from running \code{\link[=tmixFilter]{filter}}.}
 \item{z}{A character vector of length one or two containing the name(s) of the variable(s) selected for the plot.  If it is of length two, a scatterplot will be generated.  If it is of length one, a 1-D density plot will be made.  If it is unspecified, the first one/two variable(s) listed in \code{y@varNames} will be used.}
 \item{\dots}{All optional arguments passed to the \code{\link[=plot.flowClust]{plot}} or \code{\link[=hist.flowClust]{hist}} method with signature \code{'flowClust'}.  Note that arguments \code{x}, \code{data} and \code{subset} have already been provided by \code{y}, \code{x} and \code{z} above respectively.}
 }

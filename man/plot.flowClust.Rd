@@ -1,6 +1,7 @@
 \name{plot,flowClust-method}
 \docType{methods}
 \alias{plot,flowClust,missing-method}
+\alias{plot,flowClustList,missing-method}
 \alias{plot,flowClust-method}
 \alias{plot.flowClust}
 

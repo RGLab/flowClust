@@ -1,8 +1,10 @@
 \name{summary,flowClust-method}
 \docType{methods}
 \alias{summary,flowClust-method}
-\alias{summary.flowClust}
+\alias{summary,flowClustList-method}
 \alias{summary,tmixFilterResult-method}
+\alias{summary,tmixFilterResultList-method}
+\alias{summary.flowClust}
 \alias{summary.tmixFilterResult}
 
 \title{Summary Method for flowClust Object}
