@@ -1,4 +1,4 @@
-flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1e-5, nu=4, lambda=1, trans=TRUE, min.count=10, max.count=10, min=NULL, max=NULL, level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=FALSE, B.init=B, tol.init=1e-2, seed=1, criterion="BIC")
+flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1e-5, nu=4, lambda=1, trans=TRUE, min.count=10, max.count=10, min=NULL, max=NULL, level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=0, B.init=B, tol.init=1e-2, seed=1, criterion="BIC")
 {
 
     if(is(x,"flowFrame"))
@@ -86,6 +86,21 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
     }
     
 
+    if (!all(K==1) && py>1 && !randomStart)
+    {
+        # Initialization based on mclust
+        # If more than 1500 observations, only use 1500 at random
+        if(ly>1500)
+        {
+            set.seed(seed)
+            ySubset <- sample(1:ly,1500)
+        }
+        else
+        {
+            ySubset<-1:ly
+        }
+        hcPairs <- hc("VVV", (if (lambda!=0) (sign(y[ySubset,])*abs(y[ySubset,])^lambda-1)/lambda else log(y[ySubset,])))
+    }
     result <- vector("list", length(K))
 
     for (i in 1:length(K))
@@ -103,19 +118,6 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
             }
             else
             {
-                # Initialization based on mclust
-                # If more than 1500 observations, only use 1500 at random
-                if(ly>1500)
-                {
-                    set.seed(seed)
-                    ySubset <- sample(1:ly,1500)
-                }
-                else
-                {
-                    ySubset<-1:ly
-                }
-
-                hcPairs <- hc((if (py>1) "VVV" else "V"), (if (lambda!=0) (sign(y[ySubset,])*abs(y[ySubset,])^lambda-1)/lambda else log(y[ySubset,])))
                 label <- rep(0,ly)
                 label[ySubset] <- hclass(hcPairs,K[i])
             }
