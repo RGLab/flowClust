@@ -55,7 +55,7 @@ tmixFilter <- function(filterId="tmixFilter", parameters="", ...)
 {
     if (!"K" %in% names(list(...)))
         stop("The number of clusters, K, must be provided.")
-    new("tmixFilter", filterId=filterId, parameters=parameters, ...)
+    new("tmixFilter", filterId=filterId, parameters=as.list(parameters), ...)
 }
 
 
