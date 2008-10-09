@@ -26,7 +26,7 @@ This method splits data according to results of the clustering (filtering) opera
 split(x, f, drop=FALSE, population=NULL, split=NULL, rm.outliers=TRUE, \dots)
 }
 
-\section(Arguments}{
+\section{Arguments}{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}.  This is the object on which \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}} was performed.}
 \item{f}{Object returned from \code{flowClust} or \code{filter}.}
 \item{drop}{A logical value indicating whether to coerce a column matrix into a vector, if applicable.  Default is \code{FALSE}, meaning that a single-column matrix will be retained.}
