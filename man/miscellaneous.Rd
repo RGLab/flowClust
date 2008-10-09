@@ -16,7 +16,7 @@ Various functions are available to retrieve the information criteria (\code{crit
 }
 
 \usage{
-criterion(object, type="BIC")
+criterion(object, \dots)
 criterion(object) <- value
 posterior(object, assign=FALSE)
 importance(object, assign=FALSE)
@@ -25,11 +25,29 @@ getEstimates(object, data)
 }
 
 \arguments{
-\item{object}{Object returned from \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}}.  For the replacement method of \code{criterion}, the object must be of class \code{\link{flowClustList}} or \code{\link{tmixFilterResultList}}.}
-\item{type}{A character string.  May take \code{"BIC"}, \code{"ICL"} or \code{"logLike"}, to specify the criterion desired.}
-\item{value}{A character string stating the criterion used to choose the best model.  May take either \code{"BIC"} or \code{"ICL"}.}
-\item{assign}{A logical value.  If \code{TRUE}, only the quantity (\code{z} for \code{posterior} or \code{u} for \code{importance}) associated with the cluster to which an observation is assigned will be returned.  Default is \code{FALSE}, meaning that the quantities associated with all the clusters will be returned.}
-\item{data}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}; an optional argument.  This is the object on which \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}} was performed.}
+  
+  \item{object}{Object returned from \code{\link{flowClust}} or
+    \code{\link[=tmixFilter]{filter}}.  For the replacement method of
+    \code{criterion}, the object must be of class
+    \code{\link{flowClustList}} or \code{\link{tmixFilterResultList}}.}
+
+  \item{\dots}{Further arguments. Currently this is \code{type}, a
+    character string.  May take \code{"BIC"}, \code{"ICL"} or
+    \code{"logLike"}, to specify the criterion desired.}
+
+  \item{value}{A character string stating the criterion used to choose
+    the best model.  May take either \code{"BIC"} or \code{"ICL"}.}
+  
+  \item{assign}{A logical value.  If \code{TRUE}, only the quantity
+    (\code{z} for \code{posterior} or \code{u} for \code{importance})
+    associated with the cluster to which an observation is assigned will
+    be returned.  Default is \code{FALSE}, meaning that the quantities
+    associated with all the clusters will be returned.}
+
+  \item{data}{A numeric vector, matrix, data frame of observations, or
+    object of class \code{flowFrame}; an optional argument.  This is the
+    object on which \code{\link{flowClust}} or
+    \code{\link[=tmixFilter]{filter}} was performed.}
 }
 
 \details{

@@ -31,31 +31,76 @@ The \code{tmixFilter} function creates a filter object which is then passed to t
 \usage{
 tmixFilter(filterId="tmixFilter", parameters="", \dots)
 
-filter(x, filter)
 }
 
 \arguments{
-\item{filterId}{A character string that identifies the filter created.}
-\item{parameters}{A character vector specifying the variables to be used in filtering.  When it is left unspecified, all the variables of the \code{flowFrame} object are used when running \code{filter}.  Note that its content will be passed to the \code{varNames} argument of \code{\link{flowClust}} when running \code{filter}.}
-\item{\dots}{Other arguments passed to the \code{\link{flowClust}} function when running \code{filter}, namely, \code{expName}, \code{K}, \code{B}, \code{tol}, \code{nu}, \code{lambda}, \code{trans}, \code{min.count}, \code{max.count}, \code{min}, \code{max}, \code{level}, \code{u.cutoff}, \code{z.cutoff}, \code{randomStart} and \code{seed}.  All arguments are optional except \code{K} that specifies the number of clusters.}
-\item{x}{Object of class \code{flowFrame}.}
-\item{filter}{Object returned from \code{tmixFilter}.}
+  
+  \item{filterId}{A character string that identifies the filter created.}
+  
+  \item{parameters}{A character vector specifying the variables to be
+    used in filtering.  When it is left unspecified, all the variables
+    of the \code{flowFrame} object are used when running \code{filter}.
+    Note that its content will be passed to the \code{varNames} argument
+    of \code{\link{flowClust}} when running \code{filter}.}
+
+  \item{\dots}{Other arguments passed to the \code{\link{flowClust}}
+    function when running \code{\link[flowCore:::filter]{filter}},
+    namely, \code{expName}, \code{K}, \code{B}, \code{tol}, \code{nu},
+    \code{lambda}, \code{trans}, \code{min.count}, \code{max.count},
+    \code{min}, \code{max}, \code{level}, \code{u.cutoff},
+    \code{z.cutoff}, \code{randomStart} and \code{seed}.  All arguments
+    are optional except \code{K} that specifies the number of clusters.}
+  
 }
 
 \value{
-The \code{tmixFilter} function returns an object of class \code{tmixFilter} that stores all the settings required for performing the \code{filter} operations.
+  
+  The \code{tmixFilter} function returns an object of class
+  \code{tmixFilter} that stores all the settings required for performing
+  the \code{filter} operations.
 
-The \code{filter} method returns an object of class \code{tmixFilterResult} (or \code{tmixFilterResultList} if \code{filter@K} has a length >1) that stores the filtering results.  
-}
+  The \code{\link[flowCore:::filter]{filter}} method is defined in
+  package \code{flowCore} and returns an object of class
+  \code{tmixFilterResult} (or \code{tmixFilterResultList} if
+  \code{filter@K} has a length >1) that stores the filtering results.  }
 
 
 \note{
-The \code{tmixFilter} function returns an object of class \code{tmixFilter} that extends the virtual parent \code{\link[flowCore:filter-class]{filter}} class in the \pkg{flowCore} package.  Hence, the \link[flowCore:filter-class]{filter operators}, namely, \code{&}, \code{|}, \code{!} and \code{\%subset\%}, also work for the \code{tmixFilter} class.
+  
+  The \code{tmixFilter} function returns an object of class
+  \code{tmixFilter} that extends the virtual parent
+  \code{\link[flowCore:filter-class]{filter}} class in the
+  \pkg{flowCore} package.  Hence, the
+  \link[flowCore:filter-class]{filter operators}, namely, \code{&},
+  \code{|}, \code{!} and \code{\%subset\%}, also work for the
+  \code{tmixFilter} class.
 
-If \code{filter@K} is of length 1, the \code{filter} method returns an object of class \code{tmixFilterResult}.  This class extends both the \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}} class (in the \pkg{flowCore} package) and the \code{\link{flowClust}} class.  Operations defined for the \code{multipleFilterResult} class, like \code{\link[flowCore:filter-class]{\%in\%}}, \code{\link{Subset}} and \code{\link{split}}, also work for the \code{tmixFilterResult} class.  Likewise, methods or functions designed to retrieve filtering (clustering) information from a \code{\link{flowClust}} object can also be applied on a \code{tmixFilterResult} object.  These include \code{\link{criterion}}, \code{\link{ruleOutliers}}, \code{\link[=ruleOutliers]{ruleOutliers<-}}, \code{\link{Map}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}}.  Various functionalities for plotting the filtering results are also available (see the links below).
 
-If \code{filter@K} has a length >1, the function returns an object of class \code{tmixFilterResultList}.  This class extends both the \code{\link{flowClustList}} class and the \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}} class.  Note that when a \code{tmixFilterResultList} object is used in place of a \code{tmixFilterResult} object, in most cases the list element corresponding to the best model will be extracted and passed to the method/function call.
-}
+  If \code{filter@K} is of length 1, the \code{filter} method returns an
+  object of class \code{tmixFilterResult}.  This class extends both the
+  \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}}
+  class (in the \pkg{flowCore} package) and the \code{\link{flowClust}}
+  class.  Operations defined for the \code{multipleFilterResult} class,
+  like \code{\link[flowCore:filter-class]{\%in\%}}, \code{\link{Subset}}
+  and \code{\link{split}}, also work for the \code{tmixFilterResult}
+  class.  Likewise, methods or functions designed to retrieve filtering
+  (clustering) information from a \code{\link{flowClust}} object can
+  also be applied on a \code{tmixFilterResult} object.  These include
+  \code{\link{criterion}}, \code{\link{ruleOutliers}},
+  \code{\link[=ruleOutliers]{ruleOutliers<-}}, \code{\link{Map}},
+  \code{\link{posterior}}, \code{\link{importance}},
+  \code{\link{uncertainty}} and \code{\link{getEstimates}}.  Various
+  functionalities for plotting the filtering results are also available
+  (see the links below).
+
+  If \code{filter@K} has a length >1, the function returns an object of
+  class \code{tmixFilterResultList}.  This class extends both the
+  \code{\link{flowClustList}} class and the
+  \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}}
+  class.  Note that when a \code{tmixFilterResultList} object is used in
+  place of a \code{tmixFilterResult} object, in most cases the list
+  element corresponding to the best model will be extracted and passed
+  to the method/function call.  }
 
 \author{
 Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo <\email{c.lo@stat.ubc.ca}>

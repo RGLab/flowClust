@@ -169,7 +169,7 @@ The \texttt{\%in\%} operator is also defined for a \texttt{tmixFilterResult} obj
 
 The object returned by \texttt{tmixFilter} is of class \texttt{tmixFilter}, which extends the \texttt{filter} class in \texttt{flowCore}.  Various operators, namely, \texttt{\&}, \texttt{|}, \texttt{!} and \texttt{\%subset\%}, which have been constructed for \texttt{filter} objects in \texttt{flowCore}, also produce expected outcomes when applied to a \texttt{tmixFilter} object.  For example, to perform clustering on a subset evaluated by a rectangle gate, we may apply the following code:
 <<stage2fRectGate>>=
-rectGate <- rectangleGate("rectRegion", "FL1.H"=c(0, 400), "FL3.H"=c(0, 800))
+rectGate <- rectangleGate(filterId="rectRegion", "FL1.H"=c(0, 400), "FL3.H"=c(0, 800))
 MBCfilter <- tmixFilter("MBCfilter", c("FL1.H", "FL3.H"), K=2, B=100)
 filter(rituximab2, MBCfilter %subset% rectGate)
 @
