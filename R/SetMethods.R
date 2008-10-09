@@ -167,7 +167,7 @@ setMethod("%in%", signature("flowFrame", "tmixFilterResult"),
 setMethod("%in%", signature("flowFrame", "tmixFilter"),
           function(x, table)       
       {
-          vn <- if (table@parameters[[1]]=="") NULL else parameters(table)
+          vn <- if (parameters(table)[[1]]=="") NULL else parameters(table)
           min <- if (is.na(table@min[1])) NULL else table@min
           max <- if (is.na(table@max[1])) NULL else table@max
           uc <- if (is.na(table@u.cutoff)) NULL else table@u.cutoff
