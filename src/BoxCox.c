@@ -4,20 +4,24 @@ double BoxCoxGradient(double x, void *params)
 {
     struct BoxCox_params *p = (struct BoxCox_params *) params;     
     gsl_matrix *Y = p->Y;
-    gsl_vector *W  = p->W;      // will be updated
-    gsl_matrix *Mu  = p->Mu;    // will be updated
-    gsl_matrix *Precision  = p->Precision;  // will be updated
+    gsl_vector *W = p->W;      // will be updated
+    gsl_matrix *Mu = p->Mu;    // will be updated
+    gsl_matrix *Precision = p->Precision;  // will be updated
     gsl_matrix *Z = p->Z;
     gsl_matrix *U = p->U;
+    gsl_matrix *logY = p->logY;
     gsl_matrix *YTrans = p->YTrans;    // will be updated
     gsl_matrix *ZUY = p->ZUY;   // will be updated
     gsl_vector *SumZ = p->SumZ;    
     gsl_vector *SumZU = p->SumZU;                
+    gsl_vector *SumZlogY = p->SumZlogY;
     gsl_matrix *DiagOne = p->DiagOne;
+    int K1 = p->K;
 
     int i=0, ly=Y->size1;    
     int j=0, py=Mu->size2;
     int k=0, K=Mu->size1;
+    int K0=0;
  
     double Yoriginal=0,Tmp=0,Tmp1=0,Tmp2=0,Tmp3=0;
     double logJacobian=0;    // derivative of log(Jacobian) wrt lambda
@@ -28,8 +32,8 @@ double BoxCoxGradient(double x, void *params)
     gsl_vector *Y1Sum = gsl_vector_alloc(py);     
     gsl_vector *SMu = gsl_vector_alloc(py);
     gsl_matrix_view matrixZUY, matrixZUY1, matrixPrecision; 
-    gsl_vector_view rowZUY, rowZUY1, vectorYTrans, vectorPrecisionYTrans, rowPrecisionYTrans, rowMu, rowPrecision; 
-    /* Rprintf("lambda=%lf\n",x);*/
+    gsl_vector_view rowZUY, rowZUY1, rowPrecisionYTrans, rowMu, rowPrecision, rowZ; 
+    // Rprintf("K=%d  lambda=%lf\n",K1,x);
 
     for(i=0;i<ly;i++)
     {
@@ -40,16 +44,20 @@ double BoxCoxGradient(double x, void *params)
             Tmp1=sgn(Yoriginal)*pow(fabs(Yoriginal),x);
             gsl_matrix_set(YTrans,i,j,(Tmp1-1.0)/x);
             /* Compute Y1 */
-            Tmp2=log(fabs(Yoriginal))*x-1.0;
+            Tmp2=gsl_matrix_get(logY,i,j)*x-1.0;
             Tmp3=(Tmp1*Tmp2+1.0)/gsl_pow_2(x);
             gsl_matrix_set(Y1,i,j,Tmp3);
 
-            logJacobian+=log(fabs(Yoriginal));
+            if (K1==-1)
+                logJacobian+=gsl_matrix_get(logY,i,j);
         }
     }
+    if (K1>-1)
+        logJacobian=gsl_vector_get(SumZlogY,K1);
 
     /* Update ZUY-matrix and compute ZUY1 */
-    for(k=0;k<K;k++)
+    if(K1>-1) K0=K1;
+    for(k=K0;k<K;k++)
     {
         matrixZUY=gsl_matrix_submatrix(ZUY, 0, k*py, ly, py);
         gsl_matrix_memcpy(&matrixZUY.matrix, YTrans);
@@ -65,14 +73,23 @@ double BoxCoxGradient(double x, void *params)
             rowZUY1=gsl_matrix_row(&matrixZUY1.matrix,i);
             gsl_blas_dscal(gsl_matrix_get(Z,i,k), &rowZUY1.vector);            
         }
+        
+        if(K1>-1) break;
     }
     
     /* Update Mu using BLAS */  
-    gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0, Z, YTrans, 0, Mu);
-    for(k=0;k<K;k++)
+    if(K1==-1)
+        gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1.0, Z, YTrans, 0, Mu);
+    for(k=K0;k<K;k++)
     { 
         rowMu=gsl_matrix_row(Mu,k);
+        if(K1>-1)
+        {
+            rowZ=gsl_matrix_column(Z,k);
+            gsl_blas_dgemv(CblasTrans, 1.0, YTrans, &rowZ.vector, 0, &rowMu.vector);
+        }
         gsl_blas_dscal(1./gsl_vector_get(SumZU,k),&rowMu.vector);
+
 		/* Update Precision (cluster specific) */
         rowPrecision=gsl_matrix_row(Precision,k);
         matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector,py, py);            
@@ -82,9 +99,7 @@ double BoxCoxGradient(double x, void *params)
         gsl_vector_set(W,k,gsl_vector_get(SumZ,k)/ly);
 
         /* Compute PrecisionYTrans = YTrans times sqrt(Precision) */
-        vectorYTrans=gsl_vector_view_array(YTrans->data, ly*py);
-        vectorPrecisionYTrans=gsl_vector_view_array(PrecisionYTrans->data, ly*py);
-        gsl_blas_dcopy(&vectorYTrans.vector, &vectorPrecisionYTrans.vector);
+        gsl_matrix_memcpy(PrecisionYTrans, YTrans);
         gsl_blas_dtrmm(CblasRight, CblasLower, CblasNoTrans, CblasNonUnit, 1.0, &matrixPrecision.matrix, PrecisionYTrans);                
 
         /* Compute Y1Sum = sqrt(Precision) times sum(ZUY1) */
@@ -114,7 +129,9 @@ double BoxCoxGradient(double x, void *params)
         gsl_blas_dtrmv(CblasUpper, CblasNoTrans, CblasNonUnit, &matrixPrecision.matrix, SMu);
         /* Compute SMu times Y1Sum */
         gsl_blas_ddot(SMu, Y1Sum, &Tmp);
-    	logLike+=Tmp;               
+    	logLike+=Tmp;
+    	
+    	if(K1>-1) break;
     }
     
     logLike+=logJacobian;     
@@ -125,6 +142,7 @@ double BoxCoxGradient(double x, void *params)
     gsl_matrix_free(PrecisionYTrans);
     gsl_matrix_free(ZUY1);
     
+    // Rprintf("logLike = %lf\n",logLike);
 	return(logLike);
 }
 

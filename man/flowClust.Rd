@@ -16,10 +16,11 @@ This function performs automated clustering for identifying cell populations in 
 
 \usage{
 flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500, 
-          tol=1e-5, nu=4, lambda=1, trans=TRUE, min.count=10, 
-          max.count=10, min=NULL, max=NULL, level=0.9, 
-          u.cutoff=NULL, z.cutoff=0, randomStart=0, 
-          B.init=B, tol.init=1e-2, seed=1, criterion="BIC")
+          tol=1e-5, nu=4, lambda=1, nu.est=0, trans=1,
+          min.count=10, max.count=10, min=NULL, max=NULL,
+          level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=0, 
+          B.init=B, tol.init=1e-2, seed=1, criterion="BIC",
+          control=NULL)
 }
 
 \arguments{
@@ -31,7 +32,8 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
 \item{tol}{The tolerance used to assess the convergence of the EM.}
 \item{nu}{The degrees of freedom used for the \eqn{t} distribution.  Default is 4.  If \code{nu=Inf}, Gaussian distribution will be used.}
 \item{lambda}{The initial transformation to be applied to the data.}
-\item{trans}{A logical value indicating whether the Box-Cox transformation parameter is estimated from the data.}
+\item{nu.est}{A numeric indicating whether \code{nu} is to be estimated or not.  May take 0 (no estimation, default), 1 (estimation) or 2 (cluster-specific estimation).}
+\item{trans}{A numeric indicating whether the Box-Cox transformation parameter is estimated from the data.  May take 0 (no estimation), 1 (estimation, default) or 2 (cluster-specific estimation).}
 \item{min.count}{An integer specifying the threshold count for filtering data points from below.  The default is 10, meaning that if 10 or more data points are smaller than or equal to \code{min}, they will be excluded from the analysis.  If \code{min} is \code{NULL}, then the minimum of data as per each variable will be used.  To suppress filtering, set it as -1.}
 \item{max.count}{An integer specifying the threshold count for filtering data points from above.  Interpretation is similar to that of \code{min.count}.}
 \item{min}{The lower boundary set for data filtering.  Note that it is a vector of length equal to the number of variables (columns), implying that a different value can be set as per each variable.}
@@ -44,6 +46,7 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
 \item{tol.init}{The tolerance used as the stopping criterion for the short EM runs in random initialization.}
 \item{seed}{An integer giving the seed number used when \code{randomStart>0}.}
 \item{criterion}{A character string stating the criterion used to choose the best model.  May take either \code{"BIC"} or \code{"ICL"}.  This argument is only relevant when \code{length(K)>1}.}
+\item{control}{An argument reserved for internal use.}
 }
 
 \details{
@@ -70,7 +73,7 @@ If \code{K} is of length 1, the function returns an object of class \code{flowCl
 \item{mu}{A matrix of size \eqn{K \times P}{K x P}, containing the estimates of the \eqn{K} mean vectors.}
 \item{sigma}{An array of dimension \eqn{K \times P \times P}{K x P x P}, containing the estimates of the \eqn{K} covariance matrices.}
 \item{lambda}{The Box-Cox transformation parameter estimate.}
-\item{nu}{The degrees of freedom used for the \eqn{t} distribution.}
+\item{nu}{The degrees of freedom for the \eqn{t} distribution.}
 \item{z}{A matrix of size \eqn{N \times K}{N x K}, containing the posterior probabilities of cluster memberships.  The probabilities in each row sum up to one.}
 \item{u}{A matrix of size \eqn{N \times K}{N x K}, containing the \dQuote{weights} (the contribution for computing cluster mean and covariance matrix) of each data point in each cluster.  Since this quantity decreases monotonically with the Mahalanobis distance, it can also be interpreted as the level of \dQuote{outlyingness} of a data point.  Note that, when \code{nu=Inf}, this slot is used to store the Mahalanobis distances instead.}
 \item{label}{A vector of size \eqn{N}, showing the cluster membership according to the initial partition (i.e., hierarchical clustering if \code{randomStart} is \code{FALSE}).  Filtered observations will be labelled as \code{NA}.  Unassigned observations (which may occur since only 1500 observations at maximum are taken for hierarchical clustering) will be labelled as 0.}

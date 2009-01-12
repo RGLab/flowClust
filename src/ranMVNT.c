@@ -212,4 +212,3 @@ double gsl_mahalanobis(gsl_matrix *Precision, gsl_vector *Y, gsl_vector *Mu, int
 
 	return(sum_square);
 }
-

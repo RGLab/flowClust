@@ -1,22 +1,23 @@
 \name{SimulateMixture}
 \alias{SimulateMixture}
 
-\title{Random Generation from a t Mixture Model} 
+\title{Random Generation from a t Mixture Model with Box-Cox Transformation} 
 
 \description{
-This function can be used to generate a sample from a multivariate \eqn{t} mixture model. 
+This function can be used to generate a sample from a multivariate \eqn{t} mixture model with Box-Cox transformation. 
 }
 
 \usage{
-SimulateMixture(N, nu=4, mu, sigma, w)
+SimulateMixture(N, w, mu, sigma, nu=4, lambda)
 }
 
 \arguments{
 \item{N}{The number of observations.}
-\item{nu}{The degrees of freedom used for the \eqn{t} distribution.}
+\item{w}{A vector of length \eqn{K}, containing the \eqn{K} cluster proportions.}
 \item{mu}{A matrix of size \eqn{K \times P}{K x P}, where \eqn{K} is the number of clusters and \eqn{P} is the dimension, containing the \eqn{K} mean vectors.}
 \item{sigma}{An array of dimension \eqn{K \times P \times P}{K x P x P}, containing the \eqn{K} covariance matrices.}
-\item{w}{A vector of length \eqn{K}, containing the \eqn{K} cluster proportions.}
+\item{nu}{The degrees of freedom used for the \eqn{t} distribution.}
+\item{lambda}{The Box-Cox transformation parameter.  If missing, the conventional \eqn{t} distribution without transformation will be used.}
 }
 
 \value{
@@ -54,7 +55,7 @@ for (k in 1:K)
 w <- rgamma(K,10,1)
 w <- w/sum(w)
 
-y <- SimulateMixture(n, nu=4, Mu, Sigma, w)
+y <- SimulateMixture(n, w, Mu, Sigma, nu=4)
 }
 
 \keyword{datagen}

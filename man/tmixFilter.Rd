@@ -46,9 +46,10 @@ tmixFilter(filterId="tmixFilter", parameters="", \dots)
   \item{\dots}{Other arguments passed to the \code{\link{flowClust}}
     function when running \code{\link[flowCore:::filter]{filter}},
     namely, \code{expName}, \code{K}, \code{B}, \code{tol}, \code{nu},
-    \code{lambda}, \code{trans}, \code{min.count}, \code{max.count},
+    \code{lambda}, \code{nu.est}, \code{trans}, \code{min.count}, \code{max.count},
     \code{min}, \code{max}, \code{level}, \code{u.cutoff},
-    \code{z.cutoff}, \code{randomStart} and \code{seed}.  All arguments
+    \code{z.cutoff}, \code{randomStart}, \code{B.init}, \code{tol.init},
+    \code{seed} and \code{criterion}.  All arguments
     are optional except \code{K} that specifies the number of clusters.}
   
 }
