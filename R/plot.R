@@ -1,13 +1,13 @@
 # to perform box-cox transformation (multivariate)
 box <- function(data, lambda) {
-    if (lambda!=0) data <- (sign(data)*abs(data)^lambda-1)/lambda else data <- log(data)
+    if (length(lambda)>1 || lambda!=0) data <- (sign(data)*abs(data)^lambda-1)/lambda else data <- log(data)
     data
 }
 
 
 # to perform reverse box-cox transformation (multivariate)
 rbox <- function(data, lambda) {
-    if (lambda!=0) data <- sign(data+1/lambda)*(sign(data+1/lambda)*(lambda*data+1))^(1/lambda) else data <- exp(data)
+    if (length(lambda)>1 || lambda!=0) data <- sign(lambda*data+1)*(sign(lambda*data+1)*(lambda*data+1))^(1/lambda) else data <- exp(data)
     data
 }
 
@@ -80,7 +80,7 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
         ecol <- matrix(ecol, length(include))
         elty <- matrix(elty, length(include))
 
-        if (x@nu!=Inf) {
+        if (all(x@nu!=Inf)) {
             if (x@ruleOutliers[1]==0) {     # 0 means quantile
                 cc <- py * qf(x@ruleOutliers[2], py, x@nu)
             }  else {     # 1 means u.cutoff
@@ -89,16 +89,18 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
         }  else cc <- qchisq(x@ruleOutliers[2], py)
 
         j <- 0
+        lambda <- rep(x@lambda, length.out=x@K)
+        cc <- rep(cc, length.out=x@K)
         for (i in include) {
             eigenPair <- eigen(x@sigma[i,subset,subset])
             l1 <- sqrt(eigenPair$values[1]) * sqrt(cc)
             l2 <- sqrt(eigenPair$values[2]) * sqrt(cc)
             angle <- atan(eigenPair$vectors[2,1] / eigenPair$vectors[1,1]) * 180/pi
 
-            if (x@lambda!=1) {
-                points(rbox(.ellipsePoints(a=l1, b=l2, alpha=angle, loc=x@mu[i,subset], n=npoints), x@lambda), type="l", lty=elty[j <- j+1], col=ecol[j])
+            if (any(lambda!=1)) {
+                points(rbox(.ellipsePoints(a=l1[i], b=l2[i], alpha=angle, loc=x@mu[i,subset], n=npoints), lambda[i]), type="l", lty=elty[j <- j+1], col=ecol[j])
             } else {
-                points(.ellipsePoints(a=l1, b=l2, alpha=angle, loc=x@mu[i,subset], n=npoints), type="l", lty=elty[j <- j+1], col=ecol[j])
+                points(.ellipsePoints(a=l1[i], b=l2[i], alpha=angle, loc=x@mu[i,subset], n=npoints), type="l", lty=elty[j <- j+1], col=ecol[j])
             }
         }  
     }
@@ -117,19 +119,66 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
 
 
 
-# to compute the density of a multivariate t distribution
-dmvt <- function(x, mu, sigma, nu, log=FALSE) {
+# to compute the density of a multivariate t distribution with Box-Cox transformation
+dmvt <- function(x, mu, sigma, nu, lambda, log=FALSE) 
+{
     if (is.vector(x) && length(x)==length(mu)) x <- matrix(x,1) else x <- as.matrix(x)
     p <- ncol(x)
-    M <- mahalanobis(x,mu,sigma)
-    if (nu!=Inf) value <- lgamma((nu+p)/2) - 1/2*determinant(as.matrix(sigma),log=T)$modulus[1] - p/2*log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu)  else value <- -p/2*log(2*pi) - 1/2*determinant(as.matrix(sigma),log=T)$modulus[1] - 1/2*M
+
+    if (!missing(lambda)) tx <- box(x, lambda) else tx <- x
+
+    M <- mahalanobis(tx, mu, sigma)
+    if (nu != Inf) value <- lgamma((nu+p)/2) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - p/2 * log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu) else value <- -p/2 * log(2*pi) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - 1/2 * M
+    if (!missing(lambda)) value <- value + (lambda-1) * rowSums(log(abs(x)))
     if (log==F) value <- exp(value)
     list(value=value, md=M)
 }
 
 
+# to compute the density of a multivariate t mixture distribution with Box-Cox transformation
+dmvtmix <- function(x, w, mu, sigma, nu, lambda, object, subset, include, log=FALSE) 
+{
+    if (!missing(object)) {
+        w <- object@w
+        mu <- object@mu
+        sigma <- object@sigma
+        nu <- object@nu
+        if (!all(object@lambda==1)) 
+            lambda <- object@lambda
+        if (!missing(subset) && !is.numeric(subset)) 
+            subset <- match(subset, object@varNames)
+    }
 
-if(!isGeneric("density")) setGeneric("density",useAsDefault=density)
+    K <- length(w)
+    if (K==1) {
+        mu <- matrix(mu, 1)
+        sigma <- array(sigma, c(1, ncol(mu), ncol(mu)))
+    } else if (length(mu)==K) {
+        mu <- matrix(mu, K, 1)
+        sigma <- array(sigma, c(K, 1, 1))
+    }
+
+    nu <- rep(nu, K)
+    if (!missing(lambda)) 
+        lambda <- rep(lambda, K)
+
+    value <- 0
+    if (missing(subset)) 
+        subset <- 1:ncol(mu)
+    if (missing(include)) 
+        include <- 1:K
+    sumw <- sum(w[include])
+    for (k in include) {
+        if (missing(lambda)) value <- value + w[k]/sumw * dmvt(x, mu[k,subset], sigma[k, subset, subset], nu[k])$value else value <- value + w[k]/sumw * dmvt(x, mu[k,subset], sigma[k, subset, subset], nu[k], lambda[k])$value
+    }
+    if (log) 
+        value <- log(value)
+    value
+}
+
+
+
+if(!isGeneric("density")) setGeneric("density", useAsDefault=density)
 
 
 setMethod("density", signature(x="flowClust"),
@@ -157,13 +206,16 @@ function(x, data=NULL, subset=c(1,2), include=1:(x@K), npoints=c(100,100), from=
     xy <- grid2(dx,dy)
 
     value <- 0
-    if (x@lambda!=1) {
-        xyTrans <- (apply(xy,2,sign)*apply(xy,2,abs)^x@lambda - 1) / x@lambda
-        for (k in include) value <- value + x@w[k] * dmvt(xyTrans, x@mu[k,subset], x@sigma[k,subset,subset], x@nu, log=F)$value
+    nu <- rep(x@nu, length.out=x@K)
+    if (any(x@lambda!=1)) {
+        lambda <- rep(x@lambda, x@K)
+        for (k in include) {
+            xyTrans <- (apply(xy,2,sign)*apply(xy,2,abs)^lambda[k] - 1) / lambda[k]
+            value <- value + x@w[k] * dmvt(xyTrans, x@mu[k,subset], x@sigma[k,subset,subset], nu[k], log=F)$value * abs(xy[,1])^(lambda[k]-1) * abs(xy[,2])^(lambda[k]-1)
+        }
         value <- value / sum(x@w[include])
-        for (i in 1:2) value <- value * abs(xy[,i])^(x@lambda-1)
     } else {
-        for (k in include) value <- value + x@w[k] * dmvt(xy, x@mu[k,subset], x@sigma[k,subset,subset], x@nu, log=F)$value
+        for (k in include) value <- value + x@w[k] * dmvt(xy, x@mu[k,subset], x@sigma[k,subset,subset], nu[k], log=F)$value
         value <- value / sum(x@w[include])
     }
     value <- matrix(value, length(dx), length(dy))
@@ -213,15 +265,17 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NU
 {
     den <- function(y) {
         value <- 0
-        if (x@lambda!=1) {
-            yTrans <- (sign(y)*abs(y)^x@lambda - 1) / x@lambda
-            for (k in include) value <- value + x@w[k] * dmvt(yTrans, x@mu[k,subset], x@sigma[k,subset,subset], x@nu, log=F)$value
-            value <- value / sum(x@w[include])
-            value <- value * abs(y)^(x@lambda-1)
+        nu <- rep(x@nu, length.out=x@K)
+        if (any(x@lambda!=1)) {
+            lambda <- rep(x@lambda, length.out=x@K)
+            for (k in include) {
+                yTrans <- (sign(y)*abs(y)^lambda[k] - 1) / lambda[k]
+                value <- value + x@w[k] * dmvt(yTrans, x@mu[k,subset], x@sigma[k,subset,subset], nu[k], log=F)$value * abs(y)^(lambda[k]-1)
+            }
         } else {
-            for (k in include) value <- value + x@w[k] * dmvt(y, x@mu[k,subset], x@sigma[k,subset,subset], x@nu, log=F)$value
-            value <- value / sum(x@w[include])
+            for (k in include) value <- value + x@w[k] * dmvt(y, x@mu[k,subset], x@sigma[k,subset,subset], nu[k], log=F)$value
         }
+        value <- value / sum(x@w[include])
         value
     }
 

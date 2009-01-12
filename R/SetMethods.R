@@ -75,14 +75,10 @@ setMethod("show", signature("tmixFilter"),
           cat("Number of clusters:",object@K,"\n")
           cat("Degrees of freedom of t distribution:", object@nu, "\n")
           cat("Maximum number of EM iterations:", object@B, "\n")
-          if (object@trans) {
-              cat("Transformation selection will be performed")
-              if (object@lambda!=1)
-                  cat(" (Initial transformation: lambda =", object@lambda,
-                      "\n")
-              else
-                  cat("\n")
-          }
+          if (object@trans) 
+              cat("Transformation selection will be performed\n")
+          if (object@lambda != 1) 
+              cat("Initial transformation: lambda =", object@lambda, "\n")
           cat("\n")
           cat("Rule of identifying outliers: ")
           if (is.na(object@u.cutoff))
@@ -173,12 +169,13 @@ setMethod("%in%", signature("flowFrame", "tmixFilter"),
           uc <- if (is.na(table@u.cutoff)) NULL else table@u.cutoff
           flowClust(x, expName=table@expName, varNames=vn,
                     K=table@K, B=table@B, tol=table@tol,
-                    nu=table@nu, lambda=table@lambda,
-                    trans=table@trans, min.count=table@min.count,
+                    nu=table@nu, lambda=table@lambda, nu.est=table@nu.est,
+                    trans=table@trans, min.count=table@min.count, 
                     max.count=table@max.count, min=min, max=max,
-                    level=table@level, u.cutoff=uc,
-                    z.cutoff=table@z.cutoff,
-                    randomStart=table@randomStart, seed=table@seed)
+                    level=table@level, u.cutoff=uc, z.cutoff=table@z.cutoff,
+                    randomStart=table@randomStart, B.init=table@B.init, 
+                    tol.init=table@tol.init, seed=table@seed,
+                    criterion=table@criterion, control=table@control)
       })
 
 
@@ -210,7 +207,7 @@ setAs("flowClust","logical", function(from) 1 %in% from )
 setAs("tmixFilterResult","logical", function(from) 1 %in% from)
 
 setAs("flowClust","filterResult", function(from)
-      new("tmixFilterResult", from))
+      new("tmixFilterResult", from, subSet=factor(Map(from))))
 
 setAs("flowClust","tmixFilterResult", function(from)
       new("tmixFilterResult", from, subSet=factor(Map(from))))
@@ -221,7 +218,7 @@ setAs("flowClustList","flowClust", function(from) from[[from@index]] )
 setAs("flowClustList","logical", function(from) 1 %in% from )
 
 setAs("flowClustList","filterResult", function(from)
-      new("tmixFilterResultList", from))
+      new("tmixFilterResultList", from, subSet=factor(Map(from[[from@index]]))))
 
 setAs("flowClustList","tmixFilterResult", function(from)
       new("tmixFilterResult", from[[from@index]], subSet=factor(Map(from[[from@index]]))))
@@ -416,7 +413,7 @@ setMethod("split",
           function(x, f, drop=FALSE, population=NULL, split=NULL,
                    rm.outliers=TRUE, ...)
       {
-          population <- sapply(.spltVsPop(population, split, f), as.character)
+          population <- lapply(.spltVsPop(population, split, f), as.character)
           if(!is.list(population))
               population <- as.list(population)
           subSet <- factor(Map(f, rm.outliers))
@@ -519,17 +516,25 @@ setReplaceMethod("ruleOutliers", signature("flowClust","list"),
                      object@ruleOutliers[1:2] <- c(1, value$u.cutoff)
                  if (!is.null(value$z.cutoff))
                      object@ruleOutliers[3] <- value$z.cutoff
-                 if (object@nu!=Inf) {
-                     if (object@ruleOutliers[1]==0){     # 0 means quantile
+
+                 if (object@nu!=Inf)
+                 {
+                     if (object@ruleOutliers[1]==0)    # 0 means quantile
+                     {     
                          py <- ncol(object@mu)
                          cc <- py * qf(object@ruleOutliers[2], py, object@nu)
                          u.cutoff <- (object@nu+py) / (object@nu+cc)
-                         result <- (importance(object, assign=T) < u.cutoff)
-                     }else{
+                         if (length(u.cutoff)==1)
+                             result <- (importance(object, assign=T) < u.cutoff)
+                         else
+                             result <- (importance(object, assign=T) < u.cutoff[Map(object, rm.outliers=F)])
+                     }
+                     else
                          result <- (importance(object, assign=T) <
                                     object@ruleOutliers[2])
-                     }
-                 } else {
+                 }
+                 else
+                 {
                      py <- ncol(object@mu)
                      q.cutoff <- qchisq(object@ruleOutliers[2], py)
                      result <- ( importance(object, assign=T) > q.cutoff)
@@ -646,7 +651,7 @@ uncertainty <- function(object)
 getEstimates <- function(object, data)
 {
     if (is(object,"flowClustList")) object <- object[[object@index]]
-    if (object@lambda==1)
+    if (all(object@lambda==1))
         list(proportions=object@w, locations=object@mu,
              dispersion=object@sigma)
     else{
@@ -681,10 +686,10 @@ getEstimates <- function(object, data)
             ly<-nrow(y)
             py<-ncol(y)
             K<-object@K
-            if (object@nu!=Inf){
+            if (all(object@nu!=Inf)){
                 obj <- .C("getEstimates", as.double(t(y)), as.integer(ly),
                           as.integer(py), as.integer(K), mu=rep(0.0,K*py),
-                          precision=rep(0.0,K*py*py), as.double(object@nu),
+                          precision=rep(0.0,K*py*py), as.double(rep(object@nu,length.out=K)),
                           as.double(t(z)), as.double(t(u)))
             }else{
                 obj <- .C("getEstimatesGaussian", as.double(t(y)),
