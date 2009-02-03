@@ -25,8 +25,12 @@ AC_ARG_WITH([blas],
 #   BLAS_LIBS="-lgslcblas"
 # fi
 
-AM_PATH_GSL(1.6,[LIBS="${LIBS} -lgsl ${BLAS_LIBS} -lm"],[AC_MSG_ERROR([Cannot find Gnu Scientific Library >=1.6])])
-
+PKG_CHECK_MODULES(GSL, [gsl >= 1.6], [HAVEGSL="yes"], [HAVEGSL="no"])
+if test "$HAVEGSL" = "yes"; then
+  LIBS=$GSL_LIBS
+else 
+  AM_PATH_GSL(1.6,[LIBS="${LIBS} -lgsl ${BLAS_LIBS} -lm"],[AC_MSG_ERROR([Cannot find Gnu Scientific Library >=1.6])])
+fi
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT()
