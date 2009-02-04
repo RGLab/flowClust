@@ -12,14 +12,16 @@ A flow cytometry dataset produced in a drug-screening project to identify agents
 
 \format{
 An object of class \code{flowFrame} with 1545 cells (rows) and the following eight variables (columns):
-\item{FSC.H}{FSC-Height}
-\item{SSC.H}{Side Scatter}
-\item{FL1.H}{Anti-BrdU FITC}
-\item{FL2.H}{Channel not used}
-\item{FL3.H}{7 AAD}
-\item{FL1.A}{Channel not used}
-\item{FL1.W}{Channel not used}
-\item{Time}{Time}
+\describe{
+   \item{FSC.H}{FSC-Height}
+   \item{SSC.H}{Side Scatter}
+   \item{FL1.H}{Anti-BrdU FITC}
+   \item{FL2.H}{Channel not used}
+   \item{FL3.H}{7 AAD}
+   \item{FL1.A}{Channel not used}
+   \item{FL1.W}{Channel not used}
+   \item{Time}{Time}
+}
 }
 
 \source{ 

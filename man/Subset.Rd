@@ -20,11 +20,11 @@
 This method returns a subset of data upon the removal of outliers identified from the clustering (filtering) operations.
 }
 
-\section{Usage}{
+\usage{
 Subset(x, subset, \dots)
 }
 
-\section{Arguments}{
+\arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}.  This is the object on which \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}} was performed.}
 \item{subset}{Object returned from \code{flowClust} or \code{filter}.}
 \item{\dots}{Further arguments to be passed to or from other methods.}
