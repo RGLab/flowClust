@@ -21,6 +21,7 @@ Built: \tab R 2.6.1; universal-apple-darwin8.10.1; 2008-03-26 20:54:42; unix\cr
 }
 
 \section{Index}{
+\describe{
 \item{\code{\link{box}}}{Box-Cox Transformation}
 \item{\code{\link{density,flowClust-method}}}{Grid of Density Values for the Fitted \eqn{t} Mixture Model with Box-Cox Transformation}
 \item{\code{\link{dmvt}}}{Density of the Multivariate \eqn{t} Distribution with Box-Cox Tranformation}
@@ -41,6 +42,7 @@ Built: \tab R 2.6.1; universal-apple-darwin8.10.1; 2008-03-26 20:54:42; unix\cr
 \item{\code{\link{Subset,flowClust-method}}}{Subsetting Data Based on Clustering Results}
 \item{\code{\link{summary,flowClust-method}}}{Summary Method for \code{flowClust} Object}
 \item{\code{\link{tmixFilter}}}{Creating Filters and Filtering Flow Cytometry Data}
+}
 }
 
 \note{Further information is available in the vignette.}
