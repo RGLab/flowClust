@@ -30,8 +30,10 @@ setMethod("summary", "flowClust",
           cat("** Clustering Summary ** \n")	
           cat("Number of clusters:",object@K,"\n")
           cat("Proportions:",object@w,"\n")	
-          cat("** Transformation Parameter ** \n")
-          cat("lambda:",object@lambda,"\n")  
+          if (length(object@lambda)>0) {
+              cat("** Transformation Parameter ** \n")
+              cat("lambda:",object@lambda,"\n")  
+          }
           cat("** Information Criteria ** \n")
           cat("Log likelihood:",object@logLike,"\n")
           cat("BIC:",object@BIC,"\n")
@@ -651,7 +653,7 @@ uncertainty <- function(object)
 getEstimates <- function(object, data)
 {
     if (is(object,"flowClustList")) object <- object[[object@index]]
-    if (all(object@lambda==1))
+    if (length(object@lambda)==0)
         list(proportions=object@w, locations=object@mu,
              dispersion=object@sigma)
     else{
