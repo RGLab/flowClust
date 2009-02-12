@@ -89,7 +89,7 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
         }  else cc <- qchisq(x@ruleOutliers[2], py)
 
         j <- 0
-        lambda <- rep(x@lambda, length.out=x@K)
+        lambda <- if (length(x@lambda)>0) rep(x@lambda, length.out=x@K) else numeric(0)
         cc <- rep(cc, length.out=x@K)
         for (i in include) {
             eigenPair <- eigen(x@sigma[i,subset,subset])
@@ -97,7 +97,7 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
             l2 <- sqrt(eigenPair$values[2]) * sqrt(cc)
             angle <- atan(eigenPair$vectors[2,1] / eigenPair$vectors[1,1]) * 180/pi
 
-            if (any(lambda!=1)) {
+            if (length(lambda)>0) {
                 points(rbox(.ellipsePoints(a=l1[i], b=l2[i], alpha=angle, loc=x@mu[i,subset], n=npoints), lambda[i]), type="l", lty=elty[j <- j+1], col=ecol[j])
             } else {
                 points(.ellipsePoints(a=l1[i], b=l2[i], alpha=angle, loc=x@mu[i,subset], n=npoints), type="l", lty=elty[j <- j+1], col=ecol[j])
@@ -143,7 +143,7 @@ dmvtmix <- function(x, w, mu, sigma, nu, lambda, object, subset, include, log=FA
         mu <- object@mu
         sigma <- object@sigma
         nu <- object@nu
-        if (!all(object@lambda==1)) 
+        if (length(object@lambda)>0) 
             lambda <- object@lambda
         if (!missing(subset) && !is.numeric(subset)) 
             subset <- match(subset, object@varNames)
@@ -207,7 +207,7 @@ function(x, data=NULL, subset=c(1,2), include=1:(x@K), npoints=c(100,100), from=
 
     value <- 0
     nu <- rep(x@nu, length.out=x@K)
-    if (any(x@lambda!=1)) {
+    if (length(x@lambda)>0) {
         lambda <- rep(x@lambda, x@K)
         for (k in include) {
             xyTrans <- (apply(xy,2,sign)*apply(xy,2,abs)^lambda[k] - 1) / lambda[k]
@@ -266,7 +266,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NU
     den <- function(y) {
         value <- 0
         nu <- rep(x@nu, length.out=x@K)
-        if (any(x@lambda!=1)) {
+        if (length(x@lambda)>0) {
             lambda <- rep(x@lambda, length.out=x@K)
             for (k in include) {
                 yTrans <- (sign(y)*abs(y)^lambda[k] - 1) / lambda[k]
