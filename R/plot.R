@@ -22,6 +22,14 @@ rbox <- function(data, lambda) {
     ##            n    : number of points
     ## -------------------------------------------------------------------------
     ## Author: Martin Maechler, Date: 19 Mar 2002, 16:26
+    ## modified by Kenneth to get rid of the precision problem met when there's a large difference in the length of the two axes
+
+    small <- 0
+    if (a/b > 1000) {
+        ratio <- a/b
+        b <- a
+        if (round(alpha)==0) small <- 2 else small <- 1
+    }
 
     B <- min(a,b)
     A <- max(a,b)
@@ -36,7 +44,11 @@ rbox <- function(data, lambda) {
     al <- alpha * pi/180
     ca <- cos(al)
     sa <- sin(al)
-    xy %*% rbind(c(ca, sa), c(-sa, ca)) + cbind(rep(loc[1],n), rep(loc[2],n))
+
+    xy.new <- xy %*% rbind(c(ca, sa), c(-sa, ca))
+    if (small==2) xy.new[,2]=xy.new[,2]/ratio
+    if (small==1) xy.new[,1]=xy.new[,1]/ratio
+    xy.new + cbind(rep(loc[1],n), rep(loc[2],n))
 }
 
 
