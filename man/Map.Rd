@@ -43,9 +43,20 @@ Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating of Flow Cytomet
 }
 
 \examples{
-res <- flowClust(iris[,1:4], K=3)
-Map(res)
-Map(res, rm.outliers=FALSE)
+data(rituximab)
+
+### cluster the data using FSC.H and SSC.H
+res1 <- flowClust(rituximab, varNames=c("FSC.H", "SSC.H"), K=1)
+
+### remove outliers before proceeding to the second stage
+rituximab2 <- Subset(rituximab, res1)
+
+### cluster the data using FL1.H and FL3.H (with 3 clusters)
+res2 <- flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=3)
+summary(res2)
+
+# to show the cluster assignment of observations
+table(Map(res2))
 }
 
 \keyword{cluster}
