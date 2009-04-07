@@ -40,16 +40,7 @@ Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating of Flow Cytomet
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}}
 }
 
-\examples{
-res <- flowClust(iris[,1:4], K=3)
-summary(res)
-# change the rule to call outliers
-ruleOutliers(res) <- list(z.cutoff=0.9)
-# more outliers now
-summary(res)
-ruleOutliers(res) <- list(level=0.95, z.cutoff=0)
-# augmented cluster boundaries lead to fewer outliers
-summary(res)
-}
+%\examples{
+%}
 
 \keyword{manip}

@@ -46,12 +46,8 @@ Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating of Flow Cytomet
 \code{\link{flowClust}}, \code{\link[=plot.flowClust]{plot}}, \code{\link[=density.flowClust]{density}}
 }
 
-\examples{
-res <- flowClust(iris[,1:4], K=3)
-hist(res, data=iris, subset="Petal.Length", breaks=30)
-hist(res, data=iris, subset=3, histogram=FALSE, labels=FALSE)
-hist(res, data=iris, subset="Petal.Length", breaks=30, include=2:3)
-}
+%\examples{
+%}
 
 \keyword{graphs}
 

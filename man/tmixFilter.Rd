@@ -160,12 +160,23 @@ getEstimates(res2)
 ### demonstrate the use of various plotting methods
 # a scatterplot
 plot(rituximab2, res2, level=0.8)
+plot(rituximab2, res2, level=0.8, include=c(1,2), grayscale=TRUE,
+    pch.outliers=2)
 # a contour / image plot
 res2.den <- density(res2, data=rituximab2)
 plot(res2.den)
+plot(res2.den, scale="sqrt", drawlabels=FALSE)
 plot(res2.den, type="image", nlevels=100)
+plot(density(res2, include=c(1,2), from=c(0,0), to=c(400,600)))
 # a histogram (1-D density) plot
 plot(rituximab2, res2, "FL1.H")
+
+### to demonstrate the use of the ruleOutliers method
+summary(res2)
+# change the rule to call outliers
+ruleOutliers(res2) <- list(level=0.95)
+# augmented cluster boundaries lead to fewer outliers
+summary(res2)
 
 # the following line illustrates how to select a subset of data 
 # to perform cluster analysis through the min and max arguments;
@@ -175,9 +186,6 @@ s2t <- tmixFilter("s2t", c("FL1.H", "FL3.H"), K=3, B=100,
     min=c(0,0), max=c(400,800), level=0.95, z.cutoff=0.5)
 filter(rituximab2, s2t)
 }
-
-
-
 
 \keyword{cluster}
 \keyword{models}

@@ -75,15 +75,7 @@ Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating of Flow Cytomet
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}}, \code{\link{Map}}
 }
 
-\examples{
-res <- flowClust(iris[,1:4], K=3)
-criterion(res)
-posterior(res)
-posterior(res, assign=TRUE)
-importance(res)
-importance(res, assign=TRUE)
-uncertainty(res)
-getEstimates(res)
-}
+%\examples{
+%}
 
 \keyword{cluster}
