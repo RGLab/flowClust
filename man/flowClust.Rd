@@ -76,7 +76,7 @@ If \code{K} is of length 1, the function returns an object of class \code{flowCl
 \item{nu}{The degrees of freedom for the \eqn{t} distribution.}
 \item{z}{A matrix of size \eqn{N \times K}{N x K}, containing the posterior probabilities of cluster memberships.  The probabilities in each row sum up to one.}
 \item{u}{A matrix of size \eqn{N \times K}{N x K}, containing the \dQuote{weights} (the contribution for computing cluster mean and covariance matrix) of each data point in each cluster.  Since this quantity decreases monotonically with the Mahalanobis distance, it can also be interpreted as the level of \dQuote{outlyingness} of a data point.  Note that, when \code{nu=Inf}, this slot is used to store the Mahalanobis distances instead.}
-\item{label}{A vector of size \eqn{N}, showing the cluster membership according to the initial partition (i.e., hierarchical clustering if \code{randomStart} is \code{FALSE}).  Filtered observations will be labelled as \code{NA}.  Unassigned observations (which may occur since only 1500 observations at maximum are taken for hierarchical clustering) will be labelled as 0.}
+\item{label}{A vector of size \eqn{N}, showing the cluster membership according to the initial partition (i.e., hierarchical clustering if \code{randomStart=0} or random partitioning if \code{randomStart>0}).  Filtered observations will be labelled as \code{NA}.  Unassigned observations (which may occur since only 1500 observations at maximum are taken for hierarchical clustering) will be labelled as 0.}
 \item{uncertainty}{A vector of size \eqn{N}, containing the uncertainty about the cluster assignment.  Uncertainty is defined as 1 minus the posterior probability that a data point belongs to the cluster to which it is assigned.}
 \item{ruleOutliers}{A numeric vector of size 3, storing the rule used to call outliers.  The first element is 0 if the criterion is set by the \code{level} argument, or 1 if it is set by \code{u.cutoff}.  The second element copies the content of either the \code{level} or \code{u.cutoff} argument.  The third element copies the content of the \code{z.cutoff} argument.  For instance, if points are called outliers when they lie outside the 90\% quantile region or have assignment probabilities less than 0.5, then \code{ruleOutliers} is \code{c(0, 0.9, 0.5)}.  If points are called outliers only if their \dQuote{weights} in the assigned clusters are less than 0.5 regardless of the assignment probabilities, then \code{ruleOutliers} becomes \code{c(1, 0.5, 0)}.}
 \item{flagOutliers}{A logical vector of size \eqn{N}, showing whether each data point is called an outlier or not based on the rule defined by \code{level}/\code{u.cutoff} and \code{z.cutoff}.}
@@ -139,12 +139,23 @@ getEstimates(res2)$locations
 ### demonstrate the use of various plotting methods
 # a scatterplot
 plot(res2, data=rituximab2, level=0.8)
+plot(res2, data=rituximab2, level=0.8, include=c(1,2), grayscale=TRUE,
+    pch.outliers=2)
 # a contour / image plot
 res2.den <- density(res2, data=rituximab2)
 plot(res2.den)
+plot(res2.den, scale="sqrt", drawlabels=FALSE)
 plot(res2.den, type="image", nlevels=100)
+plot(density(res2, include=c(1,2), from=c(0,0), to=c(400,600)))
 # a histogram (1-D density) plot
 hist(res2, data=rituximab2, subset="FL1.H")
+
+### to demonstrate the use of the ruleOutliers method
+summary(res2)
+# change the rule to call outliers
+ruleOutliers(res2) <- list(level=0.95)
+# augmented cluster boundaries lead to fewer outliers
+summary(res2)
 
 # the following line illustrates how to select a subset of data 
 # to perform cluster analysis through the min and max arguments;

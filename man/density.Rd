@@ -46,21 +46,8 @@ Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo <\email{c.lo@stat.ubc.ca
 \code{\link[=plot.flowDens]{plot}}, \code{\link{flowClust}}
 }
 
-\examples{
-res <- flowClust(iris[,1:4], K=3)
-
-res.den <- density(res, data=iris)
-plot(res.den)
-plot(res.den, scale="sqrt", drawlabels=FALSE)
-plot(res.den, type="image", nlevels=100)
-plot(res.den, type="image", scale="sqrt", nlevels=100,
-    color="gray")
-
-plot(density(res, data=iris, subset=c("Petal.Length",
-    "Petal.Width"), include=c(2,3)))
-plot(density(res, subset=c(3,4), include=c(2,3), from=c(3,0.75),
-    to=c(7,2.5)))
-}
+%\examples{
+%}
 
 \keyword{graphs}
 

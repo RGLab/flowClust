@@ -64,20 +64,8 @@ Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating of Flow Cytomet
 \code{\link{flowClust}}
 }
 
-\examples{
-res <- flowClust(iris[,1:4], K=3)
-
-plot(res, data=iris, subset=c("Sepal.Width", "Petal.Width"),
-    pch=1, pch.outlier=2)
-plot(res, data=iris, subset=c(2,4), ellipse=FALSE,
-    show.outlier=FALSE, pch=1)
-
-plot(res, data=iris, subset=c("Petal.Length", "Petal.Width"),
-    include=c(2,3), pch=1, pch.outlier=1)
-plot(res, data=iris, subset=c("Petal.Length", "Petal.Width"),
-    include=c(2,3), grayscale=TRUE, pch=1, pch.outlier=1,
-    level=0.8)
-}
+%\examples{
+%}
 
 \keyword{graphs}
 
