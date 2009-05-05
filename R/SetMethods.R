@@ -734,3 +734,24 @@ setMethod("plot", signature("flowFrame", "tmixFilterResult"),
 setMethod("plot", signature("flowFrame", "tmixFilterResultList"),
           function(x, y, z=NULL, ...) plot(x, as(y,"tmixFilterResult"), z, ...))
           
+
+
+
+## ==========================================================================
+## We want to store the clustering information as part of the filterDetails
+## for future reference
+## ---------------------------------------------------------------------------
+setMethod("summarizeFilter",
+          signature=signature(result="tmixFilterResult",
+                              filter="tmixFilter"),
+          definition=function(result, filter)
+      {
+          ret <- callNextMethod()
+          slots <- c("expName", "varNames", "K", "w", "mu", "sigma", "lambda",
+                     "nu", "z", "u", "label", "uncertainty", "ruleOutliers",
+                     "flagOutliers", "rm.min", "rm.max", "logLike", "BIC", "ICL")
+          for(s in slots)
+              ret[[s]] <- slot(result, s)
+          ret$parameters <- parameters(filter)
+          return(ret)
+      })
