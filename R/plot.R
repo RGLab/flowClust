@@ -291,7 +291,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NU
         value
     }
 
-    if (is(data, "flowFrame")) data <- exprs(data)[,x@varNames]  else
+    if (is(data, "flowFrame")) data <- exprs(data)[,x@varNames,drop=FALSE]  else
     if (is(data, "matrix")) (if (length(x@varNames)>0) data <- as.matrix(data[,x@varNames]))  else
     if (is(data, "data.frame")) data <- as.matrix(data[,x@varNames])  else
     if (is(data, "vector")) data <- matrix(data)
