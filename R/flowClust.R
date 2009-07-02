@@ -246,6 +246,9 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
             u=u, label=label, uncertainty=uncertainty, 
             ruleOutliers=ruleOutliers, flagOutliers=flagOutliers, rm.min=sum(rm.min), 
             rm.max=sum(rm.max), logLike=obj$logLike, BIC=BIC, ICL=ICL)
+       # result[[i]]@subSet <- factor(Map(result[[i]], TRUE))
+       
+    
     }
 
 

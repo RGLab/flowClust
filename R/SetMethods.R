@@ -209,10 +209,10 @@ setAs("flowClust","logical", function(from) 1 %in% from )
 setAs("tmixFilterResult","logical", function(from) 1 %in% from)
 
 setAs("flowClust","filterResult", function(from)
-      new("tmixFilterResult", from, subSet=factor(Map(from))))
+      new("tmixFilterResult", from, subSet=factor(Map(from, TRUE))))
 
 setAs("flowClust","tmixFilterResult", function(from)
-      new("tmixFilterResult", from, subSet=factor(Map(from))))
+      new("tmixFilterResult", from, subSet=factor(Map(from, TRUE))))
 
 
 setAs("flowClustList","flowClust", function(from) from[[from@index]] )
@@ -220,10 +220,10 @@ setAs("flowClustList","flowClust", function(from) from[[from@index]] )
 setAs("flowClustList","logical", function(from) 1 %in% from )
 
 setAs("flowClustList","filterResult", function(from)
-      new("tmixFilterResultList", from, subSet=factor(Map(from[[from@index]]))))
+      new("tmixFilterResultList", from, subSet=factor(Map(from[[from@index]], TRUE))))
 
 setAs("flowClustList","tmixFilterResult", function(from)
-      new("tmixFilterResult", from[[from@index]], subSet=factor(Map(from[[from@index]]))))
+      new("tmixFilterResult", from[[from@index]], subSet=factor(Map(from[[from@index]], TRUE))))
 
 
 setAs("tmixFilterResultList","tmixFilterResult", function(from)
