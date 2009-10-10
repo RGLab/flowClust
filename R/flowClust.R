@@ -95,12 +95,13 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
     if (is.null(control$xUp)) control$xUp <- 10    # xUp=1
     if (is.null(control$nuLow)) control$nuLow <- 2    # nuLow=2
     if (is.null(control$nuUp)) control$nuUp <- 100    # nuUp=30
+    if (is.null(control$seed)) control$seed <- T
 
     # Initialization based on mclust if randomStart=FALSE
     if (!all(K==1) && py>1 && !randomStart) {
         # If more than 1500 observations, only use 1500 at random
         if (ly > 1500) {
-            set.seed(seed)
+            if (control$seed) set.seed(seed)
             ySubset <- sample(1:ly, 1500)
         }
         else
@@ -115,6 +116,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 
     # to perform the cluster analysis via EM for each specific number of clusters
     for (i in 1:length(K)) {
+        ind <- 0
         if (K[i]==1) 
             label <- rep(1, ly)
         else if (!randomStart) {
@@ -130,17 +132,19 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
             }
         }
         else { # Initialization based on short EMs with random partitions if randomStart=TRUE
-            set.seed(seed)
+            if (control$seed) set.seed(seed)
             if (randomStart==1) {
                 label <- sample(1:K[i], ly, replace=T)
             }
             else {
-                maxLabel <- c()
-                maxLogLike <- -Inf
+                maxLabel <- vector("list",randomStart)
+#                maxLabel <- c()
+                maxLogLike <- rep(NA,randomStart)
+#                maxLogLike <- -Inf
                 for (j in 1:randomStart) {
                     label <- sample(1:K[i], ly, replace=T)
                     if (nu != Inf) {
-                        obj <- .C("flowClust", as.double(t(y)), as.integer(ly),
+                        obj <- try(.C("flowClust", as.double(t(y)), as.integer(ly),
                             as.integer(py), as.integer(K[i]),
                             w=rep(0,K[i]), mu=rep(0,K[i]*py),
                             precision=rep(0,K[i]*py*py), 
@@ -155,10 +159,10 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
                             as.integer(control$B.lambda), as.integer(control$B.brent), 
                             as.double(control$tol.brent), as.double(control$xLow), 
                             as.double(control$xUp), as.double(control$nuLow), 
-                            as.double(control$nuUp), package="flowClust")
+                            as.double(control$nuUp), package="flowClust"))
                     }
                     else {
-                        obj <- .C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
+                        obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
                             as.integer(py), as.integer(K[i]), 
                             w=rep(0,K[i]), mu=rep(0,K[i]*py), 
                             precision=rep(0,K[i]*py*py),
@@ -171,53 +175,63 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
                             logLike=as.double(0),
                             as.integer(control$B.lambda), as.integer(control$B.brent), 
                             as.double(control$tol.brent), as.double(control$xLow), 
-                            as.double(control$xUp), package="flowClust")
+                            as.double(control$xUp),
+                            package="flowClust"))
                     }
-                    if (obj$logLike > maxLogLike) {
-                        maxLabel <- label
-                        maxLogLike <- obj$logLike
+                    if (class(obj)!="try-error") {
+#                    if (class(obj)!="try-error" && obj$logLike > maxLogLike) {
+                        maxLabel[[j]] <- label
+#                        maxLabel <- label
+                        maxLogLike[j] <- obj$logLike
+#                        maxLogLike <- obj$logLike
                     }
                 }
-                label <- maxLabel
+                ind <- order(maxLogLike, decreasing=T, na.last=NA)
+#                label <- maxLabel
             }
         }
 
         # long EMs
-        if (nu != Inf) {
-            obj <- .C("flowClust", as.double(t(y)), as.integer(ly), 
-                as.integer(py), as.integer(K[i]),
-                w=rep(0,K[i]), mu=rep(0,K[i]*py),
-                precision=rep(0,K[i]*py*py),
-                lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))), 
-                nu=as.double(rep(nu,K[i])),
-                z=rep(0,ly*K[i]), u=rep(0,ly*K[i]),
-                as.integer(label), uncertainty=double(ly),
-                as.double(rep(u.cutoff,K[i])), as.double(z.cutoff),
-                flagOutliers=integer(ly), as.integer(B),
-                as.double(tol), as.integer(trans), 
-                as.integer(nu.est), logLike=as.double(0),
-                as.integer(control$B.lambda), as.integer(control$B.brent), 
-                as.double(control$tol.brent), as.double(control$xLow), 
-                as.double(control$xUp), as.double(control$nuLow),
-                as.double(control$nuUp), package="flowClust")
+        for (M in ind) {
+            if (nu != Inf) {
+                obj <- try(.C("flowClust", as.double(t(y)), as.integer(ly), 
+                    as.integer(py), as.integer(K[i]),
+                    w=rep(0,K[i]), mu=rep(0,K[i]*py),
+                    precision=rep(0,K[i]*py*py),
+                    lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))), 
+                    nu=as.double(rep(nu,K[i])),
+                    z=rep(0,ly*K[i]), u=rep(0,ly*K[i]),
+                    as.integer(if (M==0) label else maxLabel[[M]]), uncertainty=double(ly),
+                    as.double(rep(u.cutoff,K[i])), as.double(z.cutoff),
+                    flagOutliers=integer(ly), as.integer(B),
+                    as.double(tol), as.integer(trans), 
+                    as.integer(nu.est), logLike=as.double(0),
+                    as.integer(control$B.lambda), as.integer(control$B.brent), 
+                    as.double(control$tol.brent), as.double(control$xLow), 
+                    as.double(control$xUp), as.double(control$nuLow),
+                    as.double(control$nuUp), package="flowClust"))
+            }
+            else {
+                obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
+                    as.integer(py), as.integer(K[i]),
+                    w=rep(0,K[i]), mu=rep(0,K[i]*py),
+                    precision=rep(0,K[i]*py*py),
+                    lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))), 
+                    z=rep(0,ly*K[i]), u=rep(0,ly*K[i]), 
+                    as.integer(if (M==0) label else maxLabel[[M]]), uncertainty=double(ly), 
+                    as.double(q.cutoff), as.double(z.cutoff),
+                    flagOutliers=integer(ly), as.integer(B),
+                    as.double(tol), as.integer(trans), 
+                    logLike=as.double(0),
+                    as.integer(control$B.lambda), as.integer(control$B.brent), 
+                    as.double(control$tol.brent), as.double(control$xLow), 
+                    as.double(control$xUp),
+                    package="flowClust"))
+                if (class(obj)!="try-error") obj$nu <- Inf
+            }
+            if (class(obj)!="try-error") break
         }
-        else {
-            obj <- .C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
-                as.integer(py), as.integer(K[i]),
-                w=rep(0,K[i]), mu=rep(0,K[i]*py),
-                precision=rep(0,K[i]*py*py),
-                lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))), 
-                z=rep(0,ly*K[i]), u=rep(0,ly*K[i]), 
-                as.integer(label), uncertainty=double(ly), 
-                as.double(q.cutoff), as.double(z.cutoff),
-                flagOutliers=integer(ly), as.integer(B),
-                as.double(tol), as.integer(trans), 
-                logLike=as.double(0),
-                as.integer(control$B.lambda), as.integer(control$B.brent), 
-                as.double(control$tol.brent), as.double(control$xLow), 
-                as.double(control$xUp), package="flowClust")
-            obj$nu <- Inf
-        }
+        if (class(obj)=="try-error") stop(geterrmessage())
 
         # output obj$precision to sigma
         sigma <- array(0, c(K[i], py, py))
@@ -234,7 +248,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
         z <- u <- matrix(NA, length(include), K[i])
         z[include,] <- matrix(obj$z, ly, K[i], byrow=TRUE)
         u[include,] <- matrix(obj$u, ly, K[i], byrow=TRUE)
-        tempLabel <- label
+        tempLabel <- if (M==0) label else maxLabel[[M]]
         label <- uncertainty <- flagOutliers <- rep(NA, length(include))
         label[include] <- tempLabel
         uncertainty[include] <- obj$uncertainty
@@ -246,9 +260,6 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
             u=u, label=label, uncertainty=uncertainty, 
             ruleOutliers=ruleOutliers, flagOutliers=flagOutliers, rm.min=sum(rm.min), 
             rm.max=sum(rm.max), logLike=obj$logLike, BIC=BIC, ICL=ICL)
-       # result[[i]]@subSet <- factor(Map(result[[i]], TRUE))
-       
-    
     }
 
 
