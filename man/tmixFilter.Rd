@@ -44,7 +44,7 @@ tmixFilter(filterId="tmixFilter", parameters="", \dots)
     of \code{\link{flowClust}} when running \code{filter}.}
 
   \item{\dots}{Other arguments passed to the \code{\link{flowClust}}
-    function when running \code{\link[flowCore:::filter]{filter}},
+    function when running \code{\link[flowCore]{filter}},
     namely, \code{expName}, \code{K}, \code{B}, \code{tol}, \code{nu},
     \code{lambda}, \code{nu.est}, \code{trans}, \code{min.count}, \code{max.count},
     \code{min}, \code{max}, \code{level}, \code{u.cutoff},
@@ -60,7 +60,7 @@ tmixFilter(filterId="tmixFilter", parameters="", \dots)
   \code{tmixFilter} that stores all the settings required for performing
   the \code{filter} operations.
 
-  The \code{\link[flowCore:::filter]{filter}} method is defined in
+  The \code{\link[flowCore]{filter}} method is defined in
   package \code{flowCore} and returns an object of class
   \code{tmixFilterResult} (or \code{tmixFilterResultList} if
   \code{filter@K} has a length >1) that stores the filtering results.  }

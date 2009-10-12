@@ -273,7 +273,7 @@ if(!isGeneric("hist")) setGeneric("hist",useAsDefault=hist)
 
 
 setMethod("hist", signature(x="flowClust"),
-function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NULL, ylim=NULL, xlab=(if (is.numeric(subset)) NULL else subset), ylab="Density", main=NULL, breaks=50, col=NULL, pch=20, cex=0.6, ...)
+function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, xlim=NULL, ylim=NULL, xlab=(if (is.numeric(subset)) NULL else subset), ylab="Density", main=NULL, breaks=50, col=NULL, pch=20, cex=0.6, ...)
 {
     den <- function(y) {
         value <- 0
