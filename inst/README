@@ -1,18 +1,41 @@
-You need the GNU Scientific Library (GSL) for the flowClust package. Make sure it is installed on your machine if you want to use flowClust. GSL is free and can be downloaded at http://www.gnu.org/software/gsl/ for 'nix distributions and at http://gnuwin32.sourceforge.net/packages/gsl.htm for Windows. 
+Unix/Linux/Mac users
+====================
+
+To build the flowClust package from source, make sure that the following is present on your system:
+- a C compiler
+- GNU Scientific Library (GSL)
+- Basic Linear Algebra Subprograms (BLAS)
+A C compiler is needed to build the package as the core function is coded in C. GSL can be downloaded at http://www.gnu.org/software/gsl/.  In addition, the package uses BLAS to perform basic vector and matrix operations.  Please go to http://www.netlib.org/blas/faq.html#5 for a list of optimized BLAS libraries for a variety of computer architectures.  For instance, Mac users may use the built-in vecLib framework, while users of Intel machines may use the Math Kernel Library (MKL).
+
+For the package to be installed properly you may have to type the following command before installation:
+export LD_LIBRARY_PATH='/path/to/GSL/:/path/to/BLAS/':$LD_LIBRARY_PATH
+which will tell R where your GSL and BLAS libraries are.  Note that this may have already been configured on your system, so you may not have to do so.  In case you need to do it, you may consider including this line in your .bashrc such that you do not have to type it every time. 
+
+If GSL is installed to some non-standard location such that it cannot be found when installing flowClust, you may set the environment variable GSL_CONFIG to point to the correct copy of gsl-config, for example,
+export GSL_CONFIG='/global/home/username/gsl-1.12/bin/gsl-config'
+For convenience sake, this line may also be added to .bashrc.
+
+Now you are ready to install the package:
+R CMD INSTALL flowClust_x.y.z.tar.gz
+The package will look for a BLAS library on your system, and by default it will choose gslcblas, which is not optimized for your system.  To use an optimized BLAS library, you can use the --with-blas argument which will be passed to the configure.ac file.  For example, on a Mac with vecLib pre-installed the package may be installed via:
+R CMD INSTALL flowClust_x.y.z.tar.gz --configure-args="--with-blas='-framework vecLib'"
+On a 64-bit Intel machine which has MKL as the optimized BLAS library, the command may look like:
+R CMD INSTALL flowClust_x.y.z.tar.gz --configure-args="--with-blas='-L/usr/local/mkl/lib/em64t/ -lmkl -lguide -lpthread'"
+where /usr/local/mkl/lib/em64t/ is the path to MKL. 
+
+If you prefer to install a prebuilt binary, you need GSL for successful installation.
+
+
 
 Windows users
 =============
 
-To install a pre-built binary of flowClust and to load the package successfully you need to tell R where to link GSL. You can do that by adding /path/to/libgsl.dll to the Path environment variable. To add this you may right click on "My Computer", choose "Properties", select the "Advanced" tab, and click the button "Environment Variables". In the dialog box that opens, click "Path" in the variable list, and then click "Edit". Add /path/to/libgsl.dll to the Variable value field. It is important that the file path does not contain any space characters; to avoid this you may simply use the short forms (8.3 DOS file names) found by typing "dir /x" at the Windows command line. For example, I added the following on my Windows machine:
-C:/PROGRA~1/GNUWIN32/bin
-and used ";" to separate it from existing paths.
+You need the GNU Scientific Library (GSL) for the flowClust package. GSL is freely available at http://gnuwin32.sourceforge.net/packages/gsl.htm for Windows distributions.
 
-To build the flowClust package from source (using Rtools), in addition to adding /path/to/libgsl.dll to Path, you need to tell flowClust where your GSL library and header files are. You can do that by setting up two environment variables GSL_LIB and GSL_INC with the correct path to the library files and header files respectively. You can do this by going to the "Environment Variables" dialog box as instructed above and then clicking the "New" button. Enter "GSL_LIB" in the Variable name field, and /path/to/your/gsl/lib/directory in the Variable value field. Likewise, do this for GSL_INC and /path/to/your/gsl/include/directory. Remember to use "/" instead of "\" as the directory delimiter.
+To install a pre-built binary of flowClust and to load the package successfully you need to tell R where to link GSL. You can do that by adding /path/to/libgsl.dll to the Path environment variable. To add this you may right click on "My Computer", choose "Properties", select the "Advanced" tab, and click the button "Environment Variables". In the dialog box that opens, click "Path" in the variable list, and then click "Edit". Add /path/to/libgsl.dll to the "Variable value" field. It is important that the file path does not contain any space characters; to avoid this you may simply use the short forms (8.3 DOS file names) found by typing "dir /x" at the Windows command line. For example, the following may be added to the "Path" environment variable:
+C:/PROGRA~1/GNUWIN32/bin
+and the symbol ";" is used to separate it from existing paths.
+
+To build flowClust from source (using Rtools), in addition to adding /path/to/libgsl.dll to Path, you need to tell flowClust where your GSL library and header files are. You can do that by setting up two environment variables GSL_LIB and GSL_INC with the correct path to the library files and header files respectively. You can do this by going to the "Environment Variables" dialog box as instructed above and then clicking the "New" button. Enter "GSL_LIB" in the "Variable name" field, and /path/to/your/gsl/lib/directory in the "Variable value" field. Likewise, do this for GSL_INC and /path/to/your/gsl/include/directory. Remember to use "/" instead of "\" as the directory delimiter.
 
 You can download Rtools at http://www.murdoch-sutherland.com/Rtools/ which provides the resources for building R and R packages. You should add to the Path variable the paths to the various components of Rtools. Please read the "Windows Toolset" appendix at http://cran.r-project.org/doc/manuals/R-admin.html#The-Windows-toolset for more details.
-
-Unix/Linux/Mac users
-====================
-
-When building the package, it will look for a BLAS library on your system. By default it will use gslcblas, which is not optimized for your system. To use an optimized BLAS library, you can use the --with-blas argument which will be passed to the configure.ac file. For example, on a Mac with vecLib pre-installed the package may be installed via: 
-R CMD INSTALL flowClust_x.y.z.tar.gz --configure-args="--with-blas='-framework vecLib'" 
