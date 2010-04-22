@@ -64,7 +64,7 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
 
     py <- ncol(data)
     data <- data[,subset]
-    label <- map(x@z)
+    label <- Map(x, rm.outliers=F)
     if (!add) plot(data, type="n", main=main, ...)  else title(main)
     flagFiltered <- is.na(label)
 
@@ -213,9 +213,14 @@ function(x, data=NULL, subset=c(1,2), include=1:(x@K), npoints=c(100,100), from=
         }
     }
 
-    dx <- grid1(npoints[1], range=(if (!is.null(data)) range(data[,subset[1]]) else c(from[1], to[1])))
-    dy <- grid1(npoints[2], range=(if (!is.null(data)) range(data[,subset[2]]) else c(from[2], to[2])))
-    xy <- grid2(dx,dy)
+    trange <- (if (!is.null(data)) range(data[,subset[1]]) else c(from[1], to[1]))
+    dx <- seq(from=min(trange), to=max(trange), by=abs(diff(trange))/(npoints[1]-1))
+#    dx <- grid1(npoints[1], range=(if (!is.null(data)) range(data[,subset[1]]) else c(from[1], to[1])))
+    trange <- (if (!is.null(data)) range(data[,subset[2]]) else c(from[2], to[2]))
+    dy <- seq(from=min(trange), to=max(trange), by=abs(diff(trange))/(npoints[2]-1))
+#    dy <- grid1(npoints[2], range=(if (!is.null(data)) range(data[,subset[2]]) else c(from[2], to[2])))
+    xy <- cbind(rep(dx,length(dy)), rep(dy,each=length(dx)))
+#    xy <- grid2(dx,dy)
 
     value <- 0
     nu <- rep(x@nu, length.out=x@K)
@@ -309,7 +314,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
 
     # look for highest point in histogram
     if (histogram) {
-        data2 <- data[!is.na(x@flagOutliers) & is.element(map(x@z), include)]
+        data2 <- data[!is.na(x@flagOutliers) & is.element(Map(x, rm.outliers=F), include)]
         tbreaks <- hist(data1, breaks=breaks, plot=F)$breaks
         if (is.null(ylim)) {
             tplot <- hist(data2, breaks=tbreaks, plot=F)
@@ -331,7 +336,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
             if (length(include)<=4) col <- c("red", "blue", "green", "black")  else col <- 2:(length(include)+1)
         } else col<-matrix(col, length(include))
         j <- 0
-        for (k in include) stripchart(data[map(x@z)==k], add=T, at=ymin - (ylim[2]-ymin)/100*(j<-j+1), pch=pch, cex=cex, col=col[j])
+        for (k in include) stripchart(data[Map(x, rm.outliers=F)==k], add=T, at=ymin - (ylim[2]-ymin)/100*(j<-j+1), pch=pch, cex=cex, col=col[j])
     }
 }
 )

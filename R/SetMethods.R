@@ -625,7 +625,8 @@ posterior <- function(object, assign=FALSE)
     if (!assign) object@z  else {
         result <- rep(NA, nrow(object@z))
         result[!is.na(object@flagOutliers)] <-
-            t(object@z)[t(unmap(map(object@z))==T)]
+            apply(object@z, 1, max)[!is.na(object@flagOutliers)]
+#            t(object@z)[t(unmap(map(object@z))==T)]
         result
     }
 }
@@ -637,7 +638,8 @@ importance <- function(object, assign=FALSE)
     if (!assign) object@u  else {
         result <- rep(NA, nrow(object@u))
         result[!is.na(object@flagOutliers)] <-
-            t(object@u)[t(unmap(map(object@z))==T)]
+            object@u[cbind(1:nrow(object@u), max.col(object@z, "first"))][!is.na(object@flagOutliers)]
+#            t(object@u)[t(unmap(map(object@z))==T)]
         result
     }
 }
