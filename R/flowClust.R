@@ -159,7 +159,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
                             as.integer(control$B.lambda), as.integer(control$B.brent), 
                             as.double(control$tol.brent), as.double(control$xLow), 
                             as.double(control$xUp), as.double(control$nuLow), 
-                            as.double(control$nuUp), package="flowClust"))
+                            as.double(control$nuUp), PACKAGE="flowClust"))
                     }
                     else {
                         obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
@@ -176,7 +176,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
                             as.integer(control$B.lambda), as.integer(control$B.brent), 
                             as.double(control$tol.brent), as.double(control$xLow), 
                             as.double(control$xUp),
-                            package="flowClust"))
+                            PACKAGE="flowClust"))
                     }
                     if (class(obj)!="try-error") {
 #                    if (class(obj)!="try-error" && obj$logLike > maxLogLike) {
@@ -209,7 +209,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
                     as.integer(control$B.lambda), as.integer(control$B.brent), 
                     as.double(control$tol.brent), as.double(control$xLow), 
                     as.double(control$xUp), as.double(control$nuLow),
-                    as.double(control$nuUp), package="flowClust"))
+                    as.double(control$nuUp), PACKAGE="flowClust"))
             }
             else {
                 obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
@@ -226,7 +226,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
                     as.integer(control$B.lambda), as.integer(control$B.brent), 
                     as.double(control$tol.brent), as.double(control$xLow), 
                     as.double(control$xUp),
-                    package="flowClust"))
+                    PACKAGE="flowClust"))
                 if (class(obj)!="try-error") obj$nu <- Inf
             }
             if (class(obj)!="try-error") break
