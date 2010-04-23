@@ -48,7 +48,7 @@ setClass("tmixFilter",
          prototype(expName="Flow Experiment", K=numeric(0), B=500, tol=1e-5,
                    nu=4, lambda=1, nu.est=0, trans=1, min.count=10, max.count=10,
                    min=NA, max=NA, level=0.9, u.cutoff=NA_real_, z.cutoff=0,
-                   randomStart=0, B.init=500, tol.init=1e-2, seed=1, criterion="BIC", 
+                   randomStart=10, B.init=500, tol.init=1e-2, seed=1, criterion="BIC", 
                    control=vector("list",0)),
          contains="parameterFilter")
 
