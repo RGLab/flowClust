@@ -262,7 +262,6 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
             rm.max=sum(rm.max), logLike=obj$logLike, BIC=BIC, ICL=ICL)
     }
 
-
     if (length(K)==1) {
         result[[1]]
     }
