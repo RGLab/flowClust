@@ -46,7 +46,7 @@ struct Nu_ECME_params
 
 double NuLikelihood(double x, void *params);
 
-void up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, double SumZ, double SumZU, gsl_matrix *DiagOne);
+int up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, double SumZ, double SumZU, gsl_matrix *DiagOne);
 void up_date_z_u(gsl_matrix *logY, gsl_matrix *YTrans, gsl_vector *W, gsl_matrix *Mu, gsl_matrix *Precision, gsl_matrix *Z, gsl_matrix *U, gsl_vector *SumZ, gsl_vector *SumZU, gsl_vector *SumZlogU, double *nu, double *lambda, double *logLike, int transform, int nuEstimate, int last);
 void up_date_z_uS(gsl_matrix *logY, gsl_matrix *YTransS, gsl_vector *W, gsl_matrix *Mu, gsl_matrix *Precision, gsl_matrix *Z, gsl_matrix *U, gsl_vector *SumZ, gsl_vector *SumZU, gsl_vector *SumZlogU, gsl_vector *SumZlogY, double *nu, double *lambda, double *logLike, int nuEstimate, int last);
 
