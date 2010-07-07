@@ -60,8 +60,10 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
   double lambdaHat=0, nuHat=0;    // current estimate of lambda and nu
   // double xLow=.1, xUp=1, nuLow=2, nuUp=30;  // initial search interval of Brent's algorithm
   double x_lo=0, x_hi=0, nu_lo=0, nu_hi=0;    // current bracketing interval for solver	
-  int status=0;   // status of the solver (an error indicator)    
+  int status=0,status2=0;   // status of the solver (an error indicator)
 
+  /* Turn off the error handler */
+  gsl_set_error_handler_off();
 
 
   /* Create matrix and vector views*/  
@@ -138,18 +140,13 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
     rowPrecision=gsl_matrix_row(&Precision.matrix,k);
     matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector,*py,*py);            
     matrixZUY=gsl_matrix_submatrix(ZUY, 0, k**py, *ly, *py);      
-    up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);            
+    status2=up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);            
         /* Initialize Mixing Proportions */
     gsl_vector_set(&W.vector,k,gsl_vector_get(SumZ,k)/(*ly));
   }
 
 
-  // This is actually not need but I leave it for now if we want to look at stochastic EM in the future
-  // gsl_rng_env_setup();
-  // T=gsl_rng_default;
-  // r=gsl_rng_alloc(T); 
-
-    /* Initialize the solver */
+  /* Initialize the solver */
   S=gsl_root_fsolver_brent;
   if (*transform>=1)
   {
@@ -179,16 +176,12 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
       params3.lambda=lambda;
     }
   }
-  /* Turn off the error handler */
-  gsl_set_error_handler_off();
 
   /* Initialize the log likelihood */
   *logLike=-FLT_MAX;
 
-
-
-  /*** EM algorithm ***/
-  while((Diff>*tol) & (iter<*B))
+  /** EM algorithm **/
+  while((Diff>*tol) & (iter<*B) & (status2==0))
   {
     R_CheckUserInterrupt();
     
@@ -204,10 +197,9 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
       up_date_z_uS(logY, YTransS, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, SumZU, SumZlogU, SumZlogY, nu, lambda, logLike, *nuEstimate, 0);              
     }
 
+    /* M step*/
 
-    /* M step*/        
-
-        /* Solve for lambda */
+    /* Solve for lambda */
     if((*transform>=1) && (iter<*BSolve))    // Only estimate lambda in the first 100(BSolve) iterations
     {
       params.W=&W.vector;     // will be updated when calling solver
@@ -272,9 +264,9 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
           params.K=k;
           F.params=&params;
 
-                /* Initialize the solver s to use the function F and the initial search interval */
+          /* Initialize the solver s to use the function F and the initial search interval */
           status=gsl_root_fsolver_set(s, &F, *xLow, *xUp);
-                // Rprintf("K=%d  status=%d  %s\n",params.K,status,gsl_strerror(status));
+          // Rprintf("K=%d  status=%d  %s\n",params.K,status,gsl_strerror(status));
           if(status==0)
           {
             iterSolve=0;            
@@ -325,8 +317,9 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
                         /* Update Precision (cluster specific) */
             rowPrecision=gsl_matrix_row(&Precision.matrix,k);
             matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector, *py,*py);            
-            up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);                        
-                        /* Update Mixing Proportions */
+            status2=up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);
+            
+            /* Update Mixing Proportions */
             gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ,k)/(*ly));            
           }
         }
@@ -371,7 +364,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
         rowPrecision=gsl_matrix_row(&Precision.matrix,k);
         matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector, *py,*py);            
         matrixZUY=gsl_matrix_submatrix(ZUY, 0, k**py, *ly, *py);
-        up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);                        
+        status2=up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);                        
                 /* Update Mixing Proportions */
         gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ,k)/(*ly));            
       }
@@ -399,7 +392,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
                 /* Update Precision (cluster specific) */
         rowPrecision=gsl_matrix_row(&Precision.matrix,k);
         matrixPrecision=gsl_matrix_view_vector(&rowPrecision.vector, *py,*py);            
-        up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);                        
+        status2=up_date_precision(&matrixZUY.matrix, &rowMu.vector, &matrixPrecision.matrix, gsl_vector_get(SumZ,k), gsl_vector_get(SumZU,k), DiagOne);                        
                 /* Update Mixing Proportions */
         gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ,k)/(*ly));            
       }
@@ -455,7 +448,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
                     //Rprintf("K=%d  status=%d  %s\n",params2.K,status,gsl_strerror(status));
           if(status==0)
           {
-            iterSolve=0;            
+            iterSolve=0;
             do
             {
               iterSolve++;
@@ -518,21 +511,28 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
       }
     }
 
-
     Diff=fabs(*logLike-logLikeOld)/fabs(logLikeOld);
     iter++; 
   }
+  
+  
   // Rprintf("The EM required %d iterations\n",iter);
   // Rprintf("The tolerance is %g\n",Diff);
 
   /* One more E-step to compute the final z's and u's */
-  if (*transform<=1)
+  if ((*transform<=1) & (status2==0))
   {
-    up_date_z_u(logY, YTrans, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, SumZU, SumZlogU, nu, lambda, logLike, *transform, *nuEstimate, 1);      
+    up_date_z_u(logY, YTrans, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, SumZU, SumZlogU, nu, lambda, logLike, *transform, *nuEstimate, 1);
   }
-  else
+  else if(status2==0)
   {
-    up_date_z_uS(logY, YTransS, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, SumZU, SumZlogU, SumZlogY, nu, lambda, logLike, *nuEstimate, 1);              
+    up_date_z_uS(logY, YTransS, &W.vector, &Mu.matrix, &Precision.matrix, &Z.matrix, &U.matrix, SumZ, SumZU, SumZlogU, SumZlogY, nu, lambda, logLike, *nuEstimate, 1);
+  }
+
+  /** We encountered an error when computing the covariance matrix **/
+  if(status2!=0)
+  {  
+    *logLike=GSL_NAN;
   }
 
     /* Output Precision to be the covariance matrix */
@@ -591,7 +591,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu, doubl
 
 
 /* Compute the precision matrix and its cholesky decomposition */
-void up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, double SumZ, double SumZU, gsl_matrix *DiagOne)
+int up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, double SumZ, double SumZU, gsl_matrix *DiagOne)
 {
   int status=0;
   gsl_matrix_set_identity(DiagOne);
@@ -602,7 +602,7 @@ void up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, d
   status=gsl_linalg_cholesky_decomp(Precision);
   if(status!=0)
   {
-    error("\n The covariance matrix is near singular! \n Try running the program with a different initial configuration or less clusters \n");		
+    return(status);
   }
   /* Compute L'^{-1} */
   gsl_blas_dtrsm(CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, 1.0, Precision, DiagOne);
@@ -612,8 +612,9 @@ void up_date_precision(gsl_matrix *ZUY, gsl_vector *Mu, gsl_matrix *Precision, d
   status=gsl_linalg_cholesky_decomp(Precision);
   if(status!=0)
   {
-    error("\n The covariance matrix is near singular! \n Try running the program with a different initial configuration or less clusters \n");		
+    return(status);
   }
+  return(0);
 }
 
 
