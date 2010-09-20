@@ -288,7 +288,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 
   result<- new("flowClust", expName=expName, varNames=varNames, K=K[i],
   w=obj$w, mu=matrix(obj$mu, K[i], py, byrow=TRUE), sigma=sigma,
-  lambda=(if (trans>0) obj$lambda else numeric(0)), nu=(if (nu.est>1) obj$nu else obj$nu[1]), z=z,
+  lambda=(if (trans>0) obj$lambda else if (lambda!=1) lambda else numeric(0)), nu=(if (nu.est>1) obj$nu else obj$nu[1]), z=z,
   u=u, label=label, uncertainty=uncertainty, 
   ruleOutliers=ruleOutliers, flagOutliers=flagOutliers, rm.min=sum(rm.min), 
   rm.max=sum(rm.max), logLike=obj$logLike, BIC=BIC, ICL=ICL)
