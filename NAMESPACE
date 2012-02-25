@@ -5,8 +5,9 @@ import(methods)
 importFrom(stats,
            density)
 
+importFrom(BiocGenerics, plot, summary)
+
 importFrom(graphics,
-           plot,
            hist)
 
 importFrom("flowCore", "summarizeFilter")

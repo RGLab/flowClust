@@ -109,7 +109,7 @@ You can download Rtools at \url{http://www.murdoch-sutherland.com/Rtools/} which
 
 To demonstrate the functionality we use a flow cytometry dataset from a drug-screening project to identify agents that would enhance the anti-lymphoma activity of Rituximab, a therapeutic monoclonal antibody.  The dataset is an object of class \texttt{flowFrame}; it consists of eight parameters, among them only the two scattering parameters (\texttt{FSC.H}, \texttt{SSC.H}) and two fluorescence parameters (\texttt{FL1.H}, \texttt{FL3.H})  are of interest in this experiment.  Note that, apart from a typical \texttt{matrix} or \texttt{data.frame} object, \textbf{flowClust} may directly take a \texttt{flowFrame}, the standard {\bf R} implementation of an FCS file, which may be returned from the \texttt{read.FCS} function in the \textbf{flowCore} package, as data input.  The following code performs an analysis with one cluster using the two scattering parameters:
 
-<<stage0, results=HIDE>>=
+<<stage0, results=hide>>=
 library(flowClust)
 @
 <<stage1, echo=TRUE>>=
@@ -143,7 +143,7 @@ summary(res2[[3]])
 This time more points are called outliers.  Note that such a change of the rule will not incur a change of the model-fitting process.  The information about which points are called outliers is conveyed through the \texttt{flagOutliers} slot, a logical vector in which the positions of \texttt{TRUE} correspond to points being called outliers.  
 
 By default, when $10$ or more points accumulate on the upper or lower boundary of any parameter, the \texttt{flowClust} function will filter those points.  To change the threshold count from the default, users may specify \texttt{max.count} and \texttt{min.count} when running \texttt{flowClust}.  To suppress filtering at the upper and/or the lower boundaries, set \texttt{max.count} and/or \texttt{min.count} as $-1$.  We can also use the \texttt{max} and \texttt{min} arguments to control filtering of points, but from a different perspective.  For instance, if we are only interested in cells which have a \texttt{FL1.H} measurement within $(0, 400)$ and \texttt{FL3.H} within $(0, 800)$, we may use the following code to perform the cluster analysis:
-<<stage2Alternative, results=HIDE>>=
+<<stage2Alternative, results=hide>>=
 flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=2, B=100, min=c(0,0), max=c(400,800))
 @
 

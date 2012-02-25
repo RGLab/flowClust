@@ -355,6 +355,7 @@ setMethod("Subset", signature("flowFrame","tmixFilterResultList"),
     return(pop)
 }
 
+setGeneric("split")
 
 setMethod("split",
           signature(x="data.frame", f="flowClust", drop="ANY"),
