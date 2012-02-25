@@ -140,7 +140,7 @@ dmvt <- function(x, mu, sigma, nu, lambda, log=FALSE)
     if (!missing(lambda)) tx <- box(x, lambda) else tx <- x
 
     M <- mahalanobis(tx, mu, sigma)
-    if (nu != Inf) value <- lgamma((nu+p)/2) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - p/2 * log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu) else value <- -p/2 * log(2*pi) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - 1/2 * M
+    if (nu != Inf) value <- lgamma((nu+p)/2) - 1/2 * determinant(as.matrix(sigma), logarithm=TRUE)$modulus[1] - p/2 * log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu) else value <- -p/2 * log(2*pi) - 1/2 * determinant(as.matrix(sigma), logarithm=TRUE)$modulus[1] - 1/2 * M
     if (!missing(lambda)) value <- value + (lambda-1) * rowSums(log(abs(x)))
     if (log==F) value <- exp(value)
     list(value=value, md=M)
