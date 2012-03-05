@@ -5,7 +5,7 @@ import(methods)
 importFrom(stats,
            density)
 
-importFrom(BiocGenerics, plot, summary)
+importFrom(stats4, plot, summary)
 
 importFrom(graphics,
            hist)
