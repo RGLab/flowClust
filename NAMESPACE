@@ -2,7 +2,7 @@ useDynLib(flowClust)
 
 import(methods)
 
-importFrom(stats,
+importMethodsFrom(BiocGenerics,
            density)
 
 importFrom(stats4, plot, summary)
