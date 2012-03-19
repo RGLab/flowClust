@@ -1,5 +1,7 @@
 \name{flowClust-package}
 \alias{flowClust-package}
+\alias{Ulist-class}
+\alias{Uvector-class}
 \docType{package}
 \title{
 Clustering for Flow Cytometry
