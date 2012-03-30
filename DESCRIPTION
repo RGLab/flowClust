@@ -1,7 +1,7 @@
 Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
-Version: 2.13.5
+Version: 2.14.0
 Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>
 Maintainer: Raphael Gottardo <raph@stat.ubc.ca>
 Depends: R(>= 2.5.0),BiocGenerics, methods, mnormt, ellipse, Biobase, flowCore(>= 1.11.23)
