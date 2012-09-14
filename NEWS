@@ -1,0 +1,20 @@
+CHANGES in VERSION 1.8
+----------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o We now check if the covariance matrices can be inverted and if not we stop the algorithm and output NaN for the log likelihood. As a consequence, the function does not stop and can finish all computable values of K.
+
+NEW FEATURES
+    o FlowClust is now bayesian. The user can specify prior information for cell population means and covariances. This
+    is particularly useful for identifying rare cell populations.  
+
+    o Support for the multicore package. The number of cores will automatically be detected. The multicore package
+    needs to be loaded for that.
+    
+    o Snowfall is also supported and if sfCluster() is called, snowfall will be used over multicore. So if you want to use snowfall make 
+    sure not to load multicore
+    
+BUG FIXES
+
+(start date: 10 July, 2010)
