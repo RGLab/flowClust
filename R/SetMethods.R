@@ -195,7 +195,8 @@ setMethod("%in%", signature("flowFrame", "tmixFilter"),
                     level=table@level, u.cutoff=uc, z.cutoff=table@z.cutoff,
                     randomStart=table@randomStart, B.init=table@B.init, 
                     tol.init=table@tol.init, seed=table@seed,
-                    criterion=table@criterion, control=table@control)
+                    criterion=table@criterion, control=table@control,
+                    usePrior=table@usePrior, prior=table@prior)
       })
 
 
