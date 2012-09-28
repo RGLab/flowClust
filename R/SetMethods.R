@@ -692,8 +692,14 @@ getEstimates <- function(object, data)
              dispersion=object@sigma)
     else{
         if (missing(data))
-            list(proportions=object@w, locations=rbox(object@mu,
-                                       object@lambda))
+            list(proportions=object@w, locations={if((object@lambda!=1))
+				{
+					rbox(object@mu,object@lambda)
+				}else{
+					object@mu
+				}
+				})
+					
         else
         {
             if(is(data,"flowFrame"))
@@ -737,8 +743,12 @@ getEstimates <- function(object, data)
             precision <- matrix(obj$precision, K, py*py, byrow=TRUE)
             for(k in 1:K) sigma[k,,] <- matrix(precision[k,], py, py,
                                                byrow=TRUE)
-            list(proportions=object@w, locations=rbox(object@mu,
-                                       object@lambda),
+            list(proportions=object@w, {if((object@lambda!=1)){
+					locations=rbox(object@mu,
+                                       object@lambda)
+					}else{
+					object@mu
+					}},
                  locationsC=matrix(obj$mu,K,py,byrow=TRUE), dispersion=sigma)
         }
     }

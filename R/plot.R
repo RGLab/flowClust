@@ -121,6 +121,7 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
 			if (any(x@lambda!=1)){
 				lambda<-rep(x@lambda, length.out=x@K)
 			}else{
+			#WTF.. why set lambda to 0?
 				lambda<-numeric(0)
 			}
 		}else{
@@ -161,7 +162,17 @@ dmvt <- function(x, mu, sigma, nu, lambda, log=FALSE)
     if (is.vector(x) && length(x)==length(mu)) x <- matrix(x,1) else x <- as.matrix(x)
     p <- ncol(x)
 
-    if (!missing(lambda)) tx <- box(x, lambda) else tx <- x
+    if (!missing(lambda)){
+	if(lambda!=1){ 
+		tx <- box(x, lambda)
+	} else 
+	{ 
+	    tx <- x
+	}
+    } else 
+	{
+		tx <- x
+   	} 	
 
     M <- mahalanobis(tx, mu, sigma)
     if (nu != Inf) value <- lgamma((nu+p)/2) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - p/2 * log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu) else value <- -p/2 * log(2*pi) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - 1/2 * M
@@ -307,7 +318,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
     den <- function(y) {
         value <- 0
         nu <- rep(x@nu, length.out=x@K)
-        if (length(x@lambda)>0) {
+        if (length(x@lambda)>0&(any(x@lambda!=1))) {
             lambda <- rep(x@lambda, length.out=x@K)
             for (k in include) {
                 yTrans <- (sign(y)*abs(y)^lambda[k] - 1) / lambda[k]
