@@ -373,13 +373,27 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 			}else{
 				ytmp<-y;
 			}
-			label<-try(kmeans(scale(ytmp),scale(prior$Mu0),nstart=100,iter.max=100)$cluster,silent=TRUE)
-			if(inherits(label,"try-error"))
-				label<-try(kmeans(scale(ytmp),K[i],nstart=100,iter.max=100)$cluster,silent=TRUE)
-			if(inherits(label,"try-error")){
-				label <- sample(1:K[i], ly, replace=T)
-				ind<-0;
-			}
+      # If the number of features (variables) is larger than 1, then K-means is
+      # used to initialize the cluster labels. In the case that the number of
+      # features is 1, then we use the prior densities to initialize the cluster
+      # labels.
+      if (py > 1) {
+        label<-try(kmeans(scale(ytmp),scale(prior$Mu0),nstart=100,iter.max=100)$cluster,silent=TRUE)
+        if(inherits(label,"try-error"))
+          label<-try(kmeans(scale(ytmp),K[i],nstart=100,iter.max=100)$cluster,silent=TRUE)
+        if(inherits(label,"try-error")){
+          label <- sample(1:K[i], ly, replace=T)
+          ind<-0;
+        }
+      } else {
+        # Here, we initialize the cluster labels of each observation to the one
+        # which maximizes the prior probability.
+        prob <- sapply(seq_len(K), function(k) {
+          with(prior, w0[k] * dmvt(x = ytmp, mu = Mu0[k, ], sigma = Lambda0[k,,],
+                                   nu = nu0[k], lambda = lambda)$value)
+        })
+        label <- apply(prob, 1, which.max)
+      }
 		}
 	}
 	
