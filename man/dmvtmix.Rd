@@ -16,7 +16,9 @@ dmvtmix(x, w, mu, sigma, nu, lambda, object, subset, include, log=FALSE)
 \item{w}{A numeric vector of length \eqn{K} containing the cluster proportions.}
 \item{mu}{A matrix of size \eqn{K \times P}{K x P} containing the \eqn{K} mean vectors.}
 \item{sigma}{An array of size \eqn{K \times P \times P}{K x P x P} containing the \eqn{K} covariance matrices.}
-\item{nu}{The degrees of freedom used for the \eqn{t} distribution.  If \code{nu=Inf}, Gaussian distribution will be used.}
+\item{nu}{A numeric vector of length \eqn{K} containing the degrees of
+  freedom used for the \eqn{t} distribution. If only one value is specified
+  for \code{nu}, then it is used for all \eqn{K} clusters. If \code{nu=Inf}, Gaussian distribution will be used.}
 \item{lambda}{The Box-Cox transformation parameter.  If missing, the conventional \eqn{t} distribution without transformation will be used.}
 \item{object}{An optional argument.  If provided, it's an object returned from \code{\link{flowClust}}, and the previous arguments will be assigned values from the corresponding slots of \code{object}.}
 \item{subset}{An optional argument.  If provided, it's a numeric vector indicating which variables are selected for computing the densities.  If \code{object} is provided and \code{object@varNames} is not \code{NULL}, then a character vector containing the names of the variables is allowed.}

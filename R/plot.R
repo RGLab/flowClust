@@ -205,7 +205,15 @@ dmvtmix <- function(x, w, mu, sigma, nu, lambda, object, subset, include, log=FA
         sigma <- array(sigma, c(K, 1, 1))
     }
 
-    nu <- rep(nu, K)
+    # If only one value of 'nu' is specified, then it is repeated for each
+    # mixture component. Otherwise, we allow the user to specify a different
+    # value of 'nu' for each population. In the case that the number of values of
+    # 'nu' is not the same as 'K', we throw an error.
+    if (length(nu) == 1) {
+      nu <- rep(nu, K)
+    } else if (length(nu) != K) {
+      stop("The number of values in 'nu' must be 1 or K.")
+    }
     if (!missing(lambda)) 
         lambda <- rep(lambda, K)
 
