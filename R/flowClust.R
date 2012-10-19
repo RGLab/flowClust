@@ -493,11 +493,11 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	flagOutliers[include] <- as.logical(obj$flagOutliers)
 
 # output reordered prior
-	prior$Mu0<-matrix(obj$mu0,K[i],py,byrow=TRUE);
-	prior$Lambda0<-aperm(array(obj$lambda0,c(py,py,K[i])),c(3,1:2))
-	prior$Omega0<-aperm(array(obj$omega0,c(py,py,K[i])),c(3,1:2))
-	prior$nu0<-obj$nu0
-	prior$w0<-obj$w0
+	prior$Mu0<-matrix({if(all(!is.null(obj$mu0))){obj$mu0}else{NA}},K[i],py,byrow=TRUE);
+	prior$Lambda0<-aperm(array({if(all(!is.null(obj$lambda0))){obj$lambda0}else{NA}},c(py,py,K[i])),c(3,1:2))
+	prior$Omega0<-aperm(array({if(all(!is.null(obj$omega0))){obj$omega0}else{NA}},c(py,py,K[i])),c(3,1:2))
+	prior$nu0<-{if(all(!is.null(obj$nu0))){obj$nu0}else{NA}}
+	prior$w0<-{if(all(!is.null(obj$w0))){obj$nu0}else{NA}}
 #omit	
 #result<- new("flowClust", expName=expName, varNames=varNames, K=K[i],
 #		w=obj$w, mu=matrix(obj$mu, K[i], py, byrow=TRUE), sigma=sigma,
