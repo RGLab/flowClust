@@ -12,7 +12,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	else if (is(x, "matrix")) {
 		if (length(varNames)==0) {
 			y <- x
-			if (length(colnames(x))==0) 
+			if (length(colnames(x))==0)
 				varNames <- "Not Available"
 			else varNames <- colnames(x)
 		}
@@ -31,31 +31,31 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	}
 	else if (is(x, "vector")) {
 		y <- matrix(x)
-		if (length(varNames)==0) 
+		if (length(varNames)==0)
 			varNames <- "Not Available"
 	}
 	else {
 		stop(paste("Object ", as.character(x), " is not of class flowFrame / matrix / data frame!"))
 	}
-	
+
 	# finding filtered observations
 	rm.max <- rm.min <- rep(FALSE, nrow(y))
 	if (max.count > -1) {
-		if (is.null(max)[1]) 
+		if (is.null(max)[1])
 			max <- apply(y, 2, max)
-		for (k in 1:ncol(y))  if (sum(y[,k]>=max[k]) >= max.count) 
+		for (k in 1:ncol(y))  if (sum(y[,k]>=max[k]) >= max.count)
 				rm.max <- rm.max | (y[,k] >= max[k])
 	}
 	if (min.count > -1) {
-		if (is.null(min)[1]) 
+		if (is.null(min)[1])
 			min <- apply(y, 2, min)
-		for (k in 1:ncol(y))  if (sum(y[,k]<=min[k]) >= min.count) 
+		for (k in 1:ncol(y))  if (sum(y[,k]<=min[k]) >= min.count)
 				rm.min <- rm.min | (y[,k] <= min[k])
 	}
 	include <- !rm.max & !rm.min
-	
+
 	usePrior=match.arg(as.character(usePrior),c("yes","no"))
-	if(usePrior=="yes"){ 
+	if(usePrior=="yes"){
 		if(is.null(prior)){
 			stop("You must specify a prior with usePrior=\"yes\"");
 		}
@@ -70,6 +70,12 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		{
 			stop("You are using a prior with cluster specific transformations.\n  This is not recommended.")
 		}
+                if(any(is.infinite(c(nu,prior$nu0)))){
+                    stop("If usePrior='yes', nu or nu0 may not be Inf");
+                }
+                if(lambda!=1&trans==1){
+                    warning("Use of a prior with transformation estimation and lambda!=1 requires the prior means to be on the transformed scale.")
+                }
 		# TODO Add tests for validity of w0. Set a default. Same for oorder.
 		if(!is.null(prior)&length(K==1)){
 			#Check that the prior dimensions match the model being fit.
@@ -88,11 +94,11 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 			}
 			if(lnu0==1){
 				#Extend nu0 to be a vector of length k. We allow cluster specific weight for covariance matrices.
-				prior$nu0<-rep(prior$nu0,mk); 
-			}	
+				prior$nu0<-rep(prior$nu0,mk);
+			}
 			if(length(prior$w0)==1){
-					#Extend w0 to be a vector of length k. 
-					prior$w0<-rep(prior$w0,mk); 
+					#Extend w0 to be a vector of length k.
+					prior$w0<-rep(prior$w0,mk);
 			}
 			options(warn=warn.o$warn)
 		}
@@ -106,7 +112,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	}
 	if((length(grep("multicore",loadedNamespaces()))==0) & (length(grep("snowfall",loadedNamespaces()))==0 || suppressMessages(!sfParallel())))
 	{
-		message("Using the serial version of flowClust")    
+		message("Using the serial version of flowClust")
 		# C version
 		result<-lapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior)
 	}
@@ -132,7 +138,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		message("Using the parallel (snowfall) version of flowClust with ", nClust, " cpus or cores")
 		result<-sfLapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior)
 	}
-	
+
 	# Simply return a flowClust object
 	if (length(K)==1)
 	{
@@ -158,7 +164,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	y <- as.matrix(y[include,,drop=FALSE])
 	ly <- nrow(y)
 	py <- ncol(y)
-	if (min(y)<=0 && lambda<=0) 
+	if (min(y)<=0 && lambda<=0)
 		stop("lambda must be positive when data contain zero / negative values!")
 	else if(usePrior=="yes")
 	{
@@ -169,7 +175,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		}else{
 			Omega0<-aperm(prior$Omega0,c(2:3,1));
 		}
-		
+
 		for(j in 1:K[i]){
 			if(!all(as.vector(Omega0[,,j])==0)){
 				#message(j)
@@ -205,7 +211,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		priorFlag<-1
 		.model<-2;
 	}
-	else 
+	else
 	{
 		# Non informative prior
 		Mu0<-matrix(rep(colMeans(y),K[i]),K[i],py,byrow=TRUE)
@@ -219,7 +225,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		w0<-rep(0,K[i]);
 		.model<-1;
 	}
-	
+
 # to determine the rule of calling outliers
 	if (nu != Inf) {
 		if (is.null(u.cutoff)) {
@@ -243,8 +249,8 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 			q.cutoff <- -1     # -1 means no outlier identification
 		ruleOutliers <- c(0, level, z.cutoff)
 	}
-	
-	
+
+
 	if (is.null(control$B.lambda)) control$B.lambda <- B    # BSolve=100
 	if (is.null(control$B.brent)) control$B.brent <- 10000    # iterSolveMax=50
 	if (is.null(control$tol.brent)) control$tol.brent <- 1e-5    # DiffSolve=1e-3
@@ -253,10 +259,10 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	if (is.null(control$nuLow)) control$nuLow <- 2    # nuLow=2
 	if (is.null(control$nuUp)) control$nuUp <- 100    # nuUp=30
 	if (is.null(control$seed)) control$seed <- TRUE
-	
+
 	ind <- 0
 	if (K[i]==1)
-	{ 
+	{
 		label <- rep(1, ly)
 	}
 	else if (!randomStart) #kmeans initialization
@@ -276,7 +282,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	if(priorFlag==0)
 	{ # Initialization based on short EMs with random partitions if randomStart=TRUE
 		if (control$seed) set.seed(seed)
-		if (randomStart==1) 
+		if (randomStart==1)
 		{
 			label <- sample(1:K[i], ly, replace=T)
 		}
@@ -292,10 +298,10 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		{
 			maxLabel <- vector("list",randomStart)
 			maxLogLike <- rep(NA,randomStart)
-			for (j in 1:randomStart) 
+			for (j in 1:randomStart)
 			{
 				label <- sample(1:K[i], ly, replace=TRUE)
-				if (nu != Inf) 
+				if (nu != Inf)
 				{
 					#cat(initprec,"\n");
 					#ordering of the priors.. used to reorder the population names;
@@ -306,14 +312,14 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 									lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))),
 									nu=as.double(rep(nu,K[i])),
 									z=rep(0,ly*K[i]), u=rep(0,ly*K[i]),
-									as.integer(label), uncertainty=double(ly), 
-									as.double(rep(u.cutoff,K[i])), as.double(z.cutoff), 
-									flagOutliers=integer(ly), as.integer(B.init), 
+									as.integer(label), uncertainty=double(ly),
+									as.double(rep(u.cutoff,K[i])), as.double(z.cutoff),
+									flagOutliers=integer(ly), as.integer(B.init),
 									as.double(tol.init), as.integer(trans),
-									as.integer(nu.est), logLike=as.double(0), 
-									as.integer(control$B.lambda), as.integer(control$B.brent), 
-									as.double(control$tol.brent), as.double(control$xLow), 
-									as.double(control$xUp), as.double(control$nuLow), 
+									as.integer(nu.est), logLike=as.double(0),
+									as.integer(control$B.lambda), as.integer(control$B.brent),
+									as.double(control$tol.brent), as.double(control$xLow),
+									as.double(control$xUp), as.double(control$nuLow),
 									as.double(control$nuUp),
 									mu0=as.double(t(Mu0)),
 									as.double(kappa0),
@@ -324,26 +330,26 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 									as.integer(.model),
 									oorder=as.integer(oorder),
 									PACKAGE="flowClust"))
-									if (class(obj)=="try-error") 
+									if (class(obj)=="try-error")
 									{
 										message("flowClust failed")
 									}
 				}
-				else 
+				else
 				{
-					obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
-									as.integer(py), as.integer(K[i]), 
-									w=rep(0,K[i]), mu=rep(0,K[i]*py), 
+					obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly),
+									as.integer(py), as.integer(K[i]),
+									w=rep(0,K[i]), mu=rep(0,K[i]*py),
 									precision=initprec,
-									lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))), 
+									lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))),
 									z=rep(0, ly*K[i]), u=rep(0,ly*K[i]),
-									as.integer(label), uncertainty=double(ly), 
-									as.double(q.cutoff), as.double(z.cutoff), 
-									flagOutliers=integer(ly), as.integer(B.init), 
-									as.double(tol.init), as.integer(trans), 
+									as.integer(label), uncertainty=double(ly),
+									as.double(q.cutoff), as.double(z.cutoff),
+									flagOutliers=integer(ly), as.integer(B.init),
+									as.double(tol.init), as.integer(trans),
 									logLike=as.double(0),
-									as.integer(control$B.lambda), as.integer(control$B.brent), 
-									as.double(control$tol.brent), as.double(control$xLow), 
+									as.integer(control$B.lambda), as.integer(control$B.brent),
+									as.double(control$tol.brent), as.double(control$xLow),
 									as.double(control$xUp),
 									as.double(t(Mu0)),
 									as.double(kappa0),
@@ -353,7 +359,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 									as.integer(.model),
 									PACKAGE="flowClust"))
 				}
-				if (class(obj)!="try-error") 
+				if (class(obj)!="try-error")
 				{
 					maxLabel[[j]] <- label
 					maxLogLike[j] <- obj$logLike
@@ -367,6 +373,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		if(usePrior=="yes")
 		{
 			M<-0
+                        #FIXME priors with transformation is currently borked
 			#Assuming Mu0 is on transformed scale
 			if(lambda!=1){
 				ytmp<-box(y,lambda);
@@ -396,29 +403,29 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
       }
 		}
 	}
-	
-	
+
+
 # long EMs
-	for (M in ind) 
+	for (M in ind)
 	{
-		if (nu != Inf) 
+		if (nu != Inf)
 		{
-			obj <- try(.C("flowClust", as.double(t(y)), as.integer(ly), 
+			obj <- try(.C("flowClust", as.double(t(y)), as.integer(ly),
 							as.integer(py), as.integer(K[i]),
 							w=rep(0,K[i]), mu=rep(0,K[i]*py),
 							precision=initprec,
-							lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))), 
+							lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))),
 							nu=as.double(rep(nu,K[i])),
 							z=rep(0,ly*K[i]), u=rep(0,ly*K[i]),
 							as.integer(if (M==0) label else maxLabel[[M]]), uncertainty=double(ly),
 							as.double(rep(u.cutoff,K[i])), as.double(z.cutoff),
 							flagOutliers=integer(ly), as.integer(B),
-							as.double(tol), as.integer(trans), 
+							as.double(tol), as.integer(trans),
 							as.integer(nu.est), logLike=as.double(0),
-							as.integer(control$B.lambda), as.integer(control$B.brent), 
-							as.double(control$tol.brent), as.double(control$xLow), 
+							as.integer(control$B.lambda), as.integer(control$B.brent),
+							as.double(control$tol.brent), as.double(control$xLow),
 							as.double(control$xUp), as.double(control$nuLow),
-							as.double(control$nuUp), 
+							as.double(control$nuUp),
 							mu0=as.double(t(Mu0)),
 							as.double(kappa0),
 							nu0=as.double(nu0),
@@ -431,23 +438,23 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 							if (class(obj)=="try-error"){
 								message("flowClust failed")
 							}
-							
+
 		}
-		else 
+		else
 		{
-			obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly), 
+			obj <- try(.C("flowClustGaussian", as.double(t(y)), as.integer(ly),
 							as.integer(py), as.integer(K[i]),
 							w=rep(0,K[i]), mu=rep(0,K[i]*py),
 							precision=initprec,
-							lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))), 
-							z=rep(0,ly*K[i]), u=rep(0,ly*K[i]), 
-							as.integer(if (M==0) label else maxLabel[[M]]), uncertainty=double(ly), 
+							lambda=as.double(rep(lambda, length.out=(if (trans>1) K[i] else 1))),
+							z=rep(0,ly*K[i]), u=rep(0,ly*K[i]),
+							as.integer(if (M==0) label else maxLabel[[M]]), uncertainty=double(ly),
 							as.double(q.cutoff), as.double(z.cutoff),
 							flagOutliers=integer(ly), as.integer(B),
-							as.double(tol), as.integer(trans), 
+							as.double(tol), as.integer(trans),
 							logLike=as.double(0),
-							as.integer(control$B.lambda), as.integer(control$B.brent), 
-							as.double(control$tol.brent), as.double(control$xLow), 
+							as.integer(control$B.lambda), as.integer(control$B.brent),
+							as.double(control$tol.brent), as.double(control$xLow),
 							as.double(control$xUp),
 							as.double(t(Mu0)),
 							as.double(kappa0),
@@ -457,16 +464,16 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 							as.integer(.model),
 							PACKAGE="flowClust"))
 			if (class(obj)!="try-error"){
-			
+
 				obj$nu <- Inf
 			}
 		}
 		if (class(obj)!="try-error")
 			break
 	}
-	if (class(obj)=="try-error") 
+	if (class(obj)=="try-error")
 		stop(geterrmessage())
-	
+
 	if(usePrior=="vague"){
 		trans<-1;
 	}
@@ -475,12 +482,12 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	precision <- matrix(obj$precision, K[i], py * py, byrow=TRUE)
 	for (k in 1:K[i])
 		sigma[k,,] <- matrix(precision[k,], py, py, byrow = TRUE)
-	
+
 # output BIC & ICL
 	BIC <- 2*obj$logLike - log(ly) * (K[i]*(py+1)*py/2 + K[i]*py + K[i]-1 + (if (trans>1) K[i] else trans) + (if (nu.est>1) K[i] else abs(nu.est)))
 	z <- matrix(obj$z, ly, K[i], byrow = TRUE)
 	ICL <- BIC + 2 * sum(z*log(z), na.rm = TRUE)
-	
+
 # output z, u, label, uncertainty, flagOutliers
 	z <- u <- matrix(NA, length(include), K[i])
 	z[include,] <- matrix(obj$z, ly, K[i], byrow=TRUE)
@@ -498,20 +505,25 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	prior$Omega0<-aperm(array({if(all(!is.null(obj$omega0))){obj$omega0}else{NA}},c(py,py,K[i])),c(3,1:2))
 	prior$nu0<-{if(all(!is.null(obj$nu0))){obj$nu0}else{NA}}
 	prior$w0<-{if(all(!is.null(obj$w0))){obj$nu0}else{NA}}
-#omit	
+#omit
 #result<- new("flowClust", expName=expName, varNames=varNames, K=K[i],
 #		w=obj$w, mu=matrix(obj$mu, K[i], py, byrow=TRUE), sigma=sigma,
 #		lambda=(if (trans>0) obj$lambda else numeric(0)), nu=(if (nu.est>1) obj$nu else obj$nu[1]), z=z,
-#		u=u, label=label, uncertainty=uncertainty, 
-#		ruleOutliers=ruleOutliers, flagOutliers=flagOutliers, rm.min=sum(rm.min), 
+#		u=u, label=label, uncertainty=uncertainty,
+#		ruleOutliers=ruleOutliers, flagOutliers=flagOutliers, rm.min=sum(rm.min),
 #		rm.max=sum(rm.max), logLike=obj$logLike, BIC=BIC, ICL=ICL);
 class(prior)<-"list";
 prior$order<-obj$oorder;
+	if(trans==1&obj$lambda==1){
+		obj$mu<-rbox(obj$mu,obj$lambda)
+	}
+	#do nothing in particular if trans>1
+        #Not sure if the above does the right thing when trans=1, and the returned lambda=1, and usePrior="no"
 	result<- new("flowClust", expName=expName, varNames=varNames, K=K[i],
 			w=obj$w, mu=matrix(obj$mu, K[i], py, byrow=TRUE), sigma=sigma,
 			lambda= obj$lambda, nu=(if (nu.est>1) obj$nu else obj$nu[1]), z=z,
-			u=u, label=label, uncertainty=uncertainty, 
-			ruleOutliers=ruleOutliers, flagOutliers=flagOutliers, rm.min=sum(rm.min), 
+			u=u, label=label, uncertainty=uncertainty,
+			ruleOutliers=ruleOutliers, flagOutliers=flagOutliers, rm.min=sum(rm.min),
 			rm.max=sum(rm.max), logLike=obj$logLike, BIC=BIC, ICL=ICL,prior=prior);
 	# if(!any(is.na(prior))&usePrior=="yes"&ruleOutliers[1]==0){
 		# label<-.fcbMap(result,ruleOutliers[2])
