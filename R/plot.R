@@ -176,7 +176,16 @@ dmvt <- function(x, mu, sigma, nu, lambda, log=FALSE)
 
     M <- mahalanobis(tx, mu, sigma)
     if (nu != Inf) value <- lgamma((nu+p)/2) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - p/2 * log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu) else value <- -p/2 * log(2*pi) - 1/2 * determinant(as.matrix(sigma), log=T)$modulus[1] - 1/2 * M
-    if (!missing(lambda)) value <- value + (lambda-1) * rowSums(log(abs(x)))
+
+    # Jacobian of Box-Cox transformation
+    # We ignore the Jacobian if no value for 'lambda' is specified.
+    # We also ignore the Jacobian if 'lambda = 1', which corresponds to no
+    # transformation. We do this to bypass the 'log(abs(x)))', which yields
+    # '-Inf' whenever 'x = 0'. This, of course, is unintended when no
+    # transformation is requested.
+    if (!missing(lambda) && lambda != 1) {
+      value <- value + (lambda-1) * rowSums(log(abs(x)))
+    }
     if (log==F) value <- exp(value)
     list(value=value, md=M)
 }
