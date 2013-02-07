@@ -6,7 +6,7 @@ setMethod("show", "flowClust",
           cat("This object has the following slots: \n")
           cat("expName, varNames, K, w, mu, sigma, lambda, nu, z, u, label,",
               "uncertainty, ruleOutliers, flagOutliers, rm.min, rm.max,",
-              "logLike, BIC, ICL\n")
+              "logLike, BIC, ICL,prior\n")
       })
 
 
@@ -17,10 +17,25 @@ setMethod("show", "flowClustList",
           cat("This object consists of a list of 'flowClust' elements, each of which has the following slots:\n")
           cat("expName, varNames, K, w, mu, sigma, lambda, nu, z, u, label,",
               "uncertainty, ruleOutliers, flagOutliers, rm.min, rm.max,",
-              "logLike, BIC, ICL\n")
+              "logLike, BIC, ICL, prior\n")
       })
 
+setMethod("show","flowClustTree",
+	function(object){
+		nn<-length(nodes(object))
+		ne<-length(unlist(edges(object)))
+		cat("A flowClustTree with ",nn," populations.\n");
+	})
 
+setGeneric("summary",useAsDefault=summary)
+setMethod("summary","flowClustTree",
+function(object){
+	nn<-RBGL::bfs(object);
+	cat("** A flowClustTree ** \n")
+	cat("** Populations: ",length(nn),"\n")
+	sapply(nn,function(x)cat("** 		     ",x,": ", dim(getData(object,x,parent=FALSE))[1]/dim(getData(object,x,parent=TRUE))[1],"\n"))
+	invisible(0);
+})
 setMethod("summary", "flowClust",
           function(object)
       {
@@ -53,6 +68,9 @@ setMethod("summary", "flowClust",
               "%)\n", sep="")
           cat("Uncertainty summary: \n")
           summary(object@uncertainty)
+		  if(!is.na(object@prior[[1]])){
+			summary(object@prior);
+		}
       })
 
 
@@ -177,7 +195,8 @@ setMethod("%in%", signature("flowFrame", "tmixFilter"),
                     level=table@level, u.cutoff=uc, z.cutoff=table@z.cutoff,
                     randomStart=table@randomStart, B.init=table@B.init, 
                     tol.init=table@tol.init, seed=table@seed,
-                    criterion=table@criterion, control=table@control)
+                    criterion=table@criterion, control=table@control,
+                    usePrior=table@usePrior, prior=table@prior)
       })
 
 
@@ -355,7 +374,7 @@ setMethod("Subset", signature("flowFrame","tmixFilterResultList"),
     return(pop)
 }
 
-setGeneric("split")
+setGeneric("split",useAsDefault=split)
 
 setMethod("split",
           signature(x="data.frame", f="flowClust", drop="ANY"),
@@ -519,18 +538,25 @@ setReplaceMethod("ruleOutliers", signature("flowClust","list"),
                      object@ruleOutliers[1:2] <- c(1, value$u.cutoff)
                  if (!is.null(value$z.cutoff))
                      object@ruleOutliers[3] <- value$z.cutoff
-
                  if (object@nu!=Inf)
                  {
                      if (object@ruleOutliers[1]==0)    # 0 means quantile
                      {     
                          py <- ncol(object@mu)
-                         cc <- py * qf(object@ruleOutliers[2], py, object@nu)
-                         u.cutoff <- (object@nu+py) / (object@nu+cc)
-                         if (length(u.cutoff)==1)
-                             result <- (importance(object, assign=T) < u.cutoff)
-                         else
+                         	cc <- py * qf(object@ruleOutliers[2], py, object@nu)
+                         	u.cutoff <- (object@nu+py) / (object@nu+cc)
+                         if (length(u.cutoff)==1){
+							# if(!any(is.na(object@prior))){
+								# result<-.fcbMap(object,quantile=object@ruleOutliers[2])==0
+							# }
+							# else
+							# {
+                             	result <- (importance(object, assign=T) < u.cutoff)
+							# }
+						}
+                         else{
                              result <- (importance(object, assign=T) < u.cutoff[Map(object, rm.outliers=F)])
+						}
                      }
                      else
                          result <- (importance(object, assign=T) <
@@ -560,14 +586,19 @@ setReplaceMethod("ruleOutliers", signature("flowClustList","list"),
 
 
 
-
 setGeneric("Map")
 
 setMethod("Map", signature(f="flowClust"),
           function(f, rm.outliers=TRUE, ...)
       {
-          result <- max.col(f@z, "first")
-          if (rm.outliers) result[which(f@flagOutliers)] <- NA
+		  # if(!any(is.na(f@prior))&f@ruleOutliers[1]==0){
+			# result<-.fcbMap(f,f@ruleOutliers[2]);
+			# if(rm.outliers)	result[which(f@flagOutliers)]<-NA
+			
+		  # }else{
+          	result <- max.col(f@z, "first")
+          	if (rm.outliers) result[which(f@flagOutliers)] <- NA
+		# }
           result
       })
 
@@ -661,8 +692,14 @@ getEstimates <- function(object, data)
              dispersion=object@sigma)
     else{
         if (missing(data))
-            list(proportions=object@w, locations=rbox(object@mu,
-                                       object@lambda))
+            list(proportions=object@w, locations={if((object@lambda!=1))
+				{
+					rbox(object@mu,object@lambda)
+				}else{
+					object@mu
+				}
+				})
+					
         else
         {
             if(is(data,"flowFrame"))
@@ -706,13 +743,16 @@ getEstimates <- function(object, data)
             precision <- matrix(obj$precision, K, py*py, byrow=TRUE)
             for(k in 1:K) sigma[k,,] <- matrix(precision[k,], py, py,
                                                byrow=TRUE)
-            list(proportions=object@w, locations=rbox(object@mu,
-                                       object@lambda),
+            list(proportions=object@w, {if((object@lambda!=1)){
+					locations=rbox(object@mu,
+                                       object@lambda)
+					}else{
+					object@mu
+					}},
                  locationsC=matrix(obj$mu,K,py,byrow=TRUE), dispersion=sigma)
         }
     }
 }
-
 
 
 

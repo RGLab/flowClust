@@ -1,24 +1,24 @@
 useDynLib(flowClust)
 
 import(methods)
-
-importMethodsFrom(BiocGenerics,
-           density)
-
-importFrom(stats4, plot, summary)
-
+import(graph)
+importFrom(MCMCpack,ddirichlet)
+importFrom(BiocGenerics,density)
+importClassesFrom(flowWorkspace,GatingSet)
 importFrom(graphics,
+           plot,
            hist)
 
 importFrom("flowCore", "summarizeFilter")
-
+importFrom("clue",solve_LSAP)
 importClassesFrom(Biobase,
                   AssayData)
 
 importClassesFrom(flowCore,
                   flowFrame,
                   filterSet,
-                  filter,
+                  flowSet,
+		  filter,
                   concreteFilter,
                   parameters,
                   parameterFilter,
@@ -49,6 +49,11 @@ importMethodsFrom(flowCore,
                   "filter",
                   "Subset")
 
+importMethodsFrom(flowWorkspace,
+		  getGate,
+		  getData,
+	       	  getNodes);
+
 ## export anything w/out a dot in front. 
 exportPattern("^[^\\.]")
 
@@ -56,7 +61,8 @@ exportClasses(flowClust,
               flowClustList,
               tmixFilter,
               tmixFilterResult,
-              tmixFilterResultList)
+              tmixFilterResultList,
+	      flowClustPriorTree)
 
 exportMethods(filter,
               "%in%",
@@ -71,10 +77,13 @@ exportMethods(filter,
               "ruleOutliers<-",
               Map,
               criterion,
-              "criterion<-")
+              "criterion<-",
+	       mkPrior)
 
 exportMethods(show,
               summary,
               plot,
               density,
               hist)
+
+export(flowClust2Prior)
