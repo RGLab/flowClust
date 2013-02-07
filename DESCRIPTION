@@ -8,11 +8,11 @@ Depends: R(>= 2.5.0),methods, Biobase, graph, RBGL,ellipse, flowViz,
         flowWorkspace(>= 0.5.60), mnormt, corpcor, synchronicity,
         flowCore(>= 1.11.23)
 Imports: BiocGenerics, MCMCpack
-Suggests: snowfall, multicore
+Suggests: parallel 
 Enhances:
 Description: Robust model-based clustering using a t-mixture model with Box-Cox transformation. Note: users should have GSL installed. Windows users: 'consult the README file available in the inst directory of the source distribution for necessary configuration instructions'.
 Collate: SetClasses.R SetMethods.R plot.R flowClust.R SimulateMixture.R
-        mkPriors.R
+        mkPriors.R peakMatch.R
 biocViews: Clustering, Bioinformatics, Visualization, FlowCytometry
 License: Artistic-2.0
 Packaged: 2012-07-13 20:14:40 UTC; finak

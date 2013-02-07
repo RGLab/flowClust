@@ -110,7 +110,7 @@ You can download Rtools at \url{http://www.murdoch-sutherland.com/Rtools/} which
 To demonstrate the functionality we use a flow cytometry dataset from a drug-screening project to identify agents that would enhance the anti-lymphoma activity of Rituximab, a therapeutic monoclonal antibody.  The dataset is an object of class \texttt{flowFrame}; it consists of eight parameters, among them only the two scattering parameters (\texttt{FSC.H}, \texttt{SSC.H}) and two fluorescence parameters (\texttt{FL1.H}, \texttt{FL3.H})  are of interest in this experiment.  Note that, apart from a typical \texttt{matrix} or \texttt{data.frame} object, \textbf{flowClust} may directly take a \texttt{flowFrame}, the standard {\bf R} implementation of an FCS file, which may be returned from the \texttt{read.FCS} function in the \textbf{flowCore} package, as data input.  The following code performs an analysis with one cluster using the two scattering parameters:
 
 <<stage0, results=hide>>=
-library(multicore)
+library(parallel)
 library(flowClust)
 @
 <<stage1, echo=TRUE>>=

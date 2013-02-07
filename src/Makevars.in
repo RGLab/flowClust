@@ -1,1 +1,1 @@
-PKG_LIBS = @LIBS@
+PKG_LIBS = @LIBS@ `gsl-config --libs` 
