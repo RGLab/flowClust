@@ -1,5 +1,6 @@
 \name{mkPrior}
 \alias{mkPrior}
+\alias{mkPrior,list,flowSet,missing,missing-method}
 \title{
 Generate a flowClust prior specification
 }
@@ -11,7 +12,7 @@ mkPrior(gate, data, nu0, Omega0, ...)
 }
 \arguments{
   \item{gate}{
-A list of gates. The gates should represent the SAME population gated across multiple samples.
+A list of flowCore gates. The gates should represent the SAME population gated across multiple samples.
 }
   \item{data}{
 A flowSet of the same size as the number of gates above. Each flowFrame in the flowSet should contain the events representing the population in its corresponding gate. i.e. it should be the gated data.
@@ -39,9 +40,6 @@ Return values depend on the specific method called. Not meant for user consumpti
 Greg Finak \email{gfinak@fhcrc.org}
 }
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
