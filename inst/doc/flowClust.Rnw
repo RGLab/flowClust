@@ -212,8 +212,20 @@ filter(rituximab2, MBCfilter %subset% rectGate)
 
 The latest version of flowClust now supports priors through a Multivariate Normal-Inverse Wishart model. 
 
-One way to construct a prior is to use an existing flowClust model fit. For example:
+One way to construct a prior is to use an existing flowClust model fit. For example, we can construct a prior from the rituximab fit. Then we can adjust the prior so that the FL1-/FL3- population is centered at 200,200 \textit{a priori}, and both populations have an \textit{a priori} smaller variance.
 
+The parameter kappa acts as a weighting factor for the prior, while Nt controls the number of equivalent observations for the prior. 
+<<priors>>=
+prior<-flowClust2Prior(res2[[2]],kappa=1,Nt=5000)
+prior2<-prior
+prior2$Mu0[1,]<-rep(box(200,prior2$lambda),2)
+prior2$Lambda0<-prior2$Lambda0/2
+pfit2<-flowClust(rituximab2,varNames=c("FL1.H","FL3.H"),K=2,prior=prior2,usePrior="yes")
+
+par(mfrow=c(1,2))
+plot(res2[[2]],data=rituximab2)
+plot(pfit2,data=rituximab2)
+@
 
 
 \end{document}
