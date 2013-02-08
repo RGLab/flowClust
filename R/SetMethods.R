@@ -20,22 +20,22 @@ setMethod("show", "flowClustList",
               "logLike, BIC, ICL, prior\n")
       })
 
-setMethod("show","flowClustTree",
-	function(object){
-		nn<-length(nodes(object))
-		ne<-length(unlist(edges(object)))
-		cat("A flowClustTree with ",nn," populations.\n");
-	})
+#setMethod("show","flowClustTree",
+#	function(object){
+#		nn<-length(nodes(object))
+#		ne<-length(unlist(edges(object)))
+#		cat("A flowClustTree with ",nn," populations.\n");
+#	})
 
 setGeneric("summary",useAsDefault=summary)
-setMethod("summary","flowClustTree",
-function(object){
-	nn<-RBGL::bfs(object);
-	cat("** A flowClustTree ** \n")
-	cat("** Populations: ",length(nn),"\n")
-	sapply(nn,function(x)cat("** 		     ",x,": ", dim(getData(object,x,parent=FALSE))[1]/dim(getData(object,x,parent=TRUE))[1],"\n"))
-	invisible(0);
-})
+#setMethod("summary","flowClustTree",
+#function(object){
+#	nn<-RBGL::bfs(object);
+#	cat("** A flowClustTree ** \n")
+#	cat("** Populations: ",length(nn),"\n")
+#	sapply(nn,function(x)cat("** 		     ",x,": ", dim(getData(object,x,parent=FALSE))[1]/dim(getData(object,x,parent=TRUE))[1],"\n"))
+#	invisible(0);
+#})
 setMethod("summary", "flowClust",
           function(object)
       {

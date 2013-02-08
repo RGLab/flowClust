@@ -4,7 +4,7 @@ import(methods)
 import(graph)
 importFrom(MCMCpack,ddirichlet)
 importFrom(BiocGenerics,density)
-importClassesFrom(flowWorkspace,GatingSet)
+#importClassesFrom(flowWorkspace,GatingSet)
 importFrom(graphics,
            plot,
            hist)
@@ -49,10 +49,10 @@ importMethodsFrom(flowCore,
                   "filter",
                   "Subset")
 
-importMethodsFrom(flowWorkspace,
-		  getGate,
-		  getData,
-	       	  getNodes);
+#importMethodsFrom(flowWorkspace,
+#		  getGate,
+#		  getData,
+#	       	  getNodes);
 
 ## export anything w/out a dot in front. 
 exportPattern("^[^\\.]")
@@ -61,8 +61,7 @@ exportClasses(flowClust,
               flowClustList,
               tmixFilter,
               tmixFilterResult,
-              tmixFilterResultList,
-	      flowClustPriorTree)
+              tmixFilterResultList)
 
 exportMethods(filter,
               "%in%",

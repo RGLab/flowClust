@@ -110,24 +110,24 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		}
 		prior<-list(NA);
 	}
-	if((length(grep("parallel",loadedNamespaces()))==0) )
+	if((length(grep("multicore",loadedNamespaces()))==0) )
 	{
 		message("Using the serial version of flowClust")
 		# C version
 		result<-lapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior)
 	}
-	else if(length(grep("parallel",loadedNamespaces()))==1)
+	else if(length(grep("multicore",loadedNamespaces()))==1)
 	{
 		cores<-getOption("cores")
 		if(is.null(cores))
 		{
-			nClust<-parallel:::detectCores()
+			nClust<-multicore:::volatile$detectedCores
 		}
 		else
 		{
 			nClust<-cores
 		}
-		message("Using the parallel version of flowClust with ",nClust," cores")
+		message("Using the parallel (multicore) version of flowClust with ",nClust," cores")
 		# Split into nClust segReadsList
 		result<-mclapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior, mc.preschedule=FALSE)
 	}
