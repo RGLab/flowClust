@@ -17,8 +17,10 @@
 #'@param NT the number of total equivalent observation
 #'@param addCluster not currently supported
 #'@export
-flowClust2Prior<-function(x,kappa,NT=10000,addCluster=NULL){
+flowClust2Prior<-function(x,kappa,Nt=NULL,addCluster=NULL){
+  if(is.null(Nt)){
     Nt<-nrow(x@z)
+  }
     p<-ncol(x@mu)
     K<-x@K
     
@@ -54,36 +56,40 @@ flowClust2Prior<-function(x,kappa,NT=10000,addCluster=NULL){
     
     lambda<-x@lambda
     #w0 are dirichlet prior parameters
-    #Make them vague
+    #Should make them vague
     w0<-x@w*Nt
     
-    #if(!is.null(addCluster)){
-    #        S<-cov(Mu0)
-    #        Lam<-array(0,c(K+1,p,p))
-    #        om<-array(0,c(K+1,p,p))
-    #        Mu0<-rbind(Mu0,colMeans(Mu0))
-    #        for(i in 1:K){
-    #            om[i,,]<-Omega0[i,,]
-    #            Lam[i,,]<-Lambda0[i,,]
-    #        }
-    #        om[K+1,,]<-diag(1,p)
-    #        Lam[K+1,,]<-S
-    #        if(p==1){
-    #            dS<-Lam[K+1,,]
-    #            dO<-om[K+1,,]
-    #        }else{
-    #            dS<-det(Lam[K+1,,])
-    #            dO<-det(om[K+1,,])
-    #        }
-    #        k<-(dO/dS)^(1/p)
-    #        om[K+1,,]<-om[K+1,,]*k
-    #        om[K+1,,]<-solve(om[K+1,,])
-    #        Omega0<-om
-    #        Lambda0<-Lam
-    #        nu0<-c(nu0,p+2)
-    #        w0<-c(w0,1)
-    #        K<-K+1
-    #    }
+    if(!is.null(addCluster)){
+      for(i in (K+1):(K+addCluster)){
+           S<-cov(Mu0)
+           Lam<-array(0,c(K+1,p,p))
+           om<-array(0,c(K+1,p,p))
+           Mu0<-rbind(Mu0,colMeans(Mu0))
+           for(i in 1:K){
+               om[i,,]<-Omega0[i,,]
+               Lam[i,,]<-Lambda0[i,,]
+           }
+           om[K+1,,]<-diag(1,p)
+           Lam[K+1,,]<-diag(1,p)
+           diag(Lam[K+1,,])<-diag(S)
+           diag(om[K+1,,])<-diag(S)
+           if(p==1){
+               dS<-Lam[K+1,,]
+               dO<-om[K+1,,]
+           }else{
+               dS<-det(Lam[K+1,,])
+               dO<-det(om[K+1,,])
+           }
+           k<-(dO/dS)^(1/p)
+           om[K+1,,]<-om[K+1,,]*k
+           #om[K+1,,]<-om[K+1,,]
+           Omega0<-om
+           Lambda0<-Lam
+           nu0<-c(nu0,p+2)
+           w0<-c(w0,1)
+           K<-K+1
+      }
+    }
     prior<-list(Mu0=Mu0,Lambda0=Lambda0,Omega0=Omega0,w0=w0,nu0=nu0,nu=x@nu,lambda=x@lambda,K=K)
     class(prior)<-"flowClustPrior"
     attr(prior,"lambda")<-x@lambda
