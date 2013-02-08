@@ -20,7 +20,7 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
           min.count=10, max.count=10, min=NULL, max=NULL,
           level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=10, 
           B.init=B, tol.init=1e-2, seed=1, criterion="BIC",
-          control=NULL)
+          control=NULL,prior=NULL,usePrior="no")
 }
 
 \arguments{
@@ -47,6 +47,8 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
 \item{seed}{An integer giving the seed number used when \code{randomStart>0}.}
 \item{criterion}{A character string stating the criterion used to choose the best model.  May take either \code{"BIC"} or \code{"ICL"}.  This argument is only relevant when \code{length(K)>1}.}
 \item{control}{An argument reserved for internal use.}
+\item{prior}{The specification of the prior. Used if usePrior="yes"}
+\item{usePrior}{Argument specifying whether or not the prior will be used. Can be "yes","no","vague". A vague prior will be automatically specified if usePrior="vague"}
 }
 
 \details{
