@@ -52,10 +52,15 @@ rbox <- function(data, lambda) {
 }
 
 
+setGeneric("plot", useAsDefault=plot)
 
 setMethod("plot", signature(x="flowClust", y="missing"),
-function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=1:(x@K), main=NULL, grayscale=F, col=(if (grayscale) gray(1/4) else 2:(length(include)+1)), pch=".", cex=0.6, col.outliers=gray(3/4), pch.outliers=".", cex.outliers=cex, col.rm=1, pch.rm=1, cex.rm=0.6, ecol=1, elty=1, level=NULL, u.cutoff=NULL, z.cutoff=NULL, npoints=501, add=F, ...)
+function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=1:(x@K), main=NULL, grayscale=F, col=(if (grayscale) gray(1/4) else 2:(length(include)+1)), pch=".", cex=0.6, col.outliers=gray(3/4), pch.outliers=".", cex.outliers=cex, col.rm=1, pch.rm=1, cex.rm=0.6, ecol=1, elty=1, level=NULL, u.cutoff=NULL, z.cutoff=NULL, npoints=501, add=F,...)
 {
+	if(ncol(x@mu)==1){
+		hist(x,data,...)
+		return(invisible(0));
+	}
     if (is(data, "flowFrame")) data <- exprs(data)[,x@varNames]  else
     if (is(data, "matrix")) (if (length(x@varNames)>0) data <- as.matrix(data[,x@varNames]))  else
     if (is(data, "data.frame")) data <- as.matrix(data[,x@varNames])
@@ -64,7 +69,10 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
 
     py <- ncol(data)
     data <- data[,subset]
-    label <- Map(x, rm.outliers=F)
+		if(is.null(level)){
+			level<-0.9
+		}
+    	label <- Map(x, rm.outliers=F)
     if (!add) plot(data, type="n", main=main, ...)  else title(main)
     flagFiltered <- is.na(label)
 
@@ -78,10 +86,10 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
     if (!show.outliers) for (i in include)  points(data[!flagFiltered & label==i,], pch=pch[j <- j+1], col=col[j], cex=cex[j])  else {
 
         # plot outliers
-        if (!is.null(level) || !is.null(u.cutoff) || !is.null(z.cutoff)) ruleOutliers(x) <- list(level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff)
-        for (i in include) points(data[!flagFiltered & label==i & !x@flagOutliers,], pch=pch[j <- j+1], col=col[j], cex=cex[j])
-        j <- 0
-        for (i in include) points(data[!flagFiltered & label==i & x@flagOutliers,], pch=pch.outliers[j <- j+1], col=col.outliers, cex=cex.outliers[j])
+        	if (!is.null(level) || !is.null(u.cutoff) || !is.null(z.cutoff)) ruleOutliers(x) <- list(level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff)
+        	for (i in include) points(data[!flagFiltered & label==i & !x@flagOutliers,], pch=pch[j <- j+1], col=col[j], cex=cex[j])
+        	j <- 0
+        	for (i in include) points(data[!flagFiltered & label==i & x@flagOutliers,], pch=pch.outliers[j <- j+1], col=col.outliers, cex=cex.outliers[j])
     }
 
     # plot filtered points (from above or below)
@@ -94,14 +102,31 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
 
         if (all(x@nu!=Inf)) {
             if (x@ruleOutliers[1]==0) {     # 0 means quantile
-                cc <- py * qf(x@ruleOutliers[2], py, x@nu)
+				if(all(is.na(x@prior))){
+                	cc <- py * qf(x@ruleOutliers[2], py, x@nu)
+				}else{
+					cc <- py * qf(x@ruleOutliers[2], py, x@nu)
+				}
             }  else {     # 1 means u.cutoff
-                cc <- ((x@nu+py)/x@ruleOutliers[2] - x@nu)    
+				if(all(is.na(x@prior))){
+                	cc <- ((x@nu+py)/x@ruleOutliers[2] - x@nu)    
+				}else{
+					cc <- ((x@nu+py)/x@ruleOutliers[2] -x@nu)    
+				}
             }
         }  else cc <- qchisq(x@ruleOutliers[2], py)
 
         j <- 0
-        lambda <- if (length(x@lambda)>0) rep(x@lambda, length.out=x@K) else numeric(0)
+        if (length(x@lambda)>0){
+			if (any(x@lambda!=1)){
+				lambda<-rep(x@lambda, length.out=x@K)
+			}else{
+			#WTF.. why set lambda to 0?
+				lambda<-numeric(0)
+			}
+		}else{
+			lambda<-numeric(0);
+		}
         cc <- rep(cc, length.out=x@K)
         for (i in include) {
             eigenPair <- eigen(x@sigma[i,subset,subset])
@@ -109,7 +134,7 @@ function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=
             l2 <- sqrt(eigenPair$values[2]) * sqrt(cc)
             angle <- atan(eigenPair$vectors[2,1] / eigenPair$vectors[1,1]) * 180/pi
 
-            if (length(lambda)>0) {
+           if (length(lambda)>0&any(lambda!=1)) {
                 points(rbox(.ellipsePoints(a=l1[i], b=l2[i], alpha=angle, loc=x@mu[i,subset], n=npoints), lambda[i]), type="l", lty=elty[j <- j+1], col=ecol[j])
             } else {
                 points(.ellipsePoints(a=l1[i], b=l2[i], alpha=angle, loc=x@mu[i,subset], n=npoints), type="l", lty=elty[j <- j+1], col=ecol[j])
@@ -137,11 +162,30 @@ dmvt <- function(x, mu, sigma, nu, lambda, log=FALSE)
     if (is.vector(x) && length(x)==length(mu)) x <- matrix(x,1) else x <- as.matrix(x)
     p <- ncol(x)
 
-    if (!missing(lambda)) tx <- box(x, lambda) else tx <- x
+   if (!missing(lambda)){
+	if(lambda!=1){ 
+		tx <- box(x, lambda)
+	} else 
+	{ 
+	    tx <- x
+	}
+    } else 
+	{
+		tx <- x
+   	} 	
 
     M <- mahalanobis(tx, mu, sigma)
-    if (nu != Inf) value <- lgamma((nu+p)/2) - 1/2 * determinant(as.matrix(sigma), logarithm=TRUE)$modulus[1] - p/2 * log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu) else value <- -p/2 * log(2*pi) - 1/2 * determinant(as.matrix(sigma), logarithm=TRUE)$modulus[1] - 1/2 * M
-    if (!missing(lambda)) value <- value + (lambda-1) * rowSums(log(abs(x)))
+    if (nu != Inf) value <- lgamma((nu+p)/2) - 1/2 * determinant(as.matrix(sigma), logarithm=T)$modulus[1] - p/2 * log(pi*nu) - lgamma(nu/2) - (nu+p)/2 * log(1+M/nu) else value <- -p/2 * log(2*pi) - 1/2 * determinant(as.matrix(sigma), logarithm=T)$modulus[1] - 1/2 * M
+
+    # Jacobian of Box-Cox transformation
+    # We ignore the Jacobian if no value for 'lambda' is specified.
+    # We also ignore the Jacobian if 'lambda = 1', which corresponds to no
+    # transformation. We do this to bypass the 'log(abs(x)))', which yields
+    # '-Inf' whenever 'x = 0'. This, of course, is unintended when no
+    # transformation is requested.
+    if (!missing(lambda) && lambda != 1) {
+      value <- value + (lambda-1) * rowSums(log(abs(x)))
+    }
     if (log==F) value <- exp(value)
     list(value=value, md=M)
 }
@@ -170,7 +214,15 @@ dmvtmix <- function(x, w, mu, sigma, nu, lambda, object, subset, include, log=FA
         sigma <- array(sigma, c(K, 1, 1))
     }
 
-    nu <- rep(nu, K)
+    # If only one value of 'nu' is specified, then it is repeated for each
+    # mixture component. Otherwise, we allow the user to specify a different
+    # value of 'nu' for each population. In the case that the number of values of
+    # 'nu' is not the same as 'K', we throw an error.
+    if (length(nu) == 1) {
+      nu <- rep(nu, K)
+    } else if (length(nu) != K) {
+      stop("The number of values in 'nu' must be 1 or K.")
+    }
     if (!missing(lambda)) 
         lambda <- rep(lambda, K)
 
@@ -190,7 +242,7 @@ dmvtmix <- function(x, w, mu, sigma, nu, lambda, object, subset, include, log=FA
 
 
 
-if(!isGeneric("density")) setGeneric("density", useAsDefault=density)
+#if(!isGeneric("density")) setGeneric("density", useAsDefault=density)
 
 
 setMethod("density", signature(x="flowClust"),
@@ -283,7 +335,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
     den <- function(y) {
         value <- 0
         nu <- rep(x@nu, length.out=x@K)
-        if (length(x@lambda)>0) {
+        if (length(x@lambda)>0&(any(x@lambda!=1))) {
             lambda <- rep(x@lambda, length.out=x@K)
             for (k in include) {
                 yTrans <- (sign(y)*abs(y)^lambda[k] - 1) / lambda[k]

@@ -1,6 +1,5 @@
 \name{split,flowClust-method}
 \docType{methods}
-\alias{split}
 \alias{split,flowClust-method}
 \alias{split.flowClust}
 \alias{split,data.frame,flowClust-method}
