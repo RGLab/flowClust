@@ -168,6 +168,14 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		stop("lambda must be positive when data contain zero / negative values!")
 	else if(usePrior=="yes")
 	{
+    #If we have a prior lambda.. use it to override the specified lambda.
+    if(exists("lambda",prior)){
+      if(!is.null(prior$lambda)){
+        if(prior$lambda!=0){
+          lambda<-prior$lambda
+        }
+      }
+    }
 		Mu0<-prior$Mu0
 		Lambda0<-prior$Lambda0
 		if(length(dim(prior$Omega0))==2){
