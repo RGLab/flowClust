@@ -19,25 +19,25 @@ setClass("flowClust",
                    ICL=numeric(0), usePrior="no", prior=list(NA)))
 
 
-setClass("flowClustPriorTree", contains="graphNEL",representation(name="character"))
-setMethod("initialize",signature="flowClustPriorTree",definition=function(.Object,...){
-	.Object<-callNextMethod(.Object,edgemode="directed")
-	nodeDataDefaults(.Object,"prior")<-NA;
-	nodeDataDefaults(.Object,"gate")<-NA;
-	return(.Object);
-})
+#setClass("flowClustPriorTree", contains="graphNEL",representation(name="character"))
+#setMethod("initialize",signature="flowClustPriorTree",definition=function(.Object,...){
+#	.Object<-callNextMethod(.Object,edgemode="directed")
+#	nodeDataDefaults(.Object,"prior")<-NA;
+#	nodeDataDefaults(.Object,"gate")<-NA;
+#	return(.Object);
+#})
 
-setClass("flowClustTree",contains="graphNEL",representation(name="character",priortree="flowClustPriorTree"),
-	prototype(name=character(0),priortree=new("flowClustPriorTree")));
-setMethod("initialize",signature="flowClustTree",definition=function(.Object,priortree,...){
-	.Object<-callNextMethod(.Object,edgemode="directed")
-	.Object@priortree=priortree;
-	nodeDataDefaults(.Object,"model")<-NA;
-	nodeDataDefaults(.Object,"population")<-NA;
-	nodeDataDefaults(.Object,"name")<-NA;
-	nodeDataDefaults(.Object,"gate")<-NA;
-	return(.Object)
-})
+#setClass("flowClustTree",contains="graphNEL",representation(name="character",priortree="flowClustPriorTree"),
+#	prototype(name=character(0),priortree=new("flowClustPriorTree")));
+#setMethod("initialize",signature="flowClustTree",definition=function(.Object,priortree,...){
+#	.Object<-callNextMethod(.Object,edgemode="directed")
+#	.Object@priortree=priortree;
+#	nodeDataDefaults(.Object,"model")<-NA;
+#	nodeDataDefaults(.Object,"population")<-NA;
+#	nodeDataDefaults(.Object,"name")<-NA;
+#	nodeDataDefaults(.Object,"gate")<-NA;
+#	return(.Object)
+#})
 
 setClass("flowClustList",
          representation("list", index="numeric", criterion="character"),

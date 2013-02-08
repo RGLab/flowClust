@@ -31,24 +31,10 @@ Generates a plot of a "flowClustPrior" or "flowClustPriorList" object overlaid o
 \value{
 Silently returns zero.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Greg Finak <gfinak@fhcrc.org>
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
-\examples{
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ aplot }
 \keyword{ dplot }% __ONLY ONE__ keyword per line
