@@ -1,0 +1,22 @@
+\name{peakMatch}
+\alias{peakMatch}
+\title{Function to match peaks across samples}
+\usage{
+  peakMatch(peaks, target.index, max.fill = 1e+12)
+}
+\arguments{
+  \item{peaks}{is the matrix of peaks in the columns and
+  samples in the rows}
+
+  \item{target.index}{is the index of the template sample.}
+
+  \item{max.fill}{is the value to substitute for NAs in the
+  distance matrix. Should be very large, but if too large,
+  will overflow and give an incorrect matching importFrom
+  clue solve_LSAP}
+}
+\description{
+  Uses the hungarian algorithm to match peaks across
+  samples, one at a time using a template sample.
+}
+
