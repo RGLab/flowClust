@@ -1,0 +1,18 @@
+CHANGES in VERSION 1.8
+----------------------
+SIGNIFICANT USER-VISIBLE CHANGES
+
+	* flowClust is now Bayesian. You can specify a prior for the means and covariances of each component.
+
+NEW FEATURES
+=======
+
+     o FlowClust is now bayesian. The user can specify prior information for cell population means and covariances. This is particularly useful for identifying rare cell populations.  
+
+    o We now check if the covariance matrices can be inverted and if not we stop the algorithm and output NaN for the log likelihood. As a consequence, the function does not stop and can finish all computable values of K.
+
+    o Support for the parallel package. The number of cores will automatically be detected. The parallel package needs to be loaded for that.
+    
+BUG FIXES
+
+
