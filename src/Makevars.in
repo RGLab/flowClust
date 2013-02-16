@@ -1,1 +1,8 @@
-PKG_LIBS = @LIBS@ `gsl-config --libs` 
+gsl_bundled=@GSL_BUNDLED@
+ifeq ($(gsl_bundled),yes)
+	gsl_basename=gsl-1.13
+	gsl_objs=${wildcard ${gsl_basename}/*/.libs/*.o} 
+endif
+
+PKG_CFLAGS=@PKG_CFLAGS@ @FLOWCLUST_DEFS@
+PKG_LIBS=${gsl_objs} @PKG_LIBS@
