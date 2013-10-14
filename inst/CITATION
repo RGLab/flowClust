@@ -1,0 +1,40 @@
+citHeader("To cite the R package 'flowClust' in your publication please use:")
+
+citEntry(entry  = "article",
+         title  = "FlowClust: a Bioconductor package for automated gating of flow cytometry data",
+         author = personList(
+                 person(first="Kenneth", last="Lo"),
+                 person(first="Florian", last="Hahne"),
+                 person(first="Ryan ", last="Brinkman"),
+                 person(first="Raphael", last="Gottardo")
+			),
+	    journal = "BMC Bioinformatics",
+	    year = "2009",
+	    volume  = "10",
+	    page =  "145",
+
+		note = paste("R package version ", R.Version()$major, ".", R.Version()$minor, sep = ""),
+		textVersion = paste("K. Lo, F. Hahne, R. R. Brinkman, and R. Gottardo, FlowClust: a Bioconductor package for automated gating of flow cytometry data, BMC bioinformatics, vol. 10, p. 145, 2009.")
+	)
+
+citEntry(entry  = "article",
+         title  = "Automated gating of flow cytometry data via robust model-based clustering",
+         author = personList(
+                   person(first="Kenneth", last="Lo"),
+                   person(first="Ryan ", last="Brinkman"),
+                   person(first="Raphael", last="Gottardo")
+  			),
+  	    journal = "Cytometry A",
+  	    year = "2008",
+  	    volume  = "73",
+  	    page =  "321-332",
+
+  		note = paste("R package version ", R.Version()$major, ".", R.Version()$minor, sep = ""),
+  		textVersion = paste("K. Lo, R. R. Brinkman, and R. Gottardo, Automated gating of flow cytometry data via robust model-based clustering, Cytometry. Part A : the journal of the International Society for Analytical Cytology, vol. 73, iss. 4, pp. 321-332, 2008.")
+  	)
+
+
+citFooter("This free open-source software implements academic
+research by the authors and co-workers. If you use it,
+please support the project by citing the appropriate
+journal articles.")
