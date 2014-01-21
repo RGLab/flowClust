@@ -67,13 +67,17 @@ if test "${GSL_BUNDLED}" = "yes" ; then
      --includedir="${BUILD_INSTALL_DIR}/include"\
      --enable-shared\
      --disable-static
-      
+    
+     cp */*.h gsl/    
+     cp *.h gsl/
+          
     ${MAKE} install
     
     cd "${BUILD_DIR}"
-    BUILD_INCLUDE_DIR="${BUILD_INSTALL_DIR}/include/gsl"
+    BUILD_INCLUDE_DIR="${BUILD_INSTALL_DIR}/include"
     #BUILD_LIB_DIR="${BUILD_INSTALL_DIR}/lib"
     #cp "${BUILD_LIB_DIR}"/* "${BUILD_DIR}"/src
+    cp -r "${BUILD_DIR}/src/$BASENAME/gsl" "$BUILD_INCLUDE_DIR"  
     GSL_VERSION="1.13.0"
     PKG_CFLAGS="${PKG_CFLAGS} -I${BUILD_INCLUDE_DIR}"
     FLOWCLUST_DEFS="-DGSL_MAJOR=1 -DGSL_MINOR=13 -DGSL_STATIC"
