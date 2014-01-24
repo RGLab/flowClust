@@ -1,12 +1,12 @@
 Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
-Version: 3.3.3
+Version: 3.3.4
 Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg Finak <gfinak@fhcrc.org>
 Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>
 Depends: R(>= 2.5.0),methods, Biobase, graph, RBGL,ellipse, flowViz, mnormt, corpcor, flowCore(>= 1.11.23), clue
 Imports: BiocGenerics, MCMCpack
-Suggests: parallel, multicore 
+Suggests: parallel 
 Enhances: 
 Description: Robust model-based clustering using a t-mixture model with Box-Cox transformation. Note: users should have GSL installed. Windows users: 'consult the README file available in the inst directory of the source distribution for necessary configuration instructions'.
 Collate: SetClasses.R SetMethods.R plot.R flowClust.R SimulateMixture.R
