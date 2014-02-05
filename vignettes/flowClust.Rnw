@@ -1,0 +1,231 @@
+%\VignetteIndexEntry{flowClust package}
+%\VignetteKeywords{Preprocessing,statistics}
+
+
+\documentclass{article}
+\usepackage{cite, hyperref}
+
+\title{Robust Model-based Clustering of Flow Cytometry Data\\
+The flowClust package}
+\author{Raphael Gottardo, Kenneth Lo}
+
+\begin{document}
+\setkeys{Gin}{width=1.0\textwidth, height=1.1\textwidth}
+
+\maketitle
+\begin{center}
+{\tt rgottard@fhcrc.org, c.lo@stat.ubc.ca}
+\end{center}
+
+\textnormal{\normalfont}
+
+\tableofcontents
+\newpage
+
+
+\section{Licensing}
+
+Under the Artistic License, you are free to use and redistribute this software. However, we ask you to cite the following paper if you use this software for publication. 
+\begin{enumerate}
+\item Lo, K., Brinkman, R.~R., and Gottardo, R. (2008). Automated gating of flow cytometry data via robust model-based clustering. {\it Cytometry Part A}, 73A(4):321--332.
+\item Lo, K., Hahne, F., Brinkman, R.~R., and Gottardo, R. (2009). flowClust: a Bioconductor package for automated gating of flow cytometry data. {\it BMC Bioinformatics}, 10:145. 
+\end{enumerate}
+% If you use the GvHD dataset included in this package, you should cite the following paper:
+% \begin{itemize}
+% \item[] Brinkman, R.~R., Gasparetto, M., Lee, S.~J.~J., et~al. (2007) High-Content Flow Cytometry and Temporal Data Analysis for Defining a Cellular Signature of Graft-Versus-Host Disease. Biol. Blood Marrow Transplant. 13(6):691--700.
+% \end{itemize}
+
+
+\section{Overview}
+
+We apply a robust model-based clustering approach proposed by Lo {\it et~al}. (2008) to identify cell populations in flow cytometry data.  The proposed approach is based on multivariate $t$ mixture models with the Box-Cox transformation.  This approach generalizes Gaussian mixture models by modeling outliers using $t$ distributions and allowing for clusters taking non-ellipsoidal shapes upon proper data transformation.  Parameter estimation is carried out using an Expectation-Maximization (EM) algorithm which simultaneously handles outlier identification and transformation selection.  Please refer to Lo {\it et~al}. (2008) for more details. % Whereas this research primarily arose to automate the gating process in flow cytometry, the proposed clustering approach is a general methodology which -- and also this package -- can be applied to cluster analyses in many other fields.
+
+This \textbf{flowClust} package consists of a core function to implement the aforementioned clustering methodology.  Its source code is built in C for optimal utilization of system resources.  Graphical functionalities are available to users for visualizing a wealth of features of the clustering results, including the cluster assignment, outliers, and the size and shape of the clusters.  The fitted mixture model may be projected onto any one/two dimensions and displayed by means of a contour or image plot.  Currently, \textbf{flowClust} provides two options for estimating the number of clusters when it is unknown, namely, the Bayesian Information Criterion (BIC) and the Integrated Completed Likelihood (ICL).
+
+\textbf{flowClust} is built in a way such that it is highly integrated with \textbf{flowCore}, the core package for flow cytometry that provides data structures and basic manipulation of flow cytometry data.  Please read Section~\ref{flowCore} for details about actual implementation.
+
+
+\section{Installation}
+
+\subsection{Unix/Linux/Mac Users}
+
+To build the \textbf{flowClust} package from source, make sure that the following is present on your system:
+\begin{itemize}
+\item a C compiler
+\item GNU Scientific Library (GSL)
+\item Basic Linear Algebra Subprograms (BLAS)
+\end{itemize}
+A C compiler is needed to build the package as the core function is coded in C. GSL can be downloaded at \url{http://www.gnu.org/software/gsl/}.  In addition, the package uses BLAS to perform basic vector and matrix operations.  Please go to \url{http://www.netlib.org/blas/faq.html#5} for a list of optimized BLAS libraries for a variety of computer architectures.  For instance, Mac users may use the built-in vecLib framework, while users of Intel machines may use the Math Kernel Library (MKL).
+
+For the package to be installed properly you may have to type the following command before installation:
+\begin{verbatim}
+export LD_LIBRARY_PATH='/path/to/GSL/:/path/to/BLAS/':$LD_LIBRARY_PATH
+\end{verbatim}
+which will tell {\bf R} where your GSL and BLAS libraries are.  Note that this may have already been configured on your system, so you may not have to do so.  In case you need to do it, you may consider including this line in your \texttt{.bashrc} such that you do not have to type it every time. 
+
+If GSL is installed to some non-standard location such that it cannot be found when installing \textbf{flowClust}, you may set the environment variable \texttt{GSL\_CONFIG} to point to the correct copy of \texttt{gsl-config}, for example,
+\begin{verbatim}
+export GSL_CONFIG='/global/home/username/gsl-1.12/bin/gsl-config'
+\end{verbatim}
+For convenience sake, this line may also be added to \texttt{.bashrc}.
+
+Now you are ready to install the package:
+\begin{verbatim}
+R CMD INSTALL flowClust_x.y.z.tar.gz
+\end{verbatim}
+The package will look for a BLAS library on your system, and by default it will choose gslcblas, which is not optimized for your system.  To use an optimized BLAS library, you can use the \texttt{-{}-with-blas} argument which will be passed to the \texttt{configure.ac} file.  For example, on a Mac with vecLib pre-installed the package may be installed via:
+\begin{verbatim}
+R CMD INSTALL flowClust_x.y.z.tar.gz --configure-args=
+  "--with-blas='-framework vecLib'"
+\end{verbatim}
+On a $64$-bit Intel machine which has MKL as the optimized BLAS library, the command may look like:
+\begin{verbatim}
+R CMD INSTALL flowClust_x.y.z.tar.gz --configure-args="--with-
+  blas='-L/usr/local/mkl/lib/em64t/ -lmkl -lguide -lpthread'"
+\end{verbatim}
+where \texttt{/usr/local/mkl/lib/em64t/} is the path to MKL. 
+
+If you prefer to install a prebuilt binary, you need GSL for successful installation.
+
+
+\subsection{Windows Users}
+
+You need the GNU Scientific Library (GSL) for the \textbf{flowClust} package. GSL is freely available at \url{http://gnuwin32.sourceforge.net/packages/gsl.htm} for Windows distributions.
+
+To install a prebuilt binary of \textbf{flowClust} and to load the package successfully you need to tell \textbf{R} where to link GSL. You can do that by adding \texttt{/path/to/libgsl.dll} to the \texttt{Path} environment variable. To add this you may right click on ``My Computer", choose ``Properties", select the ``Advanced" tab, and click the button ``Environment Variables". In the dialog box that opens, click ``Path" in the variable list, and then click ``Edit". Add \texttt{/path/to/libgsl.dll} to the ``Variable value" field. It is important that the file path does not contain any space characters; to avoid this you may simply use the short forms (8.3 DOS file names) found by typing \texttt{dir /x} at the Windows command line. For example, the following may be added to the \texttt{Path} environment variable:
+\begin{verbatim}
+C:/PROGRA~1/GNUWIN32/bin
+\end{verbatim}
+and the symbol \texttt{;} is used to separate it from existing paths.
+
+To build \textbf{flowClust} from source (using Rtools), in addition to adding \newline \texttt{/path/to/libgsl.dll} to \texttt{Path}, you need to tell \textbf{flowClust} where your GSL library and header files are. You can do that by setting up two environment variables \texttt{GSL\_LIB} and \texttt{GSL\_INC} with the correct path to the library files and header files respectively. You can do this by going to the ``Environment Variables" dialog box as instructed above and then clicking the ``New" button. Enter \texttt{GSL\_LIB} in the ``Variable name" field, and \texttt{/path/to/your/gsl/lib/directory} in the ``Variable value" field. Likewise, do this for \texttt{GSL\_INC} and \newline \texttt{/path/to/your/gsl/include/directory}. Remember to use ``\texttt{/}" instead of ``\verb*$\$" as the directory delimiter.
+
+You can download Rtools at \url{http://www.murdoch-sutherland.com/Rtools/} which provides the resources for building \textbf{R} and \textbf{R} packages. You should add to the \texttt{Path} variable the paths to the various components of Rtools. Please read the ``Windows Toolset" appendix at \url{http://cran.r-project.org/doc/manuals/R-admin.html#The-Windows-toolset} for more details.
+
+
+\section{Example: Clustering of the Rituximab Dataset}
+
+\subsection{The Core Function}  \label{core}
+
+To demonstrate the functionality we use a flow cytometry dataset from a drug-screening project to identify agents that would enhance the anti-lymphoma activity of Rituximab, a therapeutic monoclonal antibody.  The dataset is an object of class \texttt{flowFrame}; it consists of eight parameters, among them only the two scattering parameters (\texttt{FSC.H}, \texttt{SSC.H}) and two fluorescence parameters (\texttt{FL1.H}, \texttt{FL3.H})  are of interest in this experiment.  Note that, apart from a typical \texttt{matrix} or \texttt{data.frame} object, \textbf{flowClust} may directly take a \texttt{flowFrame}, the standard {\bf R} implementation of an FCS file, which may be returned from the \texttt{read.FCS} function in the \textbf{flowCore} package, as data input.  The following code performs an analysis with one cluster using the two scattering parameters:
+
+<<stage0, results=hide>>=
+library(parallel)
+library(flowClust)
+@
+<<stage1, echo=TRUE>>=
+data(rituximab)
+summary(rituximab)
+res1 <- flowClust(rituximab, varNames=c("FSC.H", "SSC.H"), K=1, B=100)
+@
+\texttt{B} is the maximum number of EM iterations; for demonstration purpose here we set a small value for \texttt{B}.  The main purpose of performing an analysis with one cluster here is to identify outliers, which will be removed from subsequent analysis.
+
+Next, we would like to proceed with an analysis using the two fluorescence parameters on cells selected from the first stage.  The following code performs the analysis with the number of clusters being fixed from one to six in turn:
+
+<<stage2>>=
+rituximab2 <- rituximab[rituximab %in% res1,]
+res2 <- flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=1:6, B=100)
+@
+We select the best model based on the BIC.  Values of the BIC can be retrieved through the \texttt{criterion} method.  By inspection, the BIC values stay relatively constant beyond three clusters.  We therefore choose the model with three clusters and print a summary of the corresponding clustering result:
+<<stage2Result>>=
+criterion(res2, "BIC")
+summary(res2[[3]])
+@
+The summary states that the rule used to identify outliers is \texttt{90\% quantile}, which means that a point outside the $90\%$ quantile region of the cluster to which it is assigned will be called an outlier.  To specify a different rule, we make use of the \texttt{ruleOutliers} replacement method.  The example below applies the more conservative \texttt{95\% quantile} rule to identify outliers:
+<<stage2ChangeRule1, echo=TRUE>>=
+ruleOutliers(res2[[3]]) <- list(level=0.95)
+summary(res2[[3]])
+@
+We can also combine the rule set by the \texttt{z.cutoff} argument to identify outliers.  Suppose we would like to assign an observation to a cluster only if the associated posterior probability is greater than $0.6$.  We can add this rule with the following command:
+<<stage2ChangeRule2, echo=TRUE>>=
+ruleOutliers(res2[[3]]) <- list(z.cutoff=0.6)
+summary(res2[[3]])
+@
+This time more points are called outliers.  Note that such a change of the rule will not incur a change of the model-fitting process.  The information about which points are called outliers is conveyed through the \texttt{flagOutliers} slot, a logical vector in which the positions of \texttt{TRUE} correspond to points being called outliers.  
+
+By default, when $10$ or more points accumulate on the upper or lower boundary of any parameter, the \texttt{flowClust} function will filter those points.  To change the threshold count from the default, users may specify \texttt{max.count} and \texttt{min.count} when running \texttt{flowClust}.  To suppress filtering at the upper and/or the lower boundaries, set \texttt{max.count} and/or \texttt{min.count} as $-1$.  We can also use the \texttt{max} and \texttt{min} arguments to control filtering of points, but from a different perspective.  For instance, if we are only interested in cells which have a \texttt{FL1.H} measurement within $(0, 400)$ and \texttt{FL3.H} within $(0, 800)$, we may use the following code to perform the cluster analysis:
+<<stage2Alternative, results=hide>>=
+flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=2, B=100, min=c(0,0), max=c(400,800))
+@
+
+
+\subsection{Visualization of Clustering Results}
+
+Information such as the cluster assignment, cluster shape and outliers may be visualized by calling the \texttt{plot} method to make a scatterplot:
+<<stage2Scatter, fig=TRUE>>=
+plot(res2[[3]], data=rituximab2, level=0.8, z.cutoff=0)
+@
+
+\noindent The \texttt{level} and/or \texttt{z.cutoff} arguments are needed when we want to apply a rule different from that stored in the \texttt{ruleOutliers} slot of the \texttt{flowClust} object to identify outliers.
+
+To look for densely populated regions, a contour/image plot can be made:
+<<stage2Contour, fig=TRUE>>=
+res2.den <- density(res2[[3]], data=rituximab2)
+plot(res2.den)
+@
+\newpage
+<<stage2Image, fig=TRUE>>=
+plot(res2.den, type="image")
+@
+
+When we want to examine how the fitted model and/or the data are distributed along one chosen dimension, we can use the \texttt{hist} method:
+\newpage
+<<stage2Hist, fig=TRUE>>=
+hist(res2[[3]], data=rituximab2, subset="FL1.H")
+@
+
+\noindent The \texttt{subset} argument may also take a numeric value:
+<<stage2Hist, fig=FALSE>>=
+hist(res2[[3]], data=rituximab2, subset=1)
+@
+Since \texttt{FL1.H} is the first element of \texttt{res2[[3]]@varNames}, this line produces exactly the same histogram as the one generated by the line taking \texttt{subset="FL1.H"}.  Likewise, the \texttt{subset} argument of both \texttt{plot} methods accepts either a numeric or a character vector to specify which two variables are to be shown on the plot.
+
+
+\subsection{Integration with flowCore}  \label{flowCore}
+
+As mentioned in Overview, effort has been made to integrate \textbf{flowClust} with the \textbf{flowCore} package.  Users will find that most methods defined in \textbf{flowCore} also work in the context of \textbf{flowClust}.
+
+The very first step of integration is to replace the core function \texttt{flowClust} with a call to the constructor \texttt{tmixFilter} followed by the \texttt{filter} method. The aim is to wrap clustering in a filtering operation like those found in \textbf{flowCore}.  The \texttt{tmixFilter} function creates a \texttt{filter} object to store all settings required for the filtering operation.  The object created is then passed to the actual filtering operation implemented by the \texttt{filter} method.  The use of a dedicated \texttt{tmixFilter}-class object separates the task of specifying the settings (\texttt{tmixFilter}) from the actual filtering operation (\texttt{filter}), facilitating the common scenario in FCM gating analysis that filtering with the same settings is performed upon a set of data files.
+
+As an example, the filtering operation that resembles the second-stage clustering using \texttt{FL1.H} and \texttt{FL3.H} with three clusters (see Section~\ref{core}) is implemented by the following code:
+<<stage2f>>=
+s2filter <- tmixFilter("s2filter", c("FL1.H", "FL3.H"), K=3, B=100)
+res2f <- filter(rituximab2, s2filter)
+@
+The object \texttt{res2f} is of class \texttt{tmixFilterResult}, which extends the \newline\texttt{multipleFilterResult} class defined in \textbf{flowCore}.  Users may apply various subsetting operations defined for the \texttt{multipleFilterResult} class in a similar fashion on a \texttt{tmixFilterResult} object:
+<<stage2fSubsetting>>=
+Subset(rituximab2, res2f)
+split(rituximab2, res2f, population=list(sc1=1:2, sc2=3))
+@
+The \texttt{Subset} method above outputs a \texttt{flowFrame} consisting of observations within the data-driven filter constructed.  The \texttt{split} method separates the data into two populations upon the removal of outliers: the first population is formed by observations assigned to clusters~1 and 2 constructed by the filter, and the other population consists of observations assigned to cluster~3.  The two populations are returned as two separate \texttt{flowFrame}'s, which are stored inside a list and labelled with \texttt{sc1} and \texttt{sc2} respectively.
+
+The \texttt{\%in\%} operator from \textbf{flowCore} is also defined for a \texttt{tmixFilterResult} object. A logical vector will be returned in which a \texttt{TRUE} value means that the corresponding observation is accepted by the filter.  In fact, the implementation of the \texttt{Subset} method needs to call \texttt{\%in\%}.
+
+The object returned by \texttt{tmixFilter} is of class \texttt{tmixFilter}, which extends the \texttt{filter} class in \textbf{flowCore}.  Various operators, namely, \texttt{\&}, \texttt{|}, \texttt{!} and \texttt{\%subset\%}, which have been constructed for \texttt{filter} objects in \textbf{flowCore}, also produce similar outcomes when applied to a \texttt{tmixFilter} object.  For example, to perform clustering on a subset of data enclosed by a rectangle gate, we may apply the following code:
+<<stage2fRectGate>>=
+rectGate <- rectangleGate(filterId="rectRegion", "FL1.H"=c(0, 400), "FL3.H"=c(0, 800))
+MBCfilter <- tmixFilter("MBCfilter", c("FL1.H", "FL3.H"), K=2, B=100)
+filter(rituximab2, MBCfilter %subset% rectGate)
+@
+
+\subsection{Using Bayesian Priors}
+
+The latest version of flowClust now supports priors through a Multivariate Normal-Inverse Wishart model. 
+
+One way to construct a prior is to use an existing flowClust model fit. For example, we can construct a prior from the rituximab fit. Then we can adjust the prior so that the FL1-/FL3- population is centered at 200,200 \textit{a priori}, and both populations have an \textit{a priori} smaller variance.
+
+The parameter kappa acts as a weighting factor for the prior, while Nt controls the number of equivalent observations for the prior. 
+<<priors>>=
+prior<-flowClust2Prior(res2[[2]],kappa=1,Nt=5000)
+prior2<-prior
+prior2$Mu0[1,]<-rep(box(200,prior2$lambda),2)
+prior2$Lambda0<-prior2$Lambda0/2
+pfit2<-flowClust(rituximab2,varNames=c("FL1.H","FL3.H"),K=2,prior=prior2,usePrior="yes")
+
+par(mfrow=c(1,2))
+plot(res2[[2]],data=rituximab2)
+plot(pfit2,data=rituximab2)
+@
+
+
+\end{document}

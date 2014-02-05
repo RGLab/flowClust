@@ -1,0 +1,19 @@
+#! /bin/sh
+for f in ./config.*; do
+rm -f $f
+done
+for f in ./autom4*; do
+rm -rf $f
+done
+if [ -e src/Makevars ]; then
+rm -f src/Makevars
+fi
+if [ -e src/gsl-1.13 ]; then
+	echo "removing gsl-1.13"
+	rm -rf src/gsl-1.13
+fi
+if [ -e src/gslbuild ]; then
+	echo "removing gslbuild"
+	rm -rf src/gslbuild
+fi
+exit 0 
