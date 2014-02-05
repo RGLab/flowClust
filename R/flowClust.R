@@ -77,7 +77,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
                     warning("Use of a prior with transformation estimation and lambda!=1 requires the prior means to be on the transformed scale.")
                 }
 		# TODO Add tests for validity of w0. Set a default. Same for oorder.
-		if(!is.null(prior)&length(K==1)){
+		if(!is.null(prior)&length(K)==1){
 			#Check that the prior dimensions match the model being fit.
 			mp<-ncol(prior$Mu0);
 			mk<-nrow(prior$Mu0);
