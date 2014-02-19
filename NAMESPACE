@@ -6,6 +6,7 @@ importFrom(MCMCpack,ddirichlet)
 importFrom(BiocGenerics,density)
 #importClassesFrom(flowWorkspace,GatingSet)
 importFrom(graphics,
+           plot,
            hist)
 
 importFrom("flowCore", "summarizeFilter")
