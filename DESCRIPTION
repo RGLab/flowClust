@@ -1,16 +1,23 @@
 Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
-Version: 3.3.7
-Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg Finak <gfinak@fhcrc.org>
-Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>
-Depends: R(>= 2.5.0),methods, Biobase, graph, RBGL,ellipse, flowViz, mnormt, corpcor, flowCore, clue
+Version: 3.3.8
+Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo
+        <c.lo@stat.ubc.ca>, Greg Finak <gfinak@fhcrc.org>
+Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang
+        <wjiang2@fhcrc.org>
+Depends: R(>= 2.5.0),methods, Biobase, graph, RBGL,ellipse, flowViz,
+        mnormt, corpcor, flowCore, clue
 Imports: BiocGenerics, MCMCpack
-Suggests: parallel 
-Enhances: 
-Description: Robust model-based clustering using a t-mixture model with Box-Cox transformation. Note: users should have GSL installed. Windows users: 'consult the README file available in the inst directory of the source distribution for necessary configuration instructions'.
+Suggests: parallel
+Enhances:
+Description: Robust model-based clustering using a t-mixture model with
+        Box-Cox transformation. Note: users should have GSL installed.
+        Windows users: 'consult the README file available in the inst
+        directory of the source distribution for necessary
+        configuration instructions'.
 Collate: SetClasses.R SetMethods.R plot.R flowClust.R SimulateMixture.R
         mkPriors.R peakMatch.R
-biocViews: Clustering, Bioinformatics, Visualization, FlowCytometry
 License: Artistic-2.0
 Packaged: 2012-07-13 20:14:40 UTC; finak
+biocViews: Clustering, Visualization, FlowCytometry
