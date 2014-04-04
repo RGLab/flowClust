@@ -1,4 +1,4 @@
-flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1e-5, nu=4, lambda=1, nu.est=0, trans=1, min.count=10, max.count=10, min=NULL, max=NULL, level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=10, B.init=B, tol.init=1e-2, seed=1, criterion="BIC", control=NULL, prior=NULL,usePrior="no")
+flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1e-5, nu=4, lambda=1, nu.est=0, trans=1, min.count=10, max.count=10, min=NULL, max=NULL, level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=0, B.init=B, tol.init=1e-2, seed=1, criterion="BIC", control=NULL, prior=NULL,usePrior="no")
 {
 	if (is(x, "flowFrame")) {
 		if (length(varNames)==0) {
@@ -111,6 +111,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		prior<-list(NA);
 	}
 	if((length(grep("parallel",loadedNamespaces()))==0) )
+  #if(TRUE)
 	{
 		message("Using the serial version of flowClust")
 		# C version

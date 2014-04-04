@@ -18,7 +18,7 @@ This function performs automated clustering for identifying cell populations in 
 flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500, 
           tol=1e-5, nu=4, lambda=1, nu.est=0, trans=1,
           min.count=10, max.count=10, min=NULL, max=NULL,
-          level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=10, 
+          level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=0, 
           B.init=B, tol.init=1e-2, seed=1, criterion="BIC",
           control=NULL,prior=NULL,usePrior="no")
 }
@@ -41,7 +41,7 @@ flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500,
 \item{level}{A numeric value between 0 and 1 specifying the threshold quantile level used to call a point an outlier.  The default is 0.9, meaning that any point outside the 90\% quantile region will be called an outlier.}
 \item{u.cutoff}{Another criterion used to identify outliers.  If this is \code{NULL}, then \code{level} will be used.  Otherwise, this specifies the threshold (e.g., 0.5) for \eqn{u}, a quantity used to measure the degree of \dQuote{outlyingness} based on the Mahalanobis distance.  Please refer to Lo et al. (2008) for more details.}
 \item{z.cutoff}{A numeric value between 0 and 1 underlying a criterion which may be used together with \code{level}/\code{u.cutoff} to identify outliers.  A point with the probability of assignment \eqn{z} (i.e., the posterior probability that a data point belongs to the cluster assigned) smaller than \code{z.cutoff} will be called an outlier.  The default is 0, meaning that assignment will be made no matter how small the associated probability is, and outliers will be identified solely based on the rule set by \code{level} or \code{cutoff}.}
-\item{randomStart}{A numeric value indicating how many times a random parition of the data is generated for initialization.  The default is 10, meaning that 10 random partitions of the data will be generated, each of which is followed by a short EM run.  The partition leading to the highest likelihood value will be adopted to be the initial partition for the eventual long EM run.}  % If \code{randomStart} is 0, this initialization strategy is not applied and hierarchical clustering is used instead.}
+\item{randomStart}{A numeric value indicating how many times a random parition of the data is generated for initialization.  The default is 0, meaning that a deterministic partition based on kmeans clustering is used. A value of 10 means random partitions of the data will be generated, each of which is followed by a short EM run.  The partition leading to the highest likelihood value will be adopted to be the initial partition for the eventual long EM run.}  % If \code{randomStart} is 0, this initialization strategy is not applied and hierarchical clustering is used instead.}
 \item{B.init}{The maximum number of EM iterations following each random partition in random initialization.}
 \item{tol.init}{The tolerance used as the stopping criterion for the short EM runs in random initialization.}
 \item{seed}{An integer giving the seed number used when \code{randomStart>0}.}
