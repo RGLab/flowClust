@@ -2,10 +2,6 @@ Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
 Version: 3.3.8
-Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo
-        <c.lo@stat.ubc.ca>, Greg Finak <gfinak@fhcrc.org>
-Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang
-        <wjiang2@fhcrc.org>
 Depends: R(>= 2.5.0),methods, Biobase, graph, RBGL,ellipse, flowViz,
         mnormt, corpcor, flowCore, clue
 Imports: BiocGenerics, MCMCpack

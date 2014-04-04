@@ -12,7 +12,7 @@ rbox <- function(data, lambda) {
 }
 
 
-.ellipsePoints <- function(a,b, alpha = 0, loc = c(0,0), n = 501)
+.ellipsePoints <- function(a,b, alpha = 0, loc = c(0,0), n = 100)
 {
     ## Purpose: ellipse points,radially equispaced, given geometric par.s
     ## -------------------------------------------------------------------------
@@ -25,7 +25,7 @@ rbox <- function(data, lambda) {
     ## modified by Kenneth to get rid of the precision problem met when there's a large difference in the length of the two axes
 
     small <- 0
-    if (a/b > 1000) {
+    if (a/b  > 10 | b/a > 10) {
         ratio <- a/b
         b <- a
         if (round(alpha)==0) small <- 2 else small <- 1
@@ -35,19 +35,31 @@ rbox <- function(data, lambda) {
     A <- max(a,b)
     ## B <= A
     d2 <- (A-B)*(A+B)                   #= A^2 - B^2
+    
     phi <- 2*pi*seq(0,1, len = n)
+    #phi<-t
     sp <- sin(phi)
     cp <- cos(phi)
     r <- a*b / sqrt(B^2 + d2 * sp^2)
-    xy <- r * cbind(cp, sp)
+    xy <- cbind(r,r) * cbind(cp, sp)
     ## xy are the ellipse points for alpha = 0 and loc = (0,0)
     al <- alpha * pi/180
     ca <- cos(al)
     sa <- sin(al)
 
+ 
+    
+    ######
     xy.new <- xy %*% rbind(c(ca, sa), c(-sa, ca))
-    if (small==2) xy.new[,2]=xy.new[,2]/ratio
-    if (small==1) xy.new[,1]=xy.new[,1]/ratio
+    if (small==2) {
+      #rotate after rescaling if appropriate
+      #xy.new[,2]=xy.new[,2]/ratio
+      xy.new <- xy.new %*% rbind(c(ca, sa), c(-sa/ratio, ca/ratio)) 
+    }
+    if (small==1) {
+      #xy.new[,1]=xy.new[,1]/ratio
+      xy.new <- xy.new %*% rbind(c(ca, sa), c(-sa/ratio, ca/ratio))
+    }
     xy.new + cbind(rep(loc[1],n), rep(loc[2],n))
 }
 
@@ -55,7 +67,7 @@ rbox <- function(data, lambda) {
 setGeneric("plot", useAsDefault=plot)
 
 setMethod("plot", signature(x="flowClust", y="missing"),
-function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=1:(x@K), main=NULL, grayscale=F, col=(if (grayscale) gray(1/4) else 2:(length(include)+1)), pch=".", cex=0.6, col.outliers=gray(3/4), pch.outliers=".", cex.outliers=cex, col.rm=1, pch.rm=1, cex.rm=0.6, ecol=1, elty=1, level=NULL, u.cutoff=NULL, z.cutoff=NULL, npoints=501, add=F,...)
+function(x, data, subset=c(1,2), ellipse=T, show.outliers=T, show.rm=F, include=1:(x@K), main=NULL, grayscale=F, col=(if (grayscale) gray(1/4) else 2:(length(include)+1)), pch=".", cex=0.6, col.outliers=gray(3/4), pch.outliers=".", cex.outliers=cex, col.rm=1, pch.rm=1, cex.rm=0.6, ecol=1, elty=1, level=NULL, u.cutoff=NULL, z.cutoff=NULL, npoints=100, add=F,...)
 {
 	if(ncol(x@mu)==1){
 		hist(x,data,...)
