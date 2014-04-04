@@ -18,7 +18,7 @@ This method generates scatterplot revealing the cluster assignment, cluster boun
      pch=".", cex=0.6, col.outliers=gray(3/4), pch.outliers=".",
      cex.outliers=cex, col.rm=1, pch.rm=1, cex.rm=0.6, ecol=1, 
      elty=1, level=NULL, u.cutoff=NULL, z.cutoff=NULL, 
-     npoints=501, add=FALSE, \dots)
+     npoints=100, add=FALSE, \dots)
 }
 
 \arguments{
