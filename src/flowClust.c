@@ -1192,9 +1192,7 @@ int ECMUpdateMUg(gsl_matrix* Precision, gsl_vector* Mu, gsl_vector* ZY,
 	gsl_vector_free(tmpMu);
 	gsl_matrix_free(tmpOmega);
 	gsl_matrix_free(tmpPrecision);
-	if (status != 0) {
-		return (status);
-	}
+	return (status);
 
 }
 
