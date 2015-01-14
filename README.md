@@ -8,7 +8,7 @@ Authors: Raphael Gottardo, Kenneth Lo, Greg Finak.
 
 Robust, multivariate-t mixture models with Box-Cox transformation.
 
-BioConductor: http://www.bioconductor.org/packages/2.10/bioc/html/flowClust.html
+BioConductor: http://www.bioconductor.org/packages/2.14/bioc/html/flowClust.html
 
 # Papers
 =========
