@@ -63,7 +63,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		{
 			stop("You can only use a prior if the number of cluster is fixed!")
 		}
-		if(!randomStart){
+		if(randomStart){
 			message("randomStart>0 has no effect when using a prior. Labels are initialized from the prior.");
 		}
 		if(trans==2)
