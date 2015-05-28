@@ -288,7 +288,7 @@ function(x, data=NULL, subset=c(1,2), include=1:(x@K), npoints=c(100,100), from=
 
     value <- 0
     nu <- rep(x@nu, length.out=x@K)
-    if (length(x@lambda)>0) {
+    if (length(x@lambda)>0&x@lambda!=1) {
         lambda <- rep(x@lambda, x@K)
         for (k in include) {
             xyTrans <- (apply(xy,2,sign)*apply(xy,2,abs)^lambda[k] - 1) / lambda[k]
