@@ -227,5 +227,9 @@ plot(res2[[2]],data=rituximab2)
 plot(pfit2,data=rituximab2)
 @
 
+\subsection{sessionInfo}
+<<sesssionInfo>>=
+sessionInfo()
+@
 
 \end{document}
