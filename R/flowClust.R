@@ -35,7 +35,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 			varNames <- "Not Available"
 	}
 	else {
-		stop(paste("Object ", as.character(x), " is not of class flowFrame / matrix / data frame!"))
+		stop(paste("Object ", class(x), " is not of class flowFrame / matrix / data frame!"))
 	}
 
 	# finding filtered observations
