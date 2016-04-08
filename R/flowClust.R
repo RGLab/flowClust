@@ -119,6 +119,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	}
 	else if(length(grep("parallel",loadedNamespaces()))==1)
 	{
+        require(parallel)
 		cores<-getOption("cores")
 		if(is.null(cores))
 		{
