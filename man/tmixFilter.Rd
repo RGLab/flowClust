@@ -21,6 +21,8 @@
 \alias{[,flowFrame,tmixFilterResult-method}
 \alias{[,flowFrame,tmixFilterResultList-method}
 \alias{[[,tmixFilterResultList,ANY-method}
+\alias{[,flowFrame,tmixFilterResult,ANY,ANY-method}
+\alias{[,flowFrame,tmixFilterResultList,ANY,ANY-method}
 
 \title{Creating Filters and Filtering Flow Cytometry Data}
 

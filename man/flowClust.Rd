@@ -7,7 +7,9 @@
 \alias{\%in\%,ANY,flowClustList-method}
 \alias{[,flowFrame,flowClust-method}
 \alias{[,flowFrame,flowClustList-method}
-
+\alias{[,flowFrame,flowClust,ANY,ANY-method}
+\alias{[,flowFrame,flowClustList,ANY,ANY-method}
+  
 \title{Robust Model-based Clustering for Flow Cytometry} 
 
 \description{
