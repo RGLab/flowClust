@@ -120,18 +120,9 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	else if(length(grep("parallel",loadedNamespaces()))==1)
 	{
         require(parallel)
-		cores<-getOption("cores")
-		if(is.null(cores))
-		{
-          
-			nClust<- detectCores()
-		}
-		else
-		{
-			nClust<-cores
-		}
-		message("Using the parallel (multicore) version of flowClust with ",nClust," cores")
 		# Split into nClust segReadsList
+      # We solely rely on getOption("mc.cores",2L) to determine parallel cores.
+      # and don't want to pass mc.cores explicitly because on windows, mclapply does not take mc.cores>1 
 		result<-mclapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior, mc.preschedule=FALSE)
 	}
 	#else if(length(grep("snowfall",loadedNamespaces()))==1 && sfParallel())
