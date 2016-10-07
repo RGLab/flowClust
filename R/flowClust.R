@@ -151,6 +151,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 .flowClustK<-function(i, y, expName="Flow Experiment", varNames=NULL, K
                         , nu, lambda, trans, min.count, max.count, min, max, randomStart, include, rm.max,rm.min, prior,usePrior, criterion # default values set in flowClust API
                         , nu.est=0, B=500, tol=1e-5, level=0.9, u.cutoff=NULL, z.cutoff=0, B.init=B, tol.init=1e-2, seed=1, control=NULL
+                        , nstart = 100 # passed to kmeans, only has effect on more than 1d clustering
                     )
 {
 	oorder<-1:K[i]
@@ -282,7 +283,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		}else{
 			#label<-try(kmeans(y,Mu0)$cluster,silent=TRUE)
 			#if(inherits(label,"try-error"))
-			label<-try(kmeans(scale(y),K[i],nstart=100,iter.max=100)$cluster,silent=TRUE)
+			label<-try(kmeans(scale(y),K[i],nstart=nstart,iter.max=100)$cluster,silent=TRUE)
 		}
 	}
 	if(priorFlag==0)
