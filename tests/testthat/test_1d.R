@@ -1,12 +1,14 @@
 context("1d clustering")
 data(GvHD)
-fr <- transform(GvHD[[1]], transformList(c("FL1-H"),  log))
+fr <- GvHD[[1]]
 trans <- estimateLogicle(fr, c("FL1-H", "FL2-H", "FL3-H", "FL4-H", "FL2-A"))
-fr <- transform(fr, trans)
+fr <- flowCore::transform(fr, trans)
 
 options("mc.cores" = 4)
+
 test_that("flowClust:SSH-H, 1 mode", {
   chnl <- "SSC-H"
+  
   res <- flowClust(fr, varNames = chnl, tol = 1e-7, K = 2)
   expect_equal(res@mu, matrix(c(5.27, 6.84), nrow = 2), tol = 5e-2)
   expect_equal(res@w, c(0.286, 0.713), tol = 3e-2)
@@ -56,15 +58,15 @@ test_that("flowClust:FL1-H, 2 mode", {
   res <- flowClust(fr, varNames = chnl, tol = 1e-10, K = 1:4, randomStart = 0)
   
   #K=1
-  expect_equal(res[[1]]@mu, matrix(c(21.6), nrow = 1), tol = 0.001)
+  expect_equal(res[[1]]@mu, matrix(c(0.7057928), nrow = 1), tol = 0.001)
   
   #K=2
-  expect_equal(res[[2]]@mu, matrix(c(49.15, 82.82), nrow = 2), tol = 0.001)
-  expect_equal(res[[2]]@w, c(0.689, 0.31), tol = 7e-4)
+  expect_equal(res[[2]]@mu, matrix(c(0.3590909, 1.4315404), nrow = 2), tol = 0.001)
+  expect_equal(res[[2]]@w, c(0.6837035, 0.3162965), tol = 7e-4)
   
   #K=3
-  expect_equal(res[[3]]@mu, matrix(c(23.1, 30.8, 44.5), nrow = 3), tol = 0.001)
-  expect_equal(res[[3]]@w, c(0.2707028, 0.4088046, 0.3204925), tol = 7e-4)
+  expect_equal(res[[3]]@mu, matrix(c(0.001814324, 0.515071157, 1.424679742), nrow = 3), tol = 0.001)
+  expect_equal(res[[3]]@w, c(0.2218212, 0.4538276, 0.3243512), tol = 7e-4)
   
   
   #2 mode is best fit
@@ -73,9 +75,9 @@ test_that("flowClust:FL1-H, 2 mode", {
   expect_gt(scores.diff[1], 0) #1st is pos
   expect_true(all(scores.diff[-1] <0))# the rest are neg
   
-  # par(mfrow=c(1,4))
-  # for(obj in res)
-  #  hist(obj, fr, main = paste("ICL:", round(obj@ICL),"BIC:", round(obj@BIC)))
+  par(mfrow=c(1,4))
+  for(obj in res)
+   hist(obj, fr, main = paste("ICL:", round(obj@ICL),"BIC:", round(obj@BIC)))
   
 })
 

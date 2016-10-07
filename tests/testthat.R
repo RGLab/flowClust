@@ -1,6 +1,6 @@
 library(testthat)
 library(flowClust)
-library(parallel)
+
 test_check("flowClust")
 
 #devtools::test("~/rglab/workspace/flowClust")
