@@ -112,8 +112,8 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		}
 		prior<-list(NA);
 	}
-	if((length(grep("parallel",loadedNamespaces()))==0) )
-  #if(TRUE)
+	mc.cores <- getOption("mc.cores", 2L)
+	if(mc.cores < 2)
 	{
 		message("Using the serial version of flowClust")
 		# C version
@@ -122,9 +122,8 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
         , randomStart=randomStart, include=include, rm.max, rm.min, prior,usePrior
         , ...)
 	}
-	else if(length(grep("parallel",loadedNamespaces()))==1)
-	{
-        require(parallel)
+	else{
+      
 		# Split into nClust segReadsList
       # We solely rely on getOption("mc.cores",2L) to determine parallel cores.
       # and don't want to pass mc.cores explicitly because on windows, mclapply does not take mc.cores>1 

@@ -4,15 +4,16 @@ fr <- GvHD[[1]]
 trans <- estimateLogicle(fr, c("FL1-H", "FL2-H", "FL3-H", "FL4-H", "FL2-A"))
 fr <- flowCore::transform(fr, trans)
 
-options("mc.cores" = 4)
+
 
 test_that("flowClust:SSH-H, 1 mode", {
   chnl <- "SSC-H"
-  
-  res <- flowClust(fr, varNames = chnl, tol = 1e-7, K = 2)
+  options("mc.cores" = 1)  
+  expect_message(res <- flowClust(fr, varNames = chnl, tol = 1e-7, K = 2), regexp = "serial")
   expect_equal(res@mu, matrix(c(5.27, 6.84), nrow = 2), tol = 5e-2)
   expect_equal(res@w, c(0.286, 0.713), tol = 3e-2)
   
+  options("mc.cores" = 4)  
   #relax tol to see the worse fit
   res <- flowClust(fr, varNames = chnl, tol = 1e-5, K = 2)
   expect_equal(res@mu, matrix(c(5.27, 6.84), nrow = 2), tol = 0.3)
