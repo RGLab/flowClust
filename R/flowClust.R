@@ -1,4 +1,6 @@
-flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1e-5, nu=4, lambda=1, nu.est=0, trans=1, min.count=10, max.count=10, min=NULL, max=NULL, level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=0, B.init=B, tol.init=1e-2, seed=1, criterion="BIC", control=NULL, prior=NULL,usePrior="no")
+flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
+                    , nu=4, lambda=1,trans=1, min.count=10, max.count=10, min=NULL, max=NULL
+                    ,  randomStart=0, prior=NULL,usePrior="no", criterion="BIC", ...)
 {
 	if (is(x, "flowFrame")) {
 		if (length(varNames)==0) {
@@ -115,7 +117,10 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	{
 		message("Using the serial version of flowClust")
 		# C version
-		result<-lapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior)
+		result<-lapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, criterion=criterion
+        , nu=nu, lambda=lambda, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max
+        , randomStart=randomStart, include=include, rm.max, rm.min, prior,usePrior
+        , ...)
 	}
 	else if(length(grep("parallel",loadedNamespaces()))==1)
 	{
@@ -123,16 +128,12 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 		# Split into nClust segReadsList
       # We solely rely on getOption("mc.cores",2L) to determine parallel cores.
       # and don't want to pass mc.cores explicitly because on windows, mclapply does not take mc.cores>1 
-		result<-mclapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior, mc.preschedule=FALSE)
+		result<-mclapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, criterion=criterion
+        , nu=nu, lambda=lambda, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max
+        , randomStart=randomStart, include=include, rm.max, rm.min, prior,usePrior, mc.preschedule=FALSE
+        , ...)
 	}
-	#else if(length(grep("snowfall",loadedNamespaces()))==1 && sfParallel())
-	#{
-		# Number of clusters
-	#	nClust<-sfCpus()
-	#	message("Using the parallel (snowfall) version of flowClust with ", nClust, " cpus or cores")
-	#	result<-sfLapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, B=B, tol=tol, nu=nu, lambda=lambda, nu.est=nu.est, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max, level=level, u.cutoff=u.cutoff, z.cutoff=z.cutoff, randomStart=randomStart, B.init=B.init, tol.init=tol.init, seed=seed, criterion=criterion, control=control,include=include, rm.max, rm.min, prior,usePrior)
-	#}
-
+	  
 	# Simply return a flowClust object
 	if (length(K)==1)
 	{
@@ -147,7 +148,10 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1
 	}
 }
 
-.flowClustK<-function(i, y, expName="Flow Experiment", varNames=NULL, K, B=500, tol=1e-5, nu=4, lambda=1, nu.est=0, trans=1, min.count=10, max.count=10, min=NULL, max=NULL, level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=10, B.init=B, tol.init=1e-2, seed=1, criterion="BIC", control=NULL, include, rm.max,rm.min, prior,usePrior)
+.flowClustK<-function(i, y, expName="Flow Experiment", varNames=NULL, K
+                        , nu, lambda, trans, min.count, max.count, min, max, randomStart, include, rm.max,rm.min, prior,usePrior, criterion # default values set in flowClust API
+                        , nu.est=0, B=500, tol=1e-5, level=0.9, u.cutoff=NULL, z.cutoff=0, B.init=B, tol.init=1e-2, seed=1, control=NULL
+                    )
 {
 	oorder<-1:K[i]
 	.model<-1; #Tells the C code whether to run ECM with non-conjugate priors, or classic flowClust.'

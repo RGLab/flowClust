@@ -17,40 +17,65 @@ This function performs automated clustering for identifying cell populations in 
 }
 
 \usage{
-flowClust(x, expName="Flow Experiment", varNames=NULL, K, B=500, 
-          tol=1e-5, nu=4, lambda=1, nu.est=0, trans=1,
+flowClust(x, expName="Flow Experiment", varNames=NULL, K, nu=4, lambda=1, trans=1,
           min.count=10, max.count=10, min=NULL, max=NULL,
-          level=0.9, u.cutoff=NULL, z.cutoff=0, randomStart=0, 
-          B.init=B, tol.init=1e-2, seed=1, criterion="BIC",
-          control=NULL,prior=NULL,usePrior="no")
+          randomStart=0, prior=NULL,usePrior="no", criterion = "BIC", ...)
 }
 
 \arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of class \code{flowFrame}.  Rows correspond to observations and columns correspond to variables.}
 \item{expName}{A character string giving the name of the experiment.}
+
 \item{varNames}{A character vector specifying the variables (columns) to be included in clustering.  When it is left unspecified, all the variables will be used.}
+
 \item{K}{An integer vector indicating the numbers of clusters.}
-\item{B}{The maximum number of EM iterations.}
-\item{tol}{The tolerance used to assess the convergence of the EM.}
+
 \item{nu}{The degrees of freedom used for the \eqn{t} distribution.  Default is 4.  If \code{nu=Inf}, Gaussian distribution will be used.}
+
 \item{lambda}{The initial transformation to be applied to the data.}
-\item{nu.est}{A numeric indicating whether \code{nu} is to be estimated or not.  May take 0 (no estimation, default), 1 (estimation) or 2 (cluster-specific estimation).}
+
 \item{trans}{A numeric indicating whether the Box-Cox transformation parameter is estimated from the data.  May take 0 (no estimation), 1 (estimation, default) or 2 (cluster-specific estimation).}
+
 \item{min.count}{An integer specifying the threshold count for filtering data points from below.  The default is 10, meaning that if 10 or more data points are smaller than or equal to \code{min}, they will be excluded from the analysis.  If \code{min} is \code{NULL}, then the minimum of data as per each variable will be used.  To suppress filtering, set it as -1.}
+
 \item{max.count}{An integer specifying the threshold count for filtering data points from above.  Interpretation is similar to that of \code{min.count}.}
+
 \item{min}{The lower boundary set for data filtering.  Note that it is a vector of length equal to the number of variables (columns), implying that a different value can be set as per each variable.}
+
 \item{max}{The upper boundary set for data filtering.  Interpretation is similar to that of \code{min}.}
-\item{level}{A numeric value between 0 and 1 specifying the threshold quantile level used to call a point an outlier.  The default is 0.9, meaning that any point outside the 90\% quantile region will be called an outlier.}
-\item{u.cutoff}{Another criterion used to identify outliers.  If this is \code{NULL}, then \code{level} will be used.  Otherwise, this specifies the threshold (e.g., 0.5) for \eqn{u}, a quantity used to measure the degree of \dQuote{outlyingness} based on the Mahalanobis distance.  Please refer to Lo et al. (2008) for more details.}
-\item{z.cutoff}{A numeric value between 0 and 1 underlying a criterion which may be used together with \code{level}/\code{u.cutoff} to identify outliers.  A point with the probability of assignment \eqn{z} (i.e., the posterior probability that a data point belongs to the cluster assigned) smaller than \code{z.cutoff} will be called an outlier.  The default is 0, meaning that assignment will be made no matter how small the associated probability is, and outliers will be identified solely based on the rule set by \code{level} or \code{cutoff}.}
+
 \item{randomStart}{A numeric value indicating how many times a random parition of the data is generated for initialization.  The default is 0, meaning that a deterministic partition based on kmeans clustering is used. A value of 10 means random partitions of the data will be generated, each of which is followed by a short EM run.  The partition leading to the highest likelihood value will be adopted to be the initial partition for the eventual long EM run.}  % If \code{randomStart} is 0, this initialization strategy is not applied and hierarchical clustering is used instead.}
-\item{B.init}{The maximum number of EM iterations following each random partition in random initialization.}
-\item{tol.init}{The tolerance used as the stopping criterion for the short EM runs in random initialization.}
-\item{seed}{An integer giving the seed number used when \code{randomStart>0}.}
-\item{criterion}{A character string stating the criterion used to choose the best model.  May take either \code{"BIC"} or \code{"ICL"}.  This argument is only relevant when \code{length(K)>1}.}
-\item{control}{An argument reserved for internal use.}
+
 \item{prior}{The specification of the prior. Used if usePrior="yes"}
+
 \item{usePrior}{Argument specifying whether or not the prior will be used. Can be "yes","no","vague". A vague prior will be automatically specified if usePrior="vague"}
+
+\item{criterion}{A character string stating the criterion used to choose the best model.  May take either \code{"BIC"} or \code{"ICL"}.  This argument is only relevant when \code{length(K)>1}. Default is "BIC".}
+    
+\item{...}{other arguments:
+    B: The maximum number of EM iterations.Default is 500.
+    
+    tol: The tolerance used to assess the convergence of the EM. default is 1e-5.
+    
+    nu.est: A numeric indicating whether \code{nu} is to be estimated or not.  May take 0 (no estimation, default), 1 (estimation) or 2 (cluster-specific estimation). Default is 0.
+    
+    level: A numeric value between 0 and 1 specifying the threshold quantile level used to call a point an outlier.  The default is 0.9, meaning that any point outside the 90\% quantile region will be called an outlier.
+    
+    u.cutoff: Another criterion used to identify outliers.  If this is \code{NULL}, which is default, then \code{level} will be used.  Otherwise, this specifies the threshold (e.g., 0.5) for \eqn{u}, a quantity used to measure the degree of \dQuote{outlyingness} based on the Mahalanobis distance.  Please refer to Lo et al. (2008) for more details.
+
+    z.cutoff: A numeric value between 0 and 1 underlying a criterion which may be used together with \code{level}/\code{u.cutoff} to identify outliers.  A point with the probability of assignment \eqn{z} (i.e., the posterior probability that a data point belongs to the cluster assigned) smaller than \code{z.cutoff} will be called an outlier.  The default is 0, meaning that assignment will be made no matter how small the associated probability is, and outliers will be identified solely based on the rule set by \code{level} or \code{cutoff}.
+
+    B.init: The maximum number of EM iterations following each random partition in random initialization. Default is the same as B.
+    
+    tol.init: The tolerance used as the stopping criterion for the short EM runs in random initialization. Default is 1e-2.
+    
+    seed: An integer giving the seed number used when \code{randomStart>0}.Default is 1.
+    
+    
+    control: An argument reserved for internal use.
+    
+}
+
 }
 
 \details{

@@ -104,13 +104,13 @@ test_that("flowClust:FL2-H, 3 mode", {
 })
 
 test_that("flowClust:FL2-A, 3 mode", {
-  chnl <- "FL2-A"
+  # chnl <- "FL2-A"
   
-  res <- flowClust(fr, varNames = chnl, tol = 1e-10, K = 1:4, randomStart = 0)
+  # res <- flowClust(fr, varNames = chnl, tol = 1e-10, K = 1:4, randomStart = 0)
   
   #3 mode is best fit
-  scores <- sapply(res, slot, "ICL")
-  scores.diff <- diff(scores)
+  # scores <- sapply(res, slot, "ICL")
+  # scores.diff <- diff(scores)
   # expect_gt(scores.diff[2], 0) #2nd is pos
   # expect_true(all(scores.diff[-2] < 0))# the rest are neg
   # par(mfrow=c(1,4))
