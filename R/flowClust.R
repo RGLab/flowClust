@@ -54,7 +54,10 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		for (k in 1:ncol(y))  if (sum(y[,k]<=min[k]) >= min.count)
 				rm.min <- rm.min | (y[,k] <= min[k])
 	}
-	include <- !rm.max & !rm.min
+	if(min.count <= -1 && max.count <= -1)
+	  include <- NULL
+	else
+	  include <- !rm.max & !rm.min
 
 	usePrior=match.arg(as.character(usePrior),c("yes","no"))
 	if(usePrior=="yes"){
@@ -113,7 +116,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		prior<-list(NA);
 	}
 	mc.cores <- getOption("mc.cores", 2L)
-	if(mc.cores < 2)
+	if(mc.cores < 2||length(K) == 1)
 	{
 		message("Using the serial version of flowClust")
 		# C version
@@ -159,7 +162,8 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 	switch(usePrior,
 			yes=priorFlag<-1,
 			no=priorFlag<-0)
-	y <- as.matrix(y[include,,drop=FALSE])
+	if(!is.null(include))
+	  y <- as.matrix(y[include,,drop=FALSE])
 	ly <- nrow(y)
 	py <- ncol(y)
 	if (min(y)<=0 && lambda<=0)
@@ -479,17 +483,30 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 	BIC <- 2*obj$logLike - log(ly) * (K[i]*(py+1)*py/2 + K[i]*py + K[i]-1 + (if (trans>1) K[i] else trans) + (if (nu.est>1) K[i] else abs(nu.est)))
 	z <- matrix(obj$z, ly, K[i], byrow = TRUE)
 	ICL <- BIC + 2 * sum(z*log(z), na.rm = TRUE)
-
-# output z, u, label, uncertainty, flagOutliers
-	z <- u <- matrix(NA, length(include), K[i])
-	z[include,] <- matrix(obj$z, ly, K[i], byrow=TRUE)
-	u[include,] <- matrix(obj$u, ly, K[i], byrow=TRUE)
-#cat(M);
-	tempLabel <- if (M==0) label else maxLabel[[M]]
-	label <- uncertainty <- flagOutliers <- rep(NA, length(include))
-	label[include] <- tempLabel
-	uncertainty[include] <- obj$uncertainty
-	flagOutliers[include] <- as.logical(obj$flagOutliers)
+  if(is.null(include)){
+    # output z, u, label, uncertainty, flagOutliers
+    z <- u <- matrix(NA, ly, K[i])
+    z <- matrix(obj$z, ly, K[i], byrow=TRUE)
+    u <- matrix(obj$u, ly, K[i], byrow=TRUE)
+    #cat(M);
+    tempLabel <- if (M==0) label else maxLabel[[M]]
+    label <- uncertainty <- flagOutliers <- rep(NA, ly)
+    label <- tempLabel
+    uncertainty <- obj$uncertainty
+    flagOutliers <- as.logical(obj$flagOutliers)
+  }else{
+    # output z, u, label, uncertainty, flagOutliers
+    z <- u <- matrix(NA, length(include), K[i])
+    z[include,] <- matrix(obj$z, ly, K[i], byrow=TRUE)
+    u[include,] <- matrix(obj$u, ly, K[i], byrow=TRUE)
+    #cat(M);
+    tempLabel <- if (M==0) label else maxLabel[[M]]
+    label <- uncertainty <- flagOutliers <- rep(NA, length(include))
+    label[include] <- tempLabel
+    uncertainty[include] <- obj$uncertainty
+    flagOutliers[include] <- as.logical(obj$flagOutliers)
+    
+  }
 
 # output reordered prior
 	prior$Mu0<-matrix({if(all(!is.null(obj$mu0))){obj$mu0}else{NA}},K[i],py,byrow=TRUE);

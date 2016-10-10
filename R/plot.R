@@ -347,14 +347,26 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
     den <- function(y) {
         value <- 0
         nu <- rep(x@nu, length.out=x@K)
+        
         if (length(x@lambda)>0&(any(x@lambda!=1))) {
             lambda <- rep(x@lambda, length.out=x@K)
             for (k in include) {
                 yTrans <- (sign(y)*abs(y)^lambda[k] - 1) / lambda[k]
-                value <- value + x@w[k] * dmvt(yTrans, x@mu[k,subset], x@sigma[k,subset,subset], nu[k], log=F)$value * abs(y)^(lambda[k]-1)
+                sigma <- x@sigma[k,subset,subset]
+                if(!is.na(sigma))
+                  value <- value + x@w[k] * dmvt(yTrans
+                                               , x@mu[k,subset]
+                                               , sigma
+                                               , nu[k]
+                                               , log=F)$value * abs(y)^(lambda[k]-1)
             }
         } else {
-            for (k in include) value <- value + x@w[k] * dmvt(y, x@mu[k,subset], x@sigma[k,subset,subset], nu[k], log=F)$value
+            for (k in include){
+              sigma <- x@sigma[k,subset,subset]
+              if(!is.na(sigma))
+                value <- value + x@w[k] * dmvt(y, x@mu[k,subset], sigma, nu[k], log=F)$value
+            } 
+              
         }
         value <- value / sum(x@w[include])
         value
@@ -367,7 +379,6 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
 
     if (is.null(xlab) && x@varNames!="Not Available") xlab <- x@varNames[subset]
     if (!is.numeric(subset)) subset <- match(subset, x@varNames)
-
     # look for highest density value
     data <- data[,subset]
     data1 <- data[!is.na(x@flagOutliers)]
