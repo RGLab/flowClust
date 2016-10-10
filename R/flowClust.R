@@ -40,35 +40,28 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		stop(paste("Object ", as.character(x), " is not of class flowFrame / matrix / data frame!"))
 	}
 
-  rm.max <- rm.min <- rep(FALSE, nrow(y))
-  is.filter.max <- max.count > -1 && !is.null(max)[1]
-  is.filter.min <- min.count > -1 && !is.null(min)[1]
-  # finding filtered observations
-  if (is.filter.max) {
-      max <- apply(y, 2, max)
-    for (k in 1:ncol(y))  if (sum(y[,k]>=max[k]) >= max.count)
-      rm.max <- rm.max | (y[,k] >= max[k])
-  }else{
-    
-  }
-  if (is.filter.min) {
-      min <- apply(y, 2, min)
-    for (k in 1:ncol(y))  if (sum(y[,k]<=min[k]) >= min.count)
-      rm.min <- rm.min | (y[,k] <= min[k])
-  }  
-  if(is.filter.min||is.filter.max)
-    include <- !rm.max & !rm.min
-  else
-    include <- NULL
+	# finding filtered observations
+	rm.max <- rm.min <- rep(FALSE, nrow(y))
+	if (max.count > -1) {
+		if (is.null(max)[1])
+			max <- apply(y, 2, max)
+		for (k in 1:ncol(y))  if (sum(y[,k]>=max[k]) >= max.count)
+				rm.max <- rm.max | (y[,k] >= max[k])
+	}
+	if (min.count > -1) {
+		if (is.null(min)[1])
+			min <- apply(y, 2, min)
+		for (k in 1:ncol(y))  if (sum(y[,k]<=min[k]) >= min.count)
+				rm.min <- rm.min | (y[,k] <= min[k])
+	}
+	include <- !rm.max & !rm.min
 
-	
 	usePrior=match.arg(as.character(usePrior),c("yes","no"))
-	nK <- length(K)
 	if(usePrior=="yes"){
 		if(is.null(prior)){
 			stop("You must specify a prior with usePrior=\"yes\"");
 		}
-		if (nK>1)
+		if (length(K)>1)
 		{
 			stop("You can only use a prior if the number of cluster is fixed!")
 		}
@@ -86,7 +79,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
                     warning("Use of a prior with transformation estimation and lambda!=1 requires the prior means to be on the transformed scale.")
                 }
 		# TODO Add tests for validity of w0. Set a default. Same for oorder.
-		if(!is.null(prior)&nK==1){
+		if(!is.null(prior)&length(K)==1){
 			#Check that the prior dimensions match the model being fit.
 			mp<-ncol(prior$Mu0);
 			mk<-nrow(prior$Mu0);
@@ -120,11 +113,11 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		prior<-list(NA);
 	}
 	mc.cores <- getOption("mc.cores", 2L)
-	if(mc.cores < 2 || nK == 1)
+	if(mc.cores < 2)
 	{
 		message("Using the serial version of flowClust")
 		# C version
-		result<-lapply(as.list(1:nK),.flowClustK, y, expName=expName, varNames=varNames, K=K, criterion=criterion
+		result<-lapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, criterion=criterion
         , nu=nu, lambda=lambda, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max
         , randomStart=randomStart, include=include, rm.max, rm.min, prior,usePrior
         , ...)
@@ -134,14 +127,14 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		# Split into nClust segReadsList
       # We solely rely on getOption("mc.cores",2L) to determine parallel cores.
       # and don't want to pass mc.cores explicitly because on windows, mclapply does not take mc.cores>1 
-		result<-mclapply(as.list(1:nK),.flowClustK, y, expName=expName, varNames=varNames, K=K, criterion=criterion
+		result<-mclapply(as.list(1:length(K)),.flowClustK, y, expName=expName, varNames=varNames, K=K, criterion=criterion
         , nu=nu, lambda=lambda, trans=trans, min.count=min.count, max.count=max.count, min=min, max=max
         , randomStart=randomStart, include=include, rm.max, rm.min, prior,usePrior, mc.preschedule=FALSE
         , ...)
 	}
 	  
 	# Simply return a flowClust object
-	if (nK==1)
+	if (length(K)==1)
 	{
 		result[[1]]
 	}
@@ -166,8 +159,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 	switch(usePrior,
 			yes=priorFlag<-1,
 			no=priorFlag<-0)
-  if(!is.null(include))
-	  y <- as.matrix(y[include,,drop=FALSE])
+	y <- as.matrix(y[include,,drop=FALSE])
 	ly <- nrow(y)
 	py <- ncol(y)
 	if (min(y)<=0 && lambda<=0)
@@ -488,30 +480,16 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 	z <- matrix(obj$z, ly, K[i], byrow = TRUE)
 	ICL <- BIC + 2 * sum(z*log(z), na.rm = TRUE)
 
-  if(is.null(include)){
-    # output z, u, label, uncertainty, flagOutliers
-    z <- u <- matrix(NA, ly, K[i])
-    z <- matrix(obj$z, ly, K[i], byrow=TRUE)
-    u <- matrix(obj$u, ly, K[i], byrow=TRUE)
-#cat(M);
-    tempLabel <- if (M==0) label else maxLabel[[M]]
-    label <- uncertainty <- flagOutliers <- rep(NA, ly)
-    label <- tempLabel
-    uncertainty <- obj$uncertainty
-    flagOutliers <- as.logical(obj$flagOutliers)
-  }else{
 # output z, u, label, uncertainty, flagOutliers
-    z <- u <- matrix(NA, length(include), K[i])
-    z[include,] <- matrix(obj$z, ly, K[i], byrow=TRUE)
-    u[include,] <- matrix(obj$u, ly, K[i], byrow=TRUE)
+	z <- u <- matrix(NA, length(include), K[i])
+	z[include,] <- matrix(obj$z, ly, K[i], byrow=TRUE)
+	u[include,] <- matrix(obj$u, ly, K[i], byrow=TRUE)
 #cat(M);
-    tempLabel <- if (M==0) label else maxLabel[[M]]
-    label <- uncertainty <- flagOutliers <- rep(NA, length(include))
-    label[include] <- tempLabel
-    uncertainty[include] <- obj$uncertainty
-    flagOutliers[include] <- as.logical(obj$flagOutliers)
-    
-  }
+	tempLabel <- if (M==0) label else maxLabel[[M]]
+	label <- uncertainty <- flagOutliers <- rep(NA, length(include))
+	label[include] <- tempLabel
+	uncertainty[include] <- obj$uncertainty
+	flagOutliers[include] <- as.logical(obj$flagOutliers)
 
 # output reordered prior
 	prior$Mu0<-matrix({if(all(!is.null(obj$mu0))){obj$mu0}else{NA}},K[i],py,byrow=TRUE);
