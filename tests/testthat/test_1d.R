@@ -48,7 +48,11 @@ test_that("flowClust:SSH-H, 1 mode", {
   # for(obj in res)
   #  hist(obj, fr, main = paste("ICL:", round(obj@ICL),"BIC:", round(obj@BIC)))
   
-  
+  # NA ICL and sigma when skipping data filtering
+  # because of unable to cal covariance matrix for the edge spike signal
+  res <- flowClust(fr, varNames = chnl, tol = 1e-10, K = 4, randomStart = 0, min.count = -1, max.count = -1)
+  expect_true(is.na(res@BIC))
+  expect_true(is.na(res@sigma[4]))
 })
 
 
