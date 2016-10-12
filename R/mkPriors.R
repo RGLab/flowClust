@@ -12,9 +12,10 @@
 #' It can be passed to a second round of flowClust() with usePrior="yes" 
 #' The prior could be estimated from a single sample, for example, and then
 #' used to speed up the convergence for other samples. 
+#' 
 #'@param x a flowClust fit object
 #'@param kappa is the fraction of equivalent observations by which to weight this prior relative to the flowClust model.
-#'@param NT the number of total equivalent observation
+#'@param Nt the number of total equivalent observation
 #'@param addCluster not currently supported
 #'@export
 flowClust2Prior<-function(x,kappa,Nt=NULL,addCluster=NULL){

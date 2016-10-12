@@ -87,7 +87,7 @@ Various operations have been defined for the object returned from \code{\link{fl
 \tabular{ll}{
 Subsetting operations: \tab \code{\%in\%}, \code{\link{Subset}} and \code{\link{split}} \cr
 Slot retrieval operations: \tab \code{\link{ruleOutliers}}, \code{\link{Map}}, \code{\link{criterion}}, \code{\link{posterior}}, \code{\link{importance}}, \code{\link{uncertainty}} and \code{\link{getEstimates}} \cr
-Graphical operations: \tab \code{\link[=plot,flowClust-method]{plot}}, \code{\link[=density,flowClust-method]{density}} and \code{\link[=hist,flowClust-method]{hist}} \cr
+Graphical operations: \tab \code{\link[=plot,flowClust-method]{plot}}, \code{\link[=density,flowClust-method]{density}} and \code{\link[=hist.flowClust]{hist}} \cr
 }
 
 In addition, to facilitate the integration with the \pkg{flowCore} package for processing flow cytometry data, the \code{flowClust} operation can be done through a method pair (\code{\link{tmixFilter}} and \code{\link[=tmixFilter]{filter}}) such that various methods defined in \pkg{flowCore} can be applied on the object created from the filtering operation.
