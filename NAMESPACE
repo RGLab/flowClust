@@ -82,7 +82,9 @@ exportMethods(filter,
 exportMethods(show,
               summary,
               plot,
-              density,
-              hist)
+              density)
+
+S3method(hist,flowClust)
+S3method(hist,flowClustList)
 
 export(flowClust2Prior)

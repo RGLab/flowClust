@@ -336,13 +336,54 @@ function(x, type=c("contour", "image"), nlevels=30, scale=c("raw", "log", "sqrt"
 }
 )
 
-
-
-if(!isGeneric("hist")) setGeneric("hist",useAsDefault=hist)
-
-
-setMethod("hist", signature(x="flowClust"),
-function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, xlim=NULL, ylim=NULL, xlab=(if (is.numeric(subset)) NULL else subset), ylab="Density", main=NULL, breaks=50, col=NULL, pch=20, cex=0.6, ...)
+#' 1-D Density Plot (Histogram) of Clustering Results
+#' 
+#' This method generates a one-dimensional density plot for the specified
+#' dimension (variable) based on the robust model-based clustering results.  A
+#' histogram of the actual data or cluster assignment is optional for display.
+#' 
+#' 
+#' @param x Object returned from \code{\link{flowClust}} or from running
+#' \code{\link[=filter.flowFrame]{filter}} on a \code{flowFrame} object.
+#' @param data A numeric vector, matrix, data frame of observations, or object
+#' of class \code{flowFrame}. This is the object on which \code{flowClust} or
+#' \code{filter} was performed.
+#' @param subset An integer indicating which variable is selected for the plot.
+#' Alternatively, a character string containing the name of the variable is
+#' allowed if \code{x@varNames} is not \code{NULL}.
+#' @param include A numeric vector specifying which clusters are shown on the
+#' plot.  By default, all clusters are included.
+#' @param histogram A logical value indicating whether a histogram of the
+#' actual data is made in addition to the density plot or not.
+#' @param labels A logical value indicating whether information about cluster
+#' assignment is shown or not.
+#' @param xlim The range of \eqn{x}-values for the plot.  If \code{NULL}, the
+#' data range will be used.
+#' @param ylim The range of \eqn{y}-values for the plot.  If \code{NULL}, an
+#' optimal range will be determined automatically.
+#' @param xlab,ylab Labels for the \eqn{x}- and \eqn{y}-axes respectively.
+#' @param main Title of the plot.
+#' @param breaks Content to be passed to the \code{breaks} argument of the
+#' generic \code{hist} function, if \code{histogram} is \code{TRUE}.  Default
+#' is 50, meaning that 50 vertical bars with equal binwidths will be drawn.
+#' @param col Colors of the plotting characters displaying the cluster
+#' assignment (if \code{labels} is \code{TRUE}).  If \code{NULL} (default), it
+#' will be determined automatically.
+#' @param pch Plotting character used to show the cluster assignment.
+#' @param cex Size of the plotting character showing the cluster assignment.
+#' @param \dots Further arguments passed to \code{curve} (and also \code{hist}
+#' if \code{histogram} is \code{TRUE}).
+#' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
+#' <\email{c.lo@@stat.ubc.ca}>
+#' @seealso \code{\link{flowClust}}, \code{\link[=plot.flowClust]{plot}},
+#' \code{\link[=density.flowClust]{density}}
+#' @references Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
+#' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
+#' \bold{73}, 321-332.
+#' @keywords graphs
+#' @export
+#' @rdname hist
+hist.flowClust <- function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, xlim=NULL, ylim=NULL, xlab=(if (is.numeric(subset)) NULL else subset), ylab="Density", main=NULL, breaks=50, col=NULL, pch=20, cex=0.6, ...)
 {
     den <- function(y) {
         value <- 0
@@ -366,7 +407,7 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
               if(!is.na(sigma))
                 value <- value + x@w[k] * dmvt(y, x@mu[k,subset], sigma, nu[k], log=F)$value
             } 
-              
+          
         }
         value <- value / sum(x@w[include])
         value
@@ -414,13 +455,12 @@ function(x, data=NULL, subset=1, include=1:(x@K), histogram=TRUE, labels=TRUE, x
         for (k in include) stripchart(data[Map(x, rm.outliers=F)==k], add=T, at=ymin - (ylim[2]-ymin)/100*(j<-j+1), pch=pch, cex=cex, col=col[j])
     }
 }
-)
 
 
-setMethod("hist", signature(x="flowClustList"),
-function(x, data=NULL, subset=1, include=1:(x@K), histogram=T, labels=T, xlim=NULL, ylim=NULL, xlab=(if (is.numeric(subset)) NULL else subset), ylab="Density", main=NULL, breaks=50, col=NULL, pch=20, cex=0.6, ...)
+#' @rdname hist
+hist.flowClustList <- function(x, ...)
 {
     x <- as(x, "flowClust")
-    callGeneric()
+    hist(x, ...)  
 }
-)
+
