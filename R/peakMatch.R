@@ -1,12 +1,16 @@
-
-#'Function to match peaks across samples
-#'
-#'Uses the hungarian algorithm to match peaks across samples, one at a time using a template sample.
-#'@param peaks is the matrix of peaks in the columns and samples in the rows
-#'@param target.index is the index of the template sample.
-#'@param max.fill is the value to substitute for NAs in the distance matrix. Should be very large, but if too large, will overflow and give an incorrect matching
-#'importFrom clue solve_LSAP
-#'@export
+#' Function to match peaks across samples
+#' 
+#' Uses the hungarian algorithm to match peaks across samples, one at a time
+#' using a template sample.
+#' 
+#' 
+#' @param peaks is the matrix of peaks in the columns and samples in the rows
+#' @param target.index is the index of the template sample.
+#' @param max.fill is the value to substitute for NAs in the distance matrix.
+#' Should be very large, but if too large, will overflow and give an incorrect
+#' matching 
+#' @importFrom clue solve_LSAP
+#' @export 
 peakMatch<-function(peaks,target.index,max.fill=1e12){
   if(any(is.na(peaks[target.index,]))){
     stop("template sample must have a full set of peaks detected.")

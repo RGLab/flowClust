@@ -1,4 +1,22 @@
-## show and summary methods
+#' Show Method for flowClust / tmixFilterResult Object
+#' 
+#' This method lists out the slots contained in a \code{flowClust} object.
+#' 
+#' 
+#' @name show,flowClust-method
+#' @aliases show,flowClust-method show,flowClustList-method show.flowClust
+#' show,tmixFilterResult-method show,tmixFilterResultList-method
+#' show.tmixFilterResult
+#' @docType methods
+#' @param object Object returned from \code{\link{flowClust}} or
+#' \code{\link[=tmixFilter]{filter}}.
+#' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
+#' <\email{c.lo@@stat.ubc.ca}>
+#' @seealso \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
+#' \code{\link[=summary.flowClust]{summary}}
+#' @keywords print
+#' @rdname show.flowClust
+#' @export 
 setMethod("show", "flowClust",
           function(object)
       {
@@ -9,7 +27,7 @@ setMethod("show", "flowClust",
               "logLike, BIC, ICL,prior\n")
       })
 
-
+#' @rdname show.flowClust
 setMethod("show", "flowClustList",
           function(object)
       {
@@ -27,6 +45,32 @@ setMethod("show", "flowClustList",
 #		cat("A flowClustTree with ",nn," populations.\n");
 #	})
 
+#' Summary Method for flowClust Object
+#' 
+#' This method prints out various characteristics of the model fitted via
+#' robust model-based clustering.
+#' 
+#' Various characteristics of the fitted model will be given under the
+#' following five categories: Experiment Information, Clustering Summary,
+#' Transformation Parameter, Information Criteria, and Data Quality.  Under
+#' Data Quality, information about data filtering, outliers, and uncertainty is
+#' given.
+#' 
+#' @name summary,flowClust-method
+#' @aliases summary
+#' summary,tmixFilterResult-method summary,tmixFilterResultList-method
+#' summary.flowClust summary.tmixFilterResult
+#' @docType methods
+#' @param object Object returned from \code{\link{flowClust}} or from
+#' \code{\link[=tmixFilter]{filter}}.
+#' @param ... not used
+#' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
+#' <\email{c.lo@@stat.ubc.ca}>
+#' @seealso \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
+#' \code{\link[=show,flowClust-method]{show}}
+#' @keywords print
+#' @rdname summary
+#' @export 
 setGeneric("summary",useAsDefault=summary)
 #setMethod("summary","flowClustTree",
 #function(object){
@@ -36,6 +80,7 @@ setGeneric("summary",useAsDefault=summary)
 #	sapply(nn,function(x)cat("** 		     ",x,": ", dim(getData(object,x,parent=FALSE))[1]/dim(getData(object,x,parent=TRUE))[1],"\n"))
 #	invisible(0);
 #})
+#' @rdname summary
 setMethod("summary", "flowClust",
           function(object)
       {
@@ -73,7 +118,7 @@ setMethod("summary", "flowClust",
 		}
       })
 
-
+#' @rdname summary
 setMethod("summary", "flowClustList",
           function(object)
       {
@@ -82,7 +127,7 @@ setMethod("summary", "flowClustList",
       })
 
 
-
+#' @rdname show.flowClust
 setMethod("show", signature("tmixFilter"),
           function(object)
       {
@@ -112,7 +157,7 @@ setMethod("show", signature("tmixFilter"),
                   "\n")
       })
 
-
+#' @rdname show.flowClust
 setMethod("show", signature("tmixFilterResult"),
           function(object)
       {
@@ -130,7 +175,7 @@ setMethod("show", signature("tmixFilterResult"),
               "logLike, BIC, ICL\n")
       })
 
-
+#' @rdname show.flowClust
 setMethod("show", signature("tmixFilterResultList"),
           function(object)
       {
@@ -166,20 +211,23 @@ setMethod("summary", signature("tmixFilterResultList"),
 
 ## %in% methods
 ## This one is quite weird if you think of the semantics it implies...
+#' @export 
 setMethod("%in%", signature("ANY", "flowClust"),
           function(x, table)
       {
           !table@flagOutliers & !is.na(table@flagOutliers)
       })
 
-
+#' @rdname tmixFilter
+#' @param x flowFrame
+#' @param table tmixFilterResult
 setMethod("%in%", signature("flowFrame", "tmixFilterResult"),
           function(x, table)
       {
           selectMethod("%in%", c("ANY", "flowClust"))(x, table)
       })
 
-
+#' @rdname tmixFilter
 setMethod("%in%", signature("flowFrame", "tmixFilter"),
           function(x, table)       
       {
@@ -199,7 +247,7 @@ setMethod("%in%", signature("flowFrame", "tmixFilter"),
                     usePrior=table@usePrior, prior=table@prior)
       })
 
-
+#' @rdname tmixFilter
 setMethod("%in%", signature("ANY", "tmixFilterResult"),
           function(x, table)
       {
@@ -212,7 +260,7 @@ setMethod("%in%", signature("ANY", "flowClustList"),
       {
           x %in% table[[table@index]]
       })    
-          
+#' @rdname tmixFilter          
 setMethod("%in%", signature("ANY", "tmixFilterResultList"),
           function(x, table)
       {
@@ -220,40 +268,8 @@ setMethod("%in%", signature("ANY", "tmixFilterResultList"),
       })
 
 
-
-
-## Object coercion
-setAs("flowClust","logical", function(from) 1 %in% from )
-
-setAs("tmixFilterResult","logical", function(from) 1 %in% from)
-
-setAs("flowClust","filterResult", function(from)
-      new("tmixFilterResult", from, subSet=factor(Map(from, TRUE))))
-
-setAs("flowClust","tmixFilterResult", function(from)
-      new("tmixFilterResult", from, subSet=factor(Map(from, TRUE))))
-
-
-setAs("flowClustList","flowClust", function(from) from[[from@index]] )
-
-setAs("flowClustList","logical", function(from) 1 %in% from )
-
-setAs("flowClustList","filterResult", function(from)
-      new("tmixFilterResultList", from, subSet=factor(Map(from[[from@index]], TRUE))))
-
-setAs("flowClustList","tmixFilterResult", function(from)
-      new("tmixFilterResult", from[[from@index]], subSet=factor(Map(from[[from@index]], TRUE))))
-
-
-setAs("tmixFilterResultList","tmixFilterResult", function(from)
-      new("tmixFilterResult", from[[from@index]], as(from, "multipleFilterResult")))
-
-setAs("tmixFilterResultList","logical", function(from) 1 %in% from)
-
-
-
-
-## Subsetting and splitting
+#' @rdname tmixFilter
+#' @export 
 setMethod("[",
           signature=signature("flowFrame","flowClust"),
           definition=function(x,i,j,...,drop=FALSE)
@@ -264,7 +280,9 @@ setMethod("[",
 #          callGeneric(x,i,j,...,drop=drop)
       })
 
-
+#' @rdname tmixFilter
+#' @param i tmixFilterResult or tmixFilterResultList
+#' @param j,drop,exact not used
 setMethod("[",
           signature=signature("flowFrame","tmixFilterResult"),
           definition=function(x, i, j, ..., drop=FALSE)
@@ -282,7 +300,7 @@ setMethod("[",
                        c("flowFrame", "filterResult"))(x, i, j, ..., drop=drop)
       })
 
-
+#' @rdname tmixFilter
 setMethod("[",
           signature=signature("flowFrame","tmixFilterResultList"),
           definition=function(x,i,j,...,drop=FALSE)
@@ -291,7 +309,8 @@ setMethod("[",
                        c("flowFrame", "filterResult"))(x, i, j, ..., drop=drop)
       })
 
-
+#' @rdname tmixFilter
+#' @export 
 setMethod("[[",
           signature=signature("tmixFilterResultList","ANY"),
           definition=function(x,i,j,...,exact=TRUE)
@@ -299,7 +318,8 @@ setMethod("[[",
           if (missing(j)) x@.Data[[i,...,exact=exact]]  else x@.Data[[i,j,...,exact=exact]]
       })
 
-
+#' @rdname tmixFilter
+#' @export 
 setMethod("length", signature("tmixFilterResultList"),
           function(x)
       {
@@ -308,14 +328,45 @@ setMethod("length", signature("tmixFilterResultList"),
 
 
 
-
+#' Subsetting Data Based on Clustering Results
+#' 
+#' This method returns a subset of data upon the removal of outliers identified
+#' from the clustering (filtering) operations.
+#' 
+#' 
+#' @name Subset,flowClust-method
+#' @aliases Subset,flowClust-method Subset.flowClust Subset.flowFrame
+#' Subset.tmixFilterResult Subset.flowFrame.tmixFilterResult
+#' Subset,flowFrame,flowClust-method Subset,flowFrame,tmixFilterResult-method
+#' Subset,data.frame,flowClust-method Subset,matrix,flowClust-method
+#' Subset,vector,flowClust-method Subset,ANY,flowClustList-method
+#' Subset,flowFrame,tmixFilterResultList-method Subset
+#' @docType methods
+#' @param x A numeric vector, matrix, data frame of observations, or object of
+#' class \code{flowFrame}.  This is the object on which \code{\link{flowClust}}
+#' or \code{\link[=tmixFilter]{filter}} was performed.
+#' @param subset Object returned from \code{flowClust} or \code{filter}.
+#' @param \dots Further arguments to be passed to or from other methods.
+#' @return An object which is a subset of \code{x}.  It also retains the same
+#' class as \code{x}.
+#' @section Usage: Subset(x, subset, \dots{})
+#' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
+#' <\email{c.lo@@stat.ubc.ca}>
+#' @seealso \code{\link{split}}, \code{\link{flowClust}},
+#' \code{\link[=tmixFilter]{filter}}
+#' @references Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
+#' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
+#' \bold{73}, 321-332.
+#' @keywords manip
+#' @rdname Subset
+#' @export 
 setMethod("Subset", signature("flowFrame","flowClust"),
           function(x,subset,...)
       {
           subset <- as(subset, "tmixFilterResult")
           callGeneric()
       })
-
+#' @rdname Subset
 setMethod("Subset", signature("flowFrame", "tmixFilterResult"),
           function(x,subset,...)
       {
@@ -323,7 +374,7 @@ setMethod("Subset", signature("flowFrame", "tmixFilterResult"),
                        c("flowFrame", "filterResult"))(x,subset,...)
       })
 
-
+#' @rdname Subset
 setMethod("Subset", signature("data.frame", "flowClust"),
           function(x, subset, ...)
       {
@@ -331,7 +382,7 @@ setMethod("Subset", signature("data.frame", "flowClust"),
           return(object)
       })
 
-
+#' @rdname Subset
 setMethod("Subset", signature("matrix","flowClust"),
           function(x, subset, ...)
       {
@@ -339,7 +390,7 @@ setMethod("Subset", signature("matrix","flowClust"),
           return(object)
       })
 
-
+#' @rdname Subset
 setMethod("Subset", signature("vector","flowClust"),
           function(x,subset,...)
       {
@@ -347,166 +398,49 @@ setMethod("Subset", signature("vector","flowClust"),
           return(object)
       })
 
-
+#' @rdname Subset
 setMethod("Subset", signature("ANY","flowClustList"),
           function(x,subset,...) Subset(x, as(subset,"flowClust"), ...))
-
+#' @rdname Subset
 setMethod("Subset", signature("flowFrame","tmixFilterResultList"),
           function(x,subset,...) Subset(x, as(subset,"tmixFilterResult"), ...))
 
-
-
-
-.spltVsPop <- function(pop, splt, f){
-    DEPR_MESSAGE <- paste("The 'split' argument is deprecated.\nPlease use",
-                          "'population' instead.")
-    if(is.null(pop)){
-        if(!is.null(splt)){
-            pop <- splt
-            warning(msg=DEPR_MESSAGE, call.=FALSE)
-        }else{
-            pop <- as.list(1:f@K)
-        }
-    }else if(!is.null(splt)){
-        warning("Both arguments 'population' and 'split' are specified.",
-                "\n'split' is deprecated and will be ignored.", call.=FALSE)
-    }
-    return(pop)
-}
-
-setGeneric("split",useAsDefault=split)
-
-setMethod("split",
-          signature(x="data.frame", f="flowClust", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          population <- .spltVsPop(population, split, f)
-          object <- vector("list", length(population))
-          for (i in 1:length(population)) 
-              object[[i]] <- x[is.element(Map(f, rm.outliers),
-                                          population[[i]]),, drop=FALSE]
-          names(object) <- names(population)
-          return(object)
-      })  
-
-
-setMethod("split",
-          signature(x="matrix", f="flowClust", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          population <- .spltVsPop(population, split, f)
-          object <- vector("list", length(population))
-          for (i in 1:length(population)) 
-              object[[i]] <- x[is.element(Map(f, rm.outliers),
-                                          population[[i]]),, drop=FALSE]
-          names(object) <- names(population)
-          return(object)
-      })
-
-
-setMethod("split",
-          signature(x="vector", f="flowClust", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          population <- .spltVsPop(population, split, f)
-          object <- vector("list", length(population))
-          for (i in 1:length(population))
-              object[[i]] <- x[is.element(Map(f, rm.outliers), population[[i]])]
-          names(object) <- names(population)
-          return(object)
-      })
-
-
-setMethod("split",
-          signature(x="flowFrame", f="flowClust", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          f <- as(f, "tmixFilterResult")
-          selectMethod("split", c("flowFrame", "tmixFilterResult"))(x,f,drop,population,split,rm.outliers, ...)
-      })
-
-
-setMethod("split",
-          signature(x="flowFrame", f="tmixFilterResult", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          population <- lapply(.spltVsPop(population, split, f), as.character)
-          if(!is.list(population))
-              population <- as.list(population)
-          subSet <- factor(Map(f, rm.outliers))
-          x <- x[!is.na(subSet),]
-          subSet <- subSet[!is.na(subSet)]
-          f@subSet <- subSet
-          selectMethod("split",
-                     c("flowFrame", "multipleFilterResult"))(x, f, drop, population=population, ...)
-      })
-
-
-setMethod("split",
-          signature(x="flowFrame", f="flowClustList", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          f <- as(f, "flowClust")
-          selectMethod("split",
-                     c("flowFrame", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
-      })
-
-
-setMethod("split",
-          signature(x="data.frame", f="flowClustList", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          f <- as(f, "flowClust")
-          selectMethod("split",
-                     c("data.frame", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
-      })
-
-
-setMethod("split",
-          signature(x="matrix", f="flowClustList", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          f <- as(f, "flowClust")
-          selectMethod("split",
-                     c("matrix", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
-      })
-
-
-setMethod("split",
-          signature(x="vector", f="flowClustList", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          f <- as(f, "flowClust")
-          selectMethod("split",
-                     c("vector", "flowClust"))(x, f, drop, population=population, split=split, rm.outliers=rm.outliers, ...)
-      })
-
-
-setMethod("split",
-          signature(x="flowFrame", f="tmixFilterResultList", drop="ANY"),
-          function(x, f, drop=FALSE, population=NULL, split=NULL,
-                   rm.outliers=TRUE, ...)
-      {
-          f <- as(f, "tmixFilterResult")
-          selectMethod("split",
-                     c("flowFrame", "tmixFilterResult"))(x, f, drop=drop, population=population, split=split, rm.outliers=rm.outliers, ...)
-      })
-
-
-
-
-## Misc methods
+#' Showing or Modifying the Rule used to Identify Outliers
+#' 
+#' This method shows or modifies the rule used to identify outliers.
+#' 
+#' 
+#' @name ruleOutliers,flowClust-method
+#' @aliases ruleOutliers,flowClust-method ruleOutliers,flowClustList-method
+#' ruleOutliers.flowClust ruleOutliers ruleOutliers<-,flowClust,list-method
+#' ruleOutliers<-,flowClustList,list-method ruleOutliers<-
+#' @docType methods
+#' @param object Object returned from \code{\link{flowClust}} or
+#' \code{\link[=tmixFilter]{filter}}.
+#' @param value A list object with one or more of the following named elements:
+#' \code{level}, \code{u.cutoff} and \code{z.cutoff}.  Their interpretations
+#' are the same as those of the corresponding arguments in the
+#' \code{\link{flowClust}} function.  Note that when both \code{level} and
+#' \code{u.cutoff} are missing, the rule set by the original value of
+#' \code{level} or \code{u.cutoff} will be unchanged rather than removed.
+#' Likewise, when \code{z.cutoff} is missing, the rule set by the original
+#' value of \code{z.cutoff} will be retained.
+#' @return The replacement method modifies \code{object@ruleOutliers} (or
+#' \code{object[[k]]@ruleOutliers} if \code{object} is of class
+#' \code{flowClustList} or \code{tmixFilterResultList}) AND updates the logical
+#' vector \code{object@flagOutliers} (or \code{object[[k]]@ruleOutliers})
+#' according to the new rule.
+#' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
+#' <\email{c.lo@@stat.ubc.ca}>
+#' @seealso \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}}
+#' @references Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
+#' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
+#' \bold{73}, 321-332.
+#' @keywords manip
+#' @rdname ruleOutliers
+#' @export 
 setGeneric("ruleOutliers", function(object) standardGeneric("ruleOutliers"))
-
+#' @rdname ruleOutliers
 setMethod("ruleOutliers", signature("flowClust"),
           function(object)
       {
@@ -521,13 +455,14 @@ setMethod("ruleOutliers", signature("flowClust"),
               cat(",\n                              probability of ",
                   "assignment <", round(object@ruleOutliers[3], 2), "\n")
       })
-
+#' @rdname ruleOutliers
 setMethod("ruleOutliers", signature("flowClustList"),
           function(object) ruleOutliers(object[[object@index]]))
 
-
+#' @rdname ruleOutliers
+#' @export 
 setGeneric("ruleOutliers<-", function(object,value) standardGeneric("ruleOutliers<-"))
-
+#' @rdname ruleOutliers
 setReplaceMethod("ruleOutliers", signature("flowClust","list"),
                  function(object,value=list(level=NULL, u.cutoff=NULL,
                                  z.cutoff=NULL))
@@ -585,9 +520,41 @@ setReplaceMethod("ruleOutliers", signature("flowClustList","list"),
              })
 
 
-
+#' Cluster Assignment Based on Clustering Results
+#' 
+#' This method performs cluster assignment according to the posterior
+#' probabilities of clustering memberships resulted from the clustering
+#' (filtering) operations.  Outliers identified will be left unassigned by
+#' default.
+#' 
+#' 
+#' @name Map,flowClust-method
+#' @aliases Map,flowClust-method Map,flowClustList-method Map.flowClust Map
+#' @docType methods
+#' @param f Object returned from \code{\link{flowClust}} or
+#' \code{\link[=tmixFilter]{filter}}.
+#' @param rm.outliers A logical value indicating whether outliers will be left
+#' unassigned or not.
+#' @param \dots Further arguments to be passed to or from other methods.
+#' @return A numeric vector of size \eqn{N} (the number of observations)
+#' indicating to which cluster each observation is assigned.  Unassigned
+#' observations will be labelled as \code{NA}.
+#' @note Even if \code{rm.outliers} is set to \code{FALSE}, \code{NA} may still
+#' appear in the resultant vector due to the filtered observations; see the
+#' descriptions about the \code{min.count}, \code{max.count}, \code{min} and
+#' \code{max} arguments of \code{\link{flowClust}}.
+#' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
+#' <\email{c.lo@@stat.ubc.ca}>
+#' @seealso \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
+#' \code{\link{posterior}}
+#' @references Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
+#' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
+#' \bold{73}, 321-332.
+#' @keywords cluster
+#' @rdname Map
+#' @export 
 setGeneric("Map")
-
+#' @rdname Map
 setMethod("Map", signature(f="flowClust"),
           function(f, rm.outliers=TRUE, ...)
       {
@@ -601,161 +568,55 @@ setMethod("Map", signature(f="flowClust"),
 		# }
           result
       })
-
+#' @rdname Map
 setMethod("Map", signature(f="flowClustList"),
           function(f, rm.outliers=TRUE, ...) Map(as(f,"flowClust"), rm.outliers, ...))
 
 
 
 
-## helper functions
 
-setGeneric("criterion", function(object, ...) standardGeneric("criterion"))
-
-setMethod("criterion", signature(object="flowClust"),
-          function(object, type="BIC")
-      {
-          if (type=="BIC") object@BIC  else if (type=="ICL") object@ICL  else if (type=="logLike") object@logLike
-      })
-
-setMethod("criterion", signature(object="flowClustList"),
-          function(object, type="BIC", max=FALSE, show.K=FALSE)
-      {
-          values <- rep(0, length(object))
-          if (show.K) K <- rep(0, length(object))
-          for (i in 1:length(object))
-          {
-              if (type=="BIC") values[i] <- object[[i]]@BIC else
-              if (type=="ICL") values[i] <- object[[i]]@ICL else
-              if (type=="logLike") values[i] <- object[[i]]@logLike
-              if (show.K) K[i] <- object[[i]]@K     
-          }
-          if (max)
-          {
-              if (show.K) K <- K[which.max(values)] else values <- max(values)
-          }
-          if (show.K) K else values
-      })
-
-
-setGeneric("criterion<-", function(object,value) standardGeneric("criterion<-"))
-
-setReplaceMethod("criterion", signature("flowClustList","character"),
-                 function(object,value)
-             {
-                 values <- criterion(object, value)
-                 object@index <- which.max(values)
-                 object@criterion <- value
-                 object
-             })
-
-
-
-posterior <- function(object, assign=FALSE)
-{
-    if (is(object,"flowClustList")) object <- object[[object@index]]
-    if (!assign) object@z  else {
-        result <- rep(NA, nrow(object@z))
-        result[!is.na(object@flagOutliers)] <-
-            apply(object@z, 1, max)[!is.na(object@flagOutliers)]
-#            t(object@z)[t(unmap(map(object@z))==T)]
-        result
-    }
-}
-
-
-importance <- function(object, assign=FALSE)
-{
-    if (is(object,"flowClustList")) object <- object[[object@index]]
-    if (!assign) object@u  else {
-        result <- rep(NA, nrow(object@u))
-        result[!is.na(object@flagOutliers)] <-
-            object@u[cbind(1:nrow(object@u), max.col(object@z, "first"))][!is.na(object@flagOutliers)]
-#            t(object@u)[t(unmap(map(object@z))==T)]
-        result
-    }
-}
-
-
-uncertainty <- function(object)
-{
-    if (is(object,"flowClustList")) object <- object[[object@index]]
-    object@uncertainty
-}
-
-
-getEstimates <- function(object, data)
-{
-    if (is(object,"flowClustList")) object <- object[[object@index]]
-    if (length(object@lambda)==0)
-        list(proportions=object@w, locations=object@mu,
-             dispersion=object@sigma)
-    else{
-        if (missing(data))
-            list(proportions=object@w, locations={if((object@lambda!=1))
-				{
-					rbox(object@mu,object@lambda)
-				}else{
-					object@mu
-				}
-				})
-					
-        else
-        {
-            if(is(data,"flowFrame"))
-            {
-                y<-as.matrix(exprs(data)[,object@varNames])
-            }
-            else if(is(data,"matrix"))
-            {
-                if(object@varNames[1]=="Not Available")
-                    y<-data
-                else
-                    y<-as.matrix(data[,object@varNames])
-            }
-            else if(is(data,"data.frame"))
-            {
-                y<-as.matrix(data[,object@varNames])
-            }
-            else if(is(data,"vector"))
-            {
-                y<-matrix(data)
-            }    
-            include <- !is.na(object@uncertainty)
-            y <- as.matrix(y[include,])
-            z <- as.matrix(object@z[include,])
-            u <- as.matrix(object@u[include,])
-            ly<-nrow(y)
-            py<-ncol(y)
-            K<-object@K
-            if (all(object@nu!=Inf)){
-                obj <- .C("getEstimates", as.double(t(y)), as.integer(ly),
-                          as.integer(py), as.integer(K), mu=rep(0.0,K*py),
-                          precision=rep(0.0,K*py*py), as.double(rep(object@nu,length.out=K)),
-                          as.double(t(z)), as.double(t(u)))
-            }else{
-                obj <- .C("getEstimatesGaussian", as.double(t(y)),
-                          as.integer(ly), as.integer(py), as.integer(K),
-                          mu=rep(0.0,K*py), precision=rep(0.0,K*py*py),
-                          as.double(t(z)))
-            }
-            sigma <- array(0,c(K,py,py))
-            precision <- matrix(obj$precision, K, py*py, byrow=TRUE)
-            for(k in 1:K) sigma[k,,] <- matrix(precision[k,], py, py,
-                                               byrow=TRUE)
-            list(proportions=object@w, {if((object@lambda!=1)){
-					locations=rbox(object@mu,
-                                       object@lambda)
-					}else{
-					object@mu
-					}},
-                 locationsC=matrix(obj$mu,K,py,byrow=TRUE), dispersion=sigma)
-        }
-    }
-}
-
-
-
+#' Scatterplot / 1-D Density Plot of Filtering (Clustering) Results
+#' 
+#' Depending on the dimensions specified, this method generates either a
+#' scatterplot or a one-dimensional density plot (histogram) based on the
+#' robust model-based clustering results.
+#' 
+#' 
+#' @name plot,flowFrame,tmixFilterResult-method
+#' @aliases plot,flowFrame,tmixFilterResult-method
+#' plot,flowFrame,tmixFilterResultList-method plot,tmixFilterResult-method
+#' plot.flowFrame.tmixFilterResult plot.flowFrame plot.tmixFilterResult
+#' @docType methods
+#' @param x Object of class \code{flowFrame}.  This is the data object on which
+#' \code{\link[=tmixFilter]{filter}} was performed.
+#' @param y Object of class \code{tmixFilterResult} or
+#' \code{tmixFilterResultList} returned from running
+#' \code{\link[=tmixFilter]{filter}}.
+#' @param z A character vector of length one or two containing the name(s) of
+#' the variable(s) selected for the plot.  If it is of length two, a
+#' scatterplot will be generated.  If it is of length one, a 1-D density plot
+#' will be made.  If it is unspecified, the first one/two variable(s) listed in
+#' \code{y@varNames} will be used.
+#' @param \dots All optional arguments passed to the
+#' \code{\link[=plot.flowClust]{plot}} or \code{\link[=hist.flowClust]{hist}}
+#' method with signature \code{'flowClust'}.  Note that arguments \code{x},
+#' \code{data} and \code{subset} have already been provided by \code{y},
+#' \code{x} and \code{z} above respectively.
+#' @note This \code{plot} method is designed such that it resembles the
+#' argument list of the \code{plot} method defined in the \pkg{flowCore}
+#' package.  The actual implementation is done through the
+#' \code{\link[=plot.flowClust]{plot}} or \code{\link[=hist.flowClust]{hist}}
+#' method defined for a \code{flowClust} object.
+#' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
+#' <\email{c.lo@@stat.ubc.ca}>
+#' @seealso \code{\link[=tmixFilter]{filter}},
+#' \code{\link[=plot.flowClust]{plot}}, \code{\link[=hist.flowClust]{hist}}
+#' @references Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
+#' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
+#' \bold{73}, 321-332.
+#' @keywords graphs
+#' @rdname plot.flowCore
 setMethod("plot", signature("flowFrame", "tmixFilterResult"),
           function(x, y, z=NULL, ...)
       {
@@ -772,7 +633,7 @@ setMethod("plot", signature("flowFrame", "tmixFilterResult"),
               hist(x=y, data=x, subset=z, ...)
       }
 )
-
+#' @rdname plot.flowCore
 setMethod("plot", signature("flowFrame", "tmixFilterResultList"),
           function(x, y, z=NULL, ...) plot(x, as(y,"tmixFilterResult"), z, ...))
           
@@ -783,6 +644,10 @@ setMethod("plot", signature("flowFrame", "tmixFilterResultList"),
 ## We want to store the clustering information as part of the filterDetails
 ## for future reference
 ## ---------------------------------------------------------------------------
+#' @rdname tmixFilter
+#' @export
+#' @param result tmixFilterResult
+#' @param filter tmixFilter
 setMethod("summarizeFilter",
           signature=signature(result="tmixFilterResult",
                               filter="tmixFilter"),

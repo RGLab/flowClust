@@ -30,11 +30,16 @@ NULL
 #' @param pch Plotting character used to show the cluster assignment.
 #' @param cex Size of the plotting character showing the cluster assignment.
 #' @param \dots other arguments
+#' 
 #'    xlim The range of \eqn{x}-values for the plot.  If \code{NULL}, the data range will be used.
+#' 
 #'    ylim The range of \eqn{y}-values for the plot.  If \code{NULL}, an optimal range will be determined automatically.
+#' 
 #'    breaks Content to be passed to the \code{breaks} argument of the generic \code{hist} function, if \code{histogram} is \code{TRUE}.  Default
 #'            is 50, meaning that 50 vertical bars with equal binwidths will be drawn.
+#' 
 #'    ... Further arguments passed to \code{curve} (and also \code{hist}
+#' 
 #' if \code{histogram} is \code{TRUE}).
 #' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
 #' <\email{c.lo@@stat.ubc.ca}>
@@ -44,8 +49,8 @@ NULL
 #' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 #' \bold{73}, 321-332.
 #' @keywords graphs
-#' @export
 #' @rdname hist
+#' @export 
 hist.flowClust <- function(x, data=NULL, subset=1, include=1:(x@K)
                            , histogram=TRUE
                            , labels=TRUE
@@ -163,6 +168,7 @@ flowClust.den <- function(x, obj, subset, include) {
 
 #' @method hist flowClustList
 #' @rdname hist
+#' @export 
 hist.flowClustList <- function(x, ...)
 {
   x <- as(x, "flowClust")
