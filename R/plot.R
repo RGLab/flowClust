@@ -492,6 +492,7 @@ dmvtmix <- function(x, w, mu, sigma, nu, lambda, object, subset, include, log=FA
 #' @rdname density
 #' @importFrom BiocGenerics density
 #' @export 
+#' @export density
 setMethod("density", signature(x="flowClust"),
 function(x, data=NULL, subset=c(1,2), include=1:(x@K), npoints=c(100,100), from=NULL, to=NULL)
 {

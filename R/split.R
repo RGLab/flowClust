@@ -129,7 +129,6 @@ setMethod("split",
         rm.outliers=TRUE, ...)
     {
       population <- lapply(.spltVsPop(population, split, f), as.character)
-      browser()
       if(!is.list(population))
         population <- as.list(population)
       subSet <- factor(Map(f, rm.outliers))
