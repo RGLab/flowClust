@@ -3,9 +3,12 @@
 \docType{class}
 \name{tmixFilter-class}
 \alias{[,flowFrame,flowClust,ANY,ANY-method}
+\alias{[,flowFrame,flowClustList,ANY,ANY-method}
 \alias{[,flowFrame,tmixFilterResult,ANY,ANY-method}
 \alias{[,flowFrame,tmixFilterResultList,ANY,ANY-method}
 \alias{[[,tmixFilterResultList,ANY-method}
+\alias{\%in\%,ANY,flowClust-method}
+\alias{\%in\%,ANY,flowClustList-method}
 \alias{\%in\%,ANY,tmixFilterResult-method}
 \alias{\%in\%,ANY,tmixFilterResultList-method}
 \alias{\%in\%,flowFrame,tmixFilter-method}
@@ -16,9 +19,12 @@
 \alias{tmixFilter-class}
 \alias{tmixFilterResult-class}
 \alias{tmixFilterResultList}
+\alias{tmixFilterResultList-class}
 \title{Creating Filters and Filtering Flow Cytometry Data}
 \usage{
 tmixFilter(filterId = "tmixFilter", parameters = "", ...)
+
+\S4method{\%in\%}{ANY,flowClust}(x, table)
 
 \S4method{\%in\%}{flowFrame,tmixFilterResult}(x, table)
 
@@ -26,11 +32,15 @@ tmixFilter(filterId = "tmixFilter", parameters = "", ...)
 
 \S4method{\%in\%}{ANY,tmixFilterResult}(x, table)
 
+\S4method{\%in\%}{ANY,flowClustList}(x, table)
+
 \S4method{\%in\%}{ANY,tmixFilterResultList}(x, table)
 
 \S4method{[}{flowFrame,flowClust,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{flowFrame,tmixFilterResult,ANY,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{flowFrame,flowClustList,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{flowFrame,tmixFilterResultList,ANY,ANY}(x, i, j, ...,
   drop = FALSE)
@@ -104,7 +114,7 @@ the links below).
 
 If \code{filter} has a length >1, the function returns an object of class
 \code{tmixFilterResultList}.  This class extends both the
-\code{\link{flowClustList}} class and the
+\code{\link[=flowClust-class]{flowClustList}} class and the
 \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}}
 class.  Note that when a \code{tmixFilterResultList} object is used in place
 of a \code{tmixFilterResult} object, in most cases the list element
@@ -126,6 +136,7 @@ the \pkg{flowCore} package.
 
 
 data(rituximab)
+library(flowCore)
 
 ### create a filter object
 s1filter <- tmixFilter("s1", c("FSC.H", "SSC.H"), K=1)

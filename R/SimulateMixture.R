@@ -21,7 +21,7 @@
 #' @seealso \code{\link{flowClust}}
 #' @keywords datagen
 #' @examples
-#' 
+#' library(flowCore)
 #' library(flowClust)
 #' ### Number of components
 #' K <- 5

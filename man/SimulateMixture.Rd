@@ -32,7 +32,7 @@ This function can be used to generate a sample from a multivariate \eqn{t}
 mixture model with Box-Cox transformation.
 }
 \examples{
-
+library(flowCore)
 library(flowClust)
 ### Number of components
 K <- 5

@@ -71,6 +71,7 @@ setClass("tmixFilter",
 #' the \pkg{flowCore} package.
 #' 
 #' @name tmixFilter
+#' @aliases tmixFilterResultList tmixFilterResultList-class
 #' 
 #' @param filterId A character string that identifies the filter created.
 #' @param parameters A character vector specifying the variables to be used in
@@ -121,7 +122,7 @@ setClass("tmixFilter",
 #' 
 #' If \code{filter} has a length >1, the function returns an object of class
 #' \code{tmixFilterResultList}.  This class extends both the
-#' \code{\link{flowClustList}} class and the
+#' \code{\link[=flowClust-class]{flowClustList}} class and the
 #' \code{\link[flowCore:multipleFilterResult-class]{multipleFilterResult}}
 #' class.  Note that when a \code{tmixFilterResultList} object is used in place
 #' of a \code{tmixFilterResult} object, in most cases the list element
@@ -148,6 +149,7 @@ setClass("tmixFilter",
 #' 
 #' 
 #' data(rituximab)
+#' library(flowCore)
 #' 
 #' ### create a filter object
 #' s1filter <- tmixFilter("s1", c("FSC.H", "SSC.H"), K=1)
@@ -225,7 +227,7 @@ tmixFilter <- function(filterId="tmixFilter", parameters="", ...)
 #' @rdname tmixFilter
 setClass("tmixFilterResult", contains=c("flowClust", "multipleFilterResult"))
 
-#' @name tmixFilterResultList
+#' @name tmixFilter
 #' @exportClass  tmixFilterResultList
 #' @rdname tmixFilter
 setClassUnion(name = "tmixFilterResultList",

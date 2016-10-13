@@ -9,7 +9,7 @@ NULL
 #' 
 #' @method hist flowClust
 #' @param x Object returned from \code{\link{flowClust}} or from running
-#' \code{\link[=filter.flowFrame]{filter}} on a \code{flowFrame} object.
+#' \code{filter} on a \code{flowFrame} object.
 #' @param data A numeric vector, matrix, data frame of observations, or object
 #' of class \code{flowFrame}. This is the object on which \code{flowClust} or
 #' \code{filter} was performed.
@@ -43,7 +43,7 @@ NULL
 #' if \code{histogram} is \code{TRUE}).
 #' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
 #' <\email{c.lo@@stat.ubc.ca}>
-#' @seealso \code{\link{flowClust}}, \code{\link[=plot.flowClust]{plot}},
+#' @seealso \code{\link{flowClust}}, \code{\link[=plot,flowClust-method]{plot}},
 #' \code{\link[=density.flowClust]{density}}
 #' @references Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 #' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}

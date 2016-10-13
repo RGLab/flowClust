@@ -203,6 +203,7 @@ operation.
 }
 \examples{
 
+library(flowCore)
 data(rituximab)
 
 ### cluster the data using FSC.H and SSC.H
@@ -272,7 +273,7 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 }
 \seealso{
 \code{\link[=summary.flowClust]{summary}},
-\code{\link[=plot.flowClust]{plot}},
+\code{\link[=plot,flowClust-method]{plot}},
 \code{\link[=density.flowClust]{density}},
 \code{\link[=hist.flowClust]{hist}}, \code{\link{Subset}},
 \code{\link{split}}, \code{\link{ruleOutliers}}, \code{\link{Map}},

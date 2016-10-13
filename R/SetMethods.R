@@ -210,7 +210,7 @@ setMethod("summary", signature("tmixFilterResultList"),
 
 
 ## %in% methods
-## This one is quite weird if you think of the semantics it implies...
+#' @rdname tmixFilter
 #' @export 
 setMethod("%in%", signature("ANY", "flowClust"),
           function(x, table)
@@ -254,7 +254,7 @@ setMethod("%in%", signature("ANY", "tmixFilterResult"),
           callNextMethod()
       })
 
-
+#' @rdname tmixFilter
 setMethod("%in%", signature("ANY", "flowClustList"),
           function(x, table) 
       {
@@ -291,7 +291,7 @@ setMethod("[",
                        c("flowFrame", "filterResult"))(x, i, j, ..., drop=drop)
       })
 
-
+#' @rdname tmixFilter
 setMethod("[",
           signature=signature("flowFrame","flowClustList"),
           definition=function(x,i,j,...,drop=FALSE)
@@ -599,19 +599,19 @@ setMethod("Map", signature(f="flowClustList"),
 #' will be made.  If it is unspecified, the first one/two variable(s) listed in
 #' \code{y@varNames} will be used.
 #' @param \dots All optional arguments passed to the
-#' \code{\link[=plot.flowClust]{plot}} or \code{\link[=hist.flowClust]{hist}}
+#' \code{\link[=plot,flowClust-method]{plot}} or \code{\link[=hist.flowClust]{hist}}
 #' method with signature \code{'flowClust'}.  Note that arguments \code{x},
 #' \code{data} and \code{subset} have already been provided by \code{y},
 #' \code{x} and \code{z} above respectively.
 #' @note This \code{plot} method is designed such that it resembles the
 #' argument list of the \code{plot} method defined in the \pkg{flowCore}
 #' package.  The actual implementation is done through the
-#' \code{\link[=plot.flowClust]{plot}} or \code{\link[=hist.flowClust]{hist}}
+#' \code{\link[=plot,flowClust-method]{plot}} or \code{\link[=hist.flowClust]{hist}}
 #' method defined for a \code{flowClust} object.
 #' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
 #' <\email{c.lo@@stat.ubc.ca}>
 #' @seealso \code{\link[=tmixFilter]{filter}},
-#' \code{\link[=plot.flowClust]{plot}}, \code{\link[=hist.flowClust]{hist}}
+#' \code{\link[=plot,flowClust-method]{plot}}, \code{\link[=hist.flowClust]{hist}}
 #' @references Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 #' of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 #' \bold{73}, 321-332.

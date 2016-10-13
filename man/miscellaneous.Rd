@@ -35,8 +35,8 @@ getEstimates(object, data)
 \arguments{
 \item{object}{Object returned from \code{\link{flowClust}} or
 \code{\link[=tmixFilter]{filter}}.  For the replacement method of
-\code{criterion}, the object must be of class \code{\link{flowClustList}} or
-\code{\link{tmixFilterResultList}}.}
+\code{criterion}, the object must be of class \code{\link[=flowClust-class]{flowClustList}} or
+\code{\link[=tmixFilter-class]{tmixFilterResultList}}.}
 
 \item{type, value}{A character string stating the criterion used to choose the
 best model.  May take either \code{"BIC"} or \code{"ICL"}.}

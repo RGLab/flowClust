@@ -172,7 +172,7 @@
 #' @author Raphael Gottardo <\email{raph@@stat.ubc.ca}>, Kenneth Lo
 #' <\email{c.lo@@stat.ubc.ca}>
 #' @seealso \code{\link[=summary.flowClust]{summary}},
-#' \code{\link[=plot.flowClust]{plot}},
+#' \code{\link[=plot,flowClust-method]{plot}},
 #' \code{\link[=density.flowClust]{density}},
 #' \code{\link[=hist.flowClust]{hist}}, \code{\link{Subset}},
 #' \code{\link{split}}, \code{\link{ruleOutliers}}, \code{\link{Map}},
@@ -183,6 +183,7 @@
 #' @keywords cluster models
 #' @examples
 #' 
+#' library(flowCore)
 #' data(rituximab)
 #' 
 #' ### cluster the data using FSC.H and SSC.H

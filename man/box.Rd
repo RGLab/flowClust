@@ -32,6 +32,7 @@ in order to avoid discontinuity across zero.
 \examples{
 
 data(rituximab)
+library(flowCore)
 data <- exprs(rituximab)
 summary(data)
 # Transform data using Box-Cox with lambda=0.3
