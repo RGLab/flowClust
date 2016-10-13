@@ -17,7 +17,8 @@ Imports:
     ellipse,
     flowViz,
     flowCore,
-    clue
+    clue,
+    mnormt
 Suggests:
     testthat,
     flowWorkspace,
