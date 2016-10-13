@@ -29,7 +29,7 @@ will be made.  If it is unspecified, the first one/two variable(s) listed in
 \code{y@varNames} will be used.}
 
 \item{\dots}{All optional arguments passed to the
-\code{\link[=plot.flowClust]{plot}} or \code{\link[=hist.flowClust]{hist}}
+\code{\link[=plot,flowClust-method]{plot}} or \code{\link[=hist.flowClust]{hist}}
 method with signature \code{'flowClust'}.  Note that arguments \code{x},
 \code{data} and \code{subset} have already been provided by \code{y},
 \code{x} and \code{z} above respectively.}
@@ -43,7 +43,7 @@ robust model-based clustering results.
 This \code{plot} method is designed such that it resembles the
 argument list of the \code{plot} method defined in the \pkg{flowCore}
 package.  The actual implementation is done through the
-\code{\link[=plot.flowClust]{plot}} or \code{\link[=hist.flowClust]{hist}}
+\code{\link[=plot,flowClust-method]{plot}} or \code{\link[=hist.flowClust]{hist}}
 method defined for a \code{flowClust} object.
 }
 \author{
@@ -57,7 +57,7 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 }
 \seealso{
 \code{\link[=tmixFilter]{filter}},
-\code{\link[=plot.flowClust]{plot}}, \code{\link[=hist.flowClust]{hist}}
+\code{\link[=plot,flowClust-method]{plot}}, \code{\link[=hist.flowClust]{hist}}
 }
 \keyword{graphs}
 

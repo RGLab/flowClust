@@ -13,7 +13,7 @@
 }
 \arguments{
 \item{x}{Object returned from \code{\link{flowClust}} or from running
-\code{\link[=filter.flowFrame]{filter}} on a \code{flowFrame} object.}
+\code{filter} on a \code{flowFrame} object.}
 
 \item{data}{A numeric vector, matrix, data frame of observations, or object
 of class \code{flowFrame}. This is the object on which \code{flowClust} or
@@ -72,7 +72,7 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \bold{73}, 321-332.
 }
 \seealso{
-\code{\link{flowClust}}, \code{\link[=plot.flowClust]{plot}},
+\code{\link{flowClust}}, \code{\link[=plot,flowClust-method]{plot}},
 \code{\link[=density.flowClust]{density}}
 }
 \keyword{graphs}

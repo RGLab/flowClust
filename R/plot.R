@@ -27,6 +27,7 @@
 #' @examples
 #' 
 #' data(rituximab)
+#' library(flowCore)
 #' data <- exprs(rituximab)
 #' summary(data)
 #' # Transform data using Box-Cox with lambda=0.3
@@ -457,7 +458,7 @@ dmvtmix <- function(x, w, mu, sigma, nu, lambda, object, subset, include, log=FA
 #' density,flowClustList-method flowDens-class density.flowClust
 #' @docType methods
 #' @param x Object returned from \code{\link{flowClust}} or from running
-#' \code{\link[=filter.flowFrame]{filter}} on a \code{flowFrame} object.
+#' \code{filter} on a \code{flowFrame} object.
 #' @param data A matrix, data frame of observations, or object of class
 #' \code{flowFrame}.  This is the object on which \code{flowClust} or
 #' \code{filter} was performed.  If this argument is not specified, the grid

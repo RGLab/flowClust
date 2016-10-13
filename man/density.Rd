@@ -18,7 +18,7 @@ Transformation}
 }
 \arguments{
 \item{x}{Object returned from \code{\link{flowClust}} or from running
-\code{\link[=filter.flowFrame]{filter}} on a \code{flowFrame} object.}
+\code{filter} on a \code{flowFrame} object.}
 
 \item{data}{A matrix, data frame of observations, or object of class
 \code{flowFrame}.  This is the object on which \code{flowClust} or

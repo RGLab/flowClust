@@ -26,8 +26,8 @@
 #' uncertainty getEstimates
 #' @param object Object returned from \code{\link{flowClust}} or
 #' \code{\link[=tmixFilter]{filter}}.  For the replacement method of
-#' \code{criterion}, the object must be of class \code{\link{flowClustList}} or
-#' \code{\link{tmixFilterResultList}}.
+#' \code{criterion}, the object must be of class \code{\link[=flowClust-class]{flowClustList}} or
+#' \code{\link[=tmixFilter-class]{tmixFilterResultList}}.
 #' @param \dots Further arguments. Currently this is \code{type}, a character
 #' string.  May take \code{"BIC"}, \code{"ICL"} or \code{"logLike"}, to specify
 #' the criterion desired.
