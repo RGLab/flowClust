@@ -45,11 +45,16 @@ will be determined automatically.}
 \item{cex}{Size of the plotting character showing the cluster assignment.}
 
 \item{\dots}{other arguments
+
    xlim The range of \eqn{x}-values for the plot.  If \code{NULL}, the data range will be used.
+
    ylim The range of \eqn{y}-values for the plot.  If \code{NULL}, an optimal range will be determined automatically.
+
    breaks Content to be passed to the \code{breaks} argument of the generic \code{hist} function, if \code{histogram} is \code{TRUE}.  Default
            is 50, meaning that 50 vertical bars with equal binwidths will be drawn.
+
    ... Further arguments passed to \code{curve} (and also \code{hist}
+
 if \code{histogram} is \code{TRUE}).}
 }
 \description{

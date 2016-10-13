@@ -1,23 +1,22 @@
-# 
-#  mkPriors.R
-#  flowClust with Bayes priors
-#  
-#  Created by Greg Finak on 2011-02-15.
-#  Copyright 2011 Greg Finak. All rights reserved.
-# 
-
-#'Generate a prior specification based on a flowClust model
-#
-#' This function generates a prior specification based on a flowClust fit object
-#' It can be passed to a second round of flowClust() with usePrior="yes" 
-#' The prior could be estimated from a single sample, for example, and then
-#' used to speed up the convergence for other samples. 
+#' Generate a prior specification based on a flowClust model This function
+#' generates a prior specification based on a flowClust fit object It can be
+#' passed to a second round of flowClust() with usePrior="yes" The prior could
+#' be estimated from a single sample, for example, and then used to speed up
+#' the convergence for other samples.
 #' 
-#'@param x a flowClust fit object
-#'@param kappa is the fraction of equivalent observations by which to weight this prior relative to the flowClust model.
-#'@param Nt the number of total equivalent observation
-#'@param addCluster not currently supported
-#'@export
+#' Generate a prior specification based on a flowClust model This function
+#' generates a prior specification based on a flowClust fit object It can be
+#' passed to a second round of flowClust() with usePrior="yes" The prior could
+#' be estimated from a single sample, for example, and then used to speed up
+#' the convergence for other samples.
+#' 
+#' 
+#' @param x a flowClust fit object
+#' @param kappa is the fraction of equivalent observations by which to weight
+#' this prior relative to the flowClust model.
+#' @param Nt the number of total equivalent observation
+#' @param addCluster not currently supported
+#' @export 
 flowClust2Prior<-function(x,kappa,Nt=NULL,addCluster=NULL){
   if(is.null(Nt)){
     Nt<-nrow(x@z)
@@ -97,16 +96,47 @@ flowClust2Prior<-function(x,kappa,Nt=NULL,addCluster=NULL){
     prior;
 }
 
-# =======================
-# = Generic for mkPrior =
-# =======================
+#' Generate a flowClust prior specification
+#' 
+#' Generate a flowClust prior specification from gates and data
+#' 
+#' Construct a prior specification. Generally not called by the user.
+#' 
+#' @aliases mkPrior mkPrior,list,flowSet,missing,missing-method
+#' @param gate A list of flowCore gates. The gates should represent the SAME
+#' population gated across multiple samples.
+#' @param data A flowSet of the same size as the number of gates above. Each
+#' flowFrame in the flowSet should contain the events representing the
+#' population in its corresponding gate. i.e. it should be the gated data.
+#' @param nu0 The nu0 hyperparameter. For estimation from data, it should be
+#' nu0=NA.
+#' @param Omega0 The Omega0 hyperparameter. For estimation from data it can be
+#' missing.
+#' @param \dots Not currently used.
+#' @return Return values depend on the specific method called. Not meant for
+#' user consumption.
+#' @author Greg Finak \email{gfinak@@fhcrc.org}
+#' @references \url{http://www.rglab.org}
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' @rdname mkPrior
+#' @export 
 setGeneric("mkPrior",function(gate,data,nu0,Omega0,...){
 standardGeneric("mkPrior");	
 })
 # ===============================================================================
 # = Generate a prior from a polygonGate and a flowFrame. Provide nu0 and Omega0 =
 # ===============================================================================
-setMethod("mkPrior",signature("polygonGate","flowFrame","numeric","matrix"),function(gate,data,nu0,Omega0){
+#' @rdname mkPrior
+#' @export 
+setMethod("mkPrior",signature("polygonGate","flowFrame","numeric","matrix")
+                ,function(gate,data,nu0,Omega0){
 	##Extract the right dimensions
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);	
 	dims<-dims[na.omit(match(parameters(data)@data$name,dims))]
@@ -125,7 +155,9 @@ setMethod("mkPrior",signature("polygonGate","flowFrame","numeric","matrix"),func
 # =========================================================
 # = Nu0 and Omega0 specified. RectangleGate and flowFrame =
 # =========================================================
-setMethod("mkPrior",signature("rectangleGate","flowFrame","numeric","matrix"),function(gate,data,nu0,Omega0){
+#' @rdname mkPrior
+setMethod("mkPrior",signature("rectangleGate","flowFrame","numeric","matrix")
+              ,function(gate,data,nu0,Omega0){
 	##Extract the right dimensions
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);
 	dims<-dims[na.omit(match(parameters(data)@data$name,dims))]
@@ -144,7 +176,9 @@ setMethod("mkPrior",signature("rectangleGate","flowFrame","numeric","matrix"),fu
 # = Returns an  incomplete prior specification. Shouldn't be called       =
 # = Directly by the user.												  =
 # =========================================================================
-setMethod("mkPrior",signature("rectangleGate","flowFrame","missing","missing"),function(gate,data,nu0=NA,Omega0=NA){
+#' @rdname mkPrior
+setMethod("mkPrior",signature("rectangleGate","flowFrame","missing","missing")
+          ,function(gate,data,nu0=NA,Omega0=NA){
 	gc(reset=TRUE)
 	##Extract the right dimensions
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);
@@ -161,7 +195,9 @@ setMethod("mkPrior",signature("rectangleGate","flowFrame","missing","missing"),f
 # = Generate a prior from a polygonGate and a flowFrame with nu0 and Omega0 missing
 # = Returns and incomplete prior specification. Should not be called by the user    =
 # ===================================================================================
-setMethod("mkPrior",signature("polygonGate","flowFrame","missing","missing"),function(gate,data,nu0=NA,Omega0=NA){
+#' @rdname mkPrior
+setMethod("mkPrior",signature("polygonGate","flowFrame","missing","missing")
+        ,function(gate,data,nu0=NA,Omega0=NA){
 	##Extract the right dimensions
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);
 	dims<-dims[na.omit(match(parameters(data)@data$name,dims))]
@@ -245,6 +281,28 @@ setMethod("mkPrior",signature("polygonGate","flowFrame","missing","missing"),fun
 # = The prior specification is for a single cluster. 					  =
 # =========================================================================
 
+
+
+#' Plots a flowClust prior over some data.
+#' 
+#' Plots a flowClust prior overlaid on data.
+#' 
+#' Generates a plot of a "flowClustPrior" or "flowClustPriorList" object
+#' overlaid on some data. Plots the prior means (Mu0), prior covariance of the
+#' means (Omega0), and prior sample covariance (Lambda0).
+#' 
+#' @param data On object of class "flowFrame". The data to be plotted.
+#' @param prior An object of class "flowClustPrior", or "flowClustPriorList",
+#' returned by a call to \code{mkPrior}.
+#' @param dims A character vector of the dimensions to be included in the plot.
+#' The dimension names should match column names in the prior and in the
+#' flowFrame.
+#' @param \dots Additional arguments to plotting functions, such as
+#' \code{smooth=TRUE/FALSE}
+#' @return Silently returns zero.
+#' @author Greg Finak <gfinak@@fhcrc.org>
+#' @keywords aplot dplot
+#' @export 
 plotPrior<-function(data,prior,dims=NULL,...){
 	if(!"smooth"%in%names(list(...))){
 		sm=FALSE
@@ -539,14 +597,20 @@ plotPrior<-function(data,prior,dims=NULL,...){
 # ======================================================================================
 # = We should also be able to generate a prior from a single gate and multiple samples =
 # ======================================================================================
- setMethod("mkPrior",signature("list","flowSet",nu0="missing","missing"),function(gate,data,nu0=NA,Omega0,model.cov="full",model.means="full"){
+#' @rdname mkPrior 
+setMethod("mkPrior",signature("list","flowSet",nu0="missing","missing")
+      ,function(gate,data,nu0=NA,Omega0,model.cov="full",model.means="full"){
  mkPrior(gate,data,nu0=NA)
  })
 
 # ==============================
 # = Prior from a flowSet alone =
 # ==============================
-setMethod("mkPrior",signature("missing","flowSet",nu0="ANY","missing"),function(gate,data,nu0=NA,Omega0,model.cov="full",model.means="full"){
+#' @rdname mkPrior
+#' @param model.cov,model.means model names used for cov and means. one of c("full","DE","DU").
+#'                                          "full" is the default.
+setMethod("mkPrior",signature("missing","flowSet",nu0="ANY","missing")
+        ,function(gate,data,nu0=NA,Omega0,model.cov="full",model.means="full"){
 	priors<-list();
 	method=match.arg(model.cov,c("full","DE","DU"));
 	model=match(model.means,c("full","DU","DE"))
@@ -580,6 +644,7 @@ setMethod("mkPrior",signature("missing","flowSet",nu0="ANY","missing"),function(
 # ================================================================================
 # = Construct a prior from a flowFrame alone. Not meant to be called by the user =
 # ================================================================================
+#' @rdname mkPrior
 setMethod("mkPrior",signature("missing","flowFrame",nu0="missing","missing"),function(gate,data,nu0,Omega0){
 	gc(reset=TRUE)
 	##Use all the dimensions, since they're not specified.
@@ -604,6 +669,7 @@ setMethod("mkPrior",signature("missing","flowFrame",nu0="missing","missing"),fun
 # = Calls mkPrior with the "missing" hyperparamter   =
 # = Signatures										 =
 # ====================================================
+#' @rdname mkPrior
 setMethod("mkPrior",signature("list","flowSet",nu0="ANY","missing"),function(gate,data,nu0=NA,Omega0,model.cov="full",model.means="full"){
 	priors<-list();
 	method=match.arg(model.cov,c("full","DE","DU"));
@@ -643,6 +709,7 @@ setMethod("mkPrior",signature("list","flowSet",nu0="ANY","missing"),function(gat
 # ====================================
 # = Log-likelihood for the dirichlet =
 # ====================================
+#' @importFrom MCMCpack ddirichlet
 .LD<-function(alpha,x){
 	
 	-sum(log(MCMCpack::ddirichlet(x,alpha)))

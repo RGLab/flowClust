@@ -7,3 +7,4 @@ test_check("flowClust")
 
 #taking quite some time , thus only for internal testing
 #test_file("~/rglab/workspace/flowClust/tests/testthat/flowClust-gated-data.R")
+tools::checkDocFiles(dir = ".")

@@ -11,10 +11,12 @@ peakMatch(peaks, target.index, max.fill = 1e+12)
 
 \item{target.index}{is the index of the template sample.}
 
-\item{max.fill}{is the value to substitute for NAs in the distance matrix. Should be very large, but if too large, will overflow and give an incorrect matching
-importFrom clue solve_LSAP}
+\item{max.fill}{is the value to substitute for NAs in the distance matrix.
+Should be very large, but if too large, will overflow and give an incorrect
+matching}
 }
 \description{
-Uses the hungarian algorithm to match peaks across samples, one at a time using a template sample.
+Uses the hungarian algorithm to match peaks across samples, one at a time
+using a template sample.
 }
 

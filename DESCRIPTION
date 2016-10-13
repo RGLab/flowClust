@@ -6,19 +6,18 @@ Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
     Finak <gfinak@fhcrc.org>
 Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>
 Depends:
-    R(>= 2.5.0),methods,
-    Biobase,
-    graph,
-    RBGL,ellipse,
-    flowViz,
-    mnormt,
-    corpcor,
-    flowCore,
-    clue,
-    parallel
+    R(>= 2.5.0)
 Imports:
     BiocGenerics,
-    MCMCpack
+    MCMCpack,
+    methods,
+    Biobase,
+    graph,
+    RBGL,
+    ellipse,
+    flowViz,
+    flowCore,
+    clue
 Suggests:
     testthat,
     flowWorkspace,
@@ -34,10 +33,14 @@ Collate:
     'SetMethods.R'
     'SimulateMixture.R'
     'flowClust.R'
+    'coerce.R'
+    'flowClust-package.R'
     'hist.R'
+    'miscellaneous.R'
     'mkPriors.R'
     'peakMatch.R'
     'plot.R'
+    'split.R'
 License: Artistic-2.0
 Packaged: 2012-07-13 20:14:40 UTC; finak
 biocViews: Clustering, Visualization, FlowCytometry
