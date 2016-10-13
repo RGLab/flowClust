@@ -15,9 +15,9 @@ flowClust2Prior(x, kappa, Nt = NULL, addCluster = NULL)
 
 \item{kappa}{is the fraction of equivalent observations by which to weight this prior relative to the flowClust model.}
 
-\item{addCluster}{not currently supported}
+\item{Nt}{the number of total equivalent observation}
 
-\item{NT}{the number of total equivalent observation}
+\item{addCluster}{not currently supported}
 }
 \description{
 Generate a prior specification based on a flowClust model

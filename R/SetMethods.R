@@ -769,8 +769,7 @@ setMethod("plot", signature("flowFrame", "tmixFilterResult"),
               selectMethod("plot",
                            signature("flowClust", "missing"))(x=y, data=x, subset=z, ...)
           else
-              selectMethod("hist",
-                           signature("flowClust"))(x=y, data=x, subset=z, ...)
+              hist(x=y, data=x, subset=z, ...)
       }
 )
 

@@ -13,6 +13,7 @@ test_that("flowClust:SSH-H, 1 mode", {
   expect_equal(res@mu, matrix(c(5.27, 6.84), nrow = 2), tol = 5e-2)
   expect_equal(res@w, c(0.286, 0.713), tol = 3e-2)
   
+ 
   options("mc.cores" = 4)  
   #relax tol to see the worse fit
   res <- flowClust(fr, varNames = chnl, tol = 1e-5, K = 2)

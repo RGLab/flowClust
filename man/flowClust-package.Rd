@@ -27,7 +27,7 @@ Built: \tab R 2.6.1; universal-apple-darwin8.10.1; 2008-03-26 20:54:42; unix\cr
 \item{\code{\link{dmvt}}}{Density of the Multivariate \eqn{t} Distribution with Box-Cox Tranformation}
 \item{\code{\link{dmvtmix}}}{Density of the Multivariate \eqn{t} Mixture Distribution with Box-Cox Tranformation}
 \item{\code{\link{flowClust}}}{Robust Model-based Clustering for Flow Cytometry}
-\item{\code{\link{hist,flowClust-method}}}{1-D Density Plot (Histogram) of Clustering Results}
+\item{\code{\link{hist.flowClust}}}{1-D Density Plot (Histogram) of Clustering Results}
 \item{\code{\link{Map,flowClust-method}}}{Cluster Assignment Based on Clustering Results}
 \item{\code{\link[=posterior]{miscellaneous}}}{Various Functions for Retrieving Information from Clustering Results}
 \item{\code{\link{plot,flowClust-method}}}{Scatterplot of Clustering Results}
