@@ -53,7 +53,7 @@ test_that("flowClust:SSH-H, 1 mode", {
   # because of unable to cal covariance matrix for the edge spike signal
   res <- flowClust(fr, varNames = chnl, tol = 1e-10, K = 4, randomStart = 0, min.count = -1, max.count = -1)
   expect_true(is.na(res@BIC))
-  expect_true(is.na(res@sigma[4]))
+  expect_true(is.na(res@sigma[4])||is.infinite(res@sigma[4]))
 })
 
 
