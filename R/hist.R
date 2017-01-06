@@ -60,7 +60,7 @@ hist.flowClust <- function(x, data=NULL, subset=1, include=1:(x@K)
                            , ...)
 {
   
-  pre.obj <- .hist.flowClust(x = x, data = data, subset = subset, sinclude = include, histogram = histogram, labels = labels, ...)
+  pre.obj <- .hist.flowClust(x = x, data = data, subset = subset, include = include, histogram = histogram, labels = labels, ...)
 
   den <- function(y) {
     flowClust.den(x = y, obj = x, subset = pre.obj$subset, include = include)
