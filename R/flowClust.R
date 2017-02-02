@@ -534,7 +534,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 		}else{
 			#label<-try(kmeans(y,Mu0)$cluster,silent=TRUE)
 			#if(inherits(label,"try-error"))
-			label<-try(kmeans(scale(y),K[i],nstart=nstart,iter.max=100)$cluster,silent=TRUE)
+			label<-try(kmeans(scale(y),K[i],nstart=nstart,iter.max=100,algorithm="MacQueen")$cluster,silent=TRUE)
 		}
 	}
 	if(priorFlag==0)
