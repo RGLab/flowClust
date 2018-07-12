@@ -7,10 +7,18 @@
 \alias{criterion,flowClustList-method}
 \alias{criterion<-}
 \alias{criterion<-,flowClustList,character-method}
-\alias{getEstimates}
-\alias{importance}
 \alias{posterior}
+\alias{importance}
 \alias{uncertainty}
+\alias{getEstimates}
+\alias{criterion,flowClust-method}
+\alias{criterion,flowClustList-method}
+\alias{criterion<-}
+\alias{criterion<-,flowClustList,character-method}
+\alias{posterior}
+\alias{importance}
+\alias{uncertainty}
+\alias{getEstimates}
 \title{Various Functions for Retrieving Information from Clustering Results}
 \usage{
 criterion(object, ...)
@@ -38,6 +46,10 @@ getEstimates(object, data)
 \code{criterion}, the object must be of class \code{\link[=flowClust-class]{flowClustList}} or
 \code{\link[=tmixFilter-class]{tmixFilterResultList}}.}
 
+\item{\dots}{Further arguments. Currently this is \code{type}, a character
+string.  May take \code{"BIC"}, \code{"ICL"} or \code{"logLike"}, to specify
+the criterion desired.}
+
 \item{type, value}{A character string stating the criterion used to choose the
 best model.  May take either \code{"BIC"} or \code{"ICL"}.}
 
@@ -55,10 +67,6 @@ will be returned.}
 of class \code{flowFrame}; an optional argument.  This is the object on
 which \code{\link{flowClust}} or \code{\link[=tmixFilter]{filter}} was
 performed.}
-
-\item{\dots}{Further arguments. Currently this is \code{type}, a character
-string.  May take \code{"BIC"}, \code{"ICL"} or \code{"logLike"}, to specify
-the criterion desired.}
 }
 \value{
 Denote by \eqn{K} the number of clusters, \eqn{N} the number of
@@ -110,10 +118,6 @@ observations) will be reported as \code{NA}.  Hence, A change in the rule to
 call outliers will incur a change in the number of \code{NA} values
 returned.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -123,5 +127,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
 \code{\link{Map}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{cluster}
-

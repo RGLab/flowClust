@@ -23,4 +23,3 @@ therapeutic monoclonal antibody.  Cells were stained with anti-BrdU FITC and
 the DNA binding dye 7-AAD.
 }
 \keyword{datasets}
-

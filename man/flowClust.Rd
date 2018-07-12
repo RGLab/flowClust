@@ -2,10 +2,15 @@
 % Please edit documentation in R/SetClasses.R, R/flowClust.R, R/coerce.R
 \docType{class}
 \name{flowClust-class}
-\alias{flowClust}
 \alias{flowClust-class}
 \alias{flowClustList-class}
 \alias{fowClust}
+\alias{flowClust}
+\alias{flowClust}
+\alias{flowClust}
+\alias{flowClust}
+\alias{flowClust}
+\alias{flowClust}
 \title{Robust Model-based Clustering for Flow Cytometry}
 \usage{
 flowClust(x, expName = "Flow Experiment", varNames = NULL, K, nu = 4,
@@ -262,10 +267,6 @@ summary(res2)
 flowClust(rituximab2, varNames=c("FL1.H", "FL3.H"), K=3, B=100, 
     min=c(0,0), max=c(400,800), level=0.95, z.cutoff=0.5)
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -279,6 +280,9 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link{split}}, \code{\link{ruleOutliers}}, \code{\link{Map}},
 \code{\link{SimulateMixture}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{cluster}
 \keyword{models}
-

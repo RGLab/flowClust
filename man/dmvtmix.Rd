@@ -56,4 +56,3 @@ Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
 <\email{c.lo@stat.ubc.ca}>
 }
 \keyword{distribution}
-

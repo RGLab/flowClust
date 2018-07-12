@@ -2,8 +2,8 @@
 % Please edit documentation in R/plot.R
 \docType{methods}
 \name{plot,flowDens-method}
-\alias{plot,flowDens,missing-method}
 \alias{plot,flowDens-method}
+\alias{plot,flowDens,missing-method}
 \alias{plot.flowDens}
 \title{Contour or Image Plot of Clustering Results}
 \usage{
@@ -42,10 +42,6 @@ This method makes use of the \code{flowDens} object returned by
 \code{\link[=density.flowClust]{density}} to generate a contour or image
 plot.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -54,5 +50,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \seealso{
 \code{\link{flowClust}}, \code{\link[=density.flowClust]{density}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{graphs}
-

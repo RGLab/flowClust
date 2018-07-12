@@ -92,6 +92,7 @@ hist.flowClust <- function(x, data=NULL, subset=1, include=1:(x@K)
 #' preprocessing flowClust results to prepare for the hist plot
 #' It is helpful to separate this logic from the default hist plot function
 #' so that it can be reused by the other kind of plot engine (e.g. ggplot)
+#' @noRd
 .hist.flowClust <- function(x, data=NULL, subset=1, include=1:(x@K)
                             , histogram=TRUE
                             , labels=TRUE, xlim=NULL, ylim=NULL

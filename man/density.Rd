@@ -2,11 +2,13 @@
 % Please edit documentation in R/SetClasses.R, R/plot.R
 \docType{class}
 \name{flowDens-class}
-\alias{density,flowClust-method}
-\alias{density,flowClustList-method}
-\alias{density-method}
-\alias{density.flowClust}
 \alias{flowDens-class}
+\alias{density,flowClust-method}
+\alias{density-method}
+\alias{density,flowClustList-method}
+\alias{flowDens-class}
+\alias{density.flowClust}
+\alias{density,flowClustList-method}
 \title{Grid of Density Values for the Fitted t Mixture Model with Box-Cox
 Transformation}
 \usage{
@@ -62,12 +64,11 @@ a contour or image plot.
 The \code{flowDens} object returned is to be passed to the \code{plot}
 method for generating a contour or image plot.
 }
+\seealso{
+\code{\link[=plot.flowDens]{plot}}, \code{\link{flowClust}}
+}
 \author{
 Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
 <\email{c.lo@stat.ubc.ca}>
 }
-\seealso{
-\code{\link[=plot.flowDens]{plot}}, \code{\link{flowClust}}
-}
 \keyword{graphs}
-

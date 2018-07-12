@@ -2,21 +2,31 @@
 % Please edit documentation in R/split.R
 \docType{methods}
 \name{split,flowClust-method}
-\alias{split}
-\alias{split,data.frame,flowClust-method}
-\alias{split,data.frame,flowClustList-method}
 \alias{split,flowClust-method}
-\alias{split,flowFrame,flowClust-method}
-\alias{split,flowFrame,flowClustList-method}
-\alias{split,flowFrame,tmixFilterResult-method}
-\alias{split,flowFrame,tmixFilterResultList-method}
-\alias{split,matrix,flowClust-method}
-\alias{split,matrix,flowClustList-method}
-\alias{split,vector,flowClust-method}
-\alias{split,vector,flowClustList-method}
 \alias{split.flowClust}
+\alias{split,data.frame,flowClust-method}
+\alias{split,matrix,flowClust-method}
+\alias{split,vector,flowClust-method}
+\alias{split,flowFrame,flowClust-method}
+\alias{split,flowFrame,tmixFilterResult-method}
+\alias{split,data.frame,flowClustList-method}
+\alias{split,matrix,flowClustList-method}
+\alias{split,vector,flowClustList-method}
+\alias{split,flowFrame,flowClustList-method}
+\alias{split,flowFrame,tmixFilterResultList-method}
 \alias{split.flowFrame}
 \alias{split.tmixFilterResult}
+\alias{split}
+\alias{split,data.frame,flowClust-method}
+\alias{split,matrix,flowClust-method}
+\alias{split,vector,flowClust-method}
+\alias{split,flowFrame,flowClust-method}
+\alias{split,flowFrame,tmixFilterResult-method}
+\alias{split,flowFrame,flowClustList-method}
+\alias{split,data.frame,flowClustList-method}
+\alias{split,matrix,flowClustList-method}
+\alias{split,vector,flowClustList-method}
+\alias{split,flowFrame,tmixFilterResultList-method}
 \title{Splitting Data Based on Clustering Results}
 \usage{
 split(x, f, drop = FALSE, ...)
@@ -62,6 +72,8 @@ or \code{\link[=tmixFilter]{filter}} was performed.}
 into a vector, if applicable.  Default is \code{FALSE}, meaning that a
 single-column matrix will be retained.}
 
+\item{\dots}{Further arguments to be passed to or from other methods.}
+
 \item{population}{An optional argument which specifies how to split the
 data.  If specified, it takes a list object with named or unnamed elements
 each of which is a numeric vector specifying which clusters are included.
@@ -74,8 +86,6 @@ instead.}
 
 \item{rm.outliers}{A logical value indicating whether outliers are removed
 or not.}
-
-\item{\dots}{Further arguments to be passed to or from other methods.}
 }
 \value{
 A list object with elements each of which is a subset of \code{x}
@@ -91,10 +101,7 @@ operation.  Outliers identified will be removed by default.
  split(x, f, drop=FALSE, population=NULL, split=NULL,
 rm.outliers=TRUE, \dots{})
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
+
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -104,5 +111,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link{Subset}}, \code{\link{flowClust}},
 \code{\link[=tmixFilter]{filter}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{manip}
-

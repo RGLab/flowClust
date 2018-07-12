@@ -27,4 +27,3 @@ passed to a second round of flowClust() with usePrior="yes" The prior could
 be estimated from a single sample, for example, and then used to speed up
 the convergence for other samples.
 }
-

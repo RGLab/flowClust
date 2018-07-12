@@ -2,9 +2,9 @@
 % Please edit documentation in R/plot.R
 \docType{methods}
 \name{plot,flowClust-method}
+\alias{plot,flowClust-method}
 \alias{plot}
 \alias{plot,flowClust,missing-method}
-\alias{plot,flowClust-method}
 \alias{plot,flowClustList,missing-method}
 \title{Scatterplot of Clustering Results}
 \usage{
@@ -31,6 +31,9 @@ plot(x, y, ...)
 \item{x}{Object returned from \code{\link{flowClust}}.}
 
 \item{y}{missing}
+
+\item{\dots}{Further graphical parameters passed to the generic function
+\code{plot}.}
 
 \item{data}{A matrix, data frame of observations, or object of class
 \code{flowFrame}. This is the object on which \code{flowClust} was
@@ -100,9 +103,6 @@ taken.  Otherwise, these arguments will be passed to
 \item{npoints}{The number of points used to draw each cluster boundary.}
 
 \item{add}{A logical value.  If \code{TRUE}, add to the current plot.}
-
-\item{\dots}{Further graphical parameters passed to the generic function
-\code{plot}.}
 }
 \description{
 This method generates scatterplot revealing the cluster assignment, cluster
@@ -113,10 +113,6 @@ information like outliers or filtered observations.
 The cluster boundaries need not be elliptical since Box-Cox
 transformation has been performed.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -125,5 +121,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \seealso{
 \code{\link{flowClust}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{graphs}
-

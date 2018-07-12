@@ -2,10 +2,12 @@
 % Please edit documentation in R/SetMethods.R
 \docType{methods}
 \name{Map,flowClust-method}
-\alias{Map}
 \alias{Map,flowClust-method}
 \alias{Map,flowClustList-method}
 \alias{Map.flowClust}
+\alias{Map}
+\alias{Map,flowClust-method}
+\alias{Map,flowClustList-method}
 \title{Cluster Assignment Based on Clustering Results}
 \usage{
 Map(f, ...)
@@ -18,10 +20,10 @@ Map(f, ...)
 \item{f}{Object returned from \code{\link{flowClust}} or
 \code{\link[=tmixFilter]{filter}}.}
 
+\item{\dots}{Further arguments to be passed to or from other methods.}
+
 \item{rm.outliers}{A logical value indicating whether outliers will be left
 unassigned or not.}
-
-\item{\dots}{Further arguments to be passed to or from other methods.}
 }
 \value{
 A numeric vector of size \eqn{N} (the number of observations)
@@ -40,10 +42,6 @@ appear in the resultant vector due to the filtered observations; see the
 descriptions about the \code{min.count}, \code{max.count}, \code{min} and
 \code{max} arguments of \code{\link{flowClust}}.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -53,5 +51,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
 \code{\link{posterior}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{cluster}
-

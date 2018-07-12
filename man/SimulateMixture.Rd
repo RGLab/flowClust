@@ -57,12 +57,11 @@ w <- w/sum(w)
 
 y <- SimulateMixture(n, w, Mu, Sigma, nu=4)
 }
+\seealso{
+\code{\link{flowClust}}
+}
 \author{
 Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
 <\email{c.lo@stat.ubc.ca}>
 }
-\seealso{
-\code{\link{flowClust}}
-}
 \keyword{datagen}
-

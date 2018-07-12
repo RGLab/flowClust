@@ -2,13 +2,17 @@
 % Please edit documentation in R/SetMethods.R
 \docType{methods}
 \name{ruleOutliers,flowClust-method}
-\alias{ruleOutliers}
 \alias{ruleOutliers,flowClust-method}
 \alias{ruleOutliers,flowClustList-method}
 \alias{ruleOutliers.flowClust}
-\alias{ruleOutliers<-}
+\alias{ruleOutliers}
 \alias{ruleOutliers<-,flowClust,list-method}
 \alias{ruleOutliers<-,flowClustList,list-method}
+\alias{ruleOutliers<-}
+\alias{ruleOutliers,flowClust-method}
+\alias{ruleOutliers,flowClustList-method}
+\alias{ruleOutliers<-}
+\alias{ruleOutliers<-,flowClust,list-method}
 \title{Showing or Modifying the Rule used to Identify Outliers}
 \usage{
 ruleOutliers(object)
@@ -44,10 +48,6 @@ according to the new rule.
 \description{
 This method shows or modifies the rule used to identify outliers.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -56,5 +56,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \seealso{
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{manip}
-

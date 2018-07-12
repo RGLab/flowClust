@@ -1,7 +1,7 @@
 Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
-Version: 3.19.0
+Version: 3.19.1
 Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
     Finak <gfinak@fhcrc.org>
 Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>
@@ -9,15 +9,14 @@ Depends:
     R(>= 2.5.0)
 Imports:
     BiocGenerics,
-    MCMCpack,
     methods,
     Biobase,
     graph,
-    RBGL,
     ellipse,
     flowViz,
     flowCore,
     clue,
+    corpcor,
     mnormt
 Suggests:
     testthat,
@@ -46,4 +45,4 @@ License: Artistic-2.0
 Packaged: 2012-07-13 20:14:40 UTC; finak
 biocViews: Clustering, Visualization, FlowCytometry
 SystemRequirements: GNU make
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

@@ -52,4 +52,3 @@ R. Statist. Soc. B} \bold{26}, 211-252.
 \code{\link{rbox}}
 }
 \keyword{math}
-

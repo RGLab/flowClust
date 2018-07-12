@@ -134,8 +134,9 @@ posterior <- function(object, assign=FALSE)
 
 #' @name BIC
 #' @title Extract the BIC for a flowClust fit.
+#' @description Extract the bayesian information criterion for a flowClust fit.
 #' @importFrom stats BIC
-#' @method BIC.flowClustList
+#' @method BIC flowClustList
 #' @rdname BIC
 #' @return \code{vector} of BIC or ICL values
 #' @param object \code{flowClustList} or \code{flowClust} fitted object
@@ -145,11 +146,8 @@ BIC.flowClustList = function(object,...){
 	criterion(object,type="BIC")
 }
 
-#' @method BIC.flowClust
+#' @method BIC flowClust
 #' @rdname BIC
-#' @return \code{vector} of BIC or ICL values
-#' @param object \code{flowClustList} or \code{flowClust} fitted object
-#' @param ... other arguments. Currently not used.
 #' @export
 BIC.flowClust = function(object,...){
 	criterion(object,type="BIC")
