@@ -17,9 +17,7 @@
 }
 \value{
 \code{vector} of BIC or ICL values
-
-\code{vector} of BIC or ICL values
 }
 \description{
-Extract the BIC for a flowClust fit.
+Extract the bayesian information criterion for a flowClust fit.
 }

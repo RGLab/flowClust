@@ -9,15 +9,14 @@ Depends:
     R(>= 2.5.0)
 Imports:
     BiocGenerics,
-    MCMCpack,
     methods,
     Biobase,
     graph,
-    RBGL,
     ellipse,
     flowViz,
     flowCore,
     clue,
+    corpcor,
     mnormt
 Suggests:
     testthat,
@@ -47,4 +46,3 @@ Packaged: 2012-07-13 20:14:40 UTC; finak
 biocViews: Clustering, Visualization, FlowCytometry
 SystemRequirements: GNU make
 RoxygenNote: 6.1.0
-Encoding: UTF-8

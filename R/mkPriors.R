@@ -61,7 +61,7 @@ flowClust2Prior<-function(x,kappa,Nt=NULL,addCluster=NULL){
     
     if(!is.null(addCluster)){
       for(i in (K+1):(K+addCluster)){
-           S<-cov(Mu0)
+           S<-stats::cov(Mu0)
            Lam<-array(0,c(K+1,p,p))
            om<-array(0,c(K+1,p,p))
            Mu0<-rbind(Mu0,colMeans(Mu0))
@@ -141,7 +141,7 @@ setMethod("mkPrior",signature("polygonGate","flowFrame","numeric","matrix")
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);	
 	dims<-dims[na.omit(match(parameters(data)@data$name,dims))]
 	data<-exprs(data[,dims])
-	Lambda0<-cov(data)*(nu0-length(dims)-1)
+	Lambda0<-stats::cov(data)*(nu0-length(dims)-1)
 	Mu0<-colMeans(data)
 	if(length(dims)!=ncol(Omega0)){
 		stop("Invalid dimensions of \"Omega0\". Received ",dim(Omega0)[1]," x ",dim(Omega0)[2]," but expecting ",length(dims)," x ",length(dims));
@@ -162,7 +162,7 @@ setMethod("mkPrior",signature("rectangleGate","flowFrame","numeric","matrix")
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);
 	dims<-dims[na.omit(match(parameters(data)@data$name,dims))]
 	data<-exprs(data[,dims])
-	Lambda0<-cov(data)*(nu0-length(dims)-1)
+	Lambda0<-stats::cov(data)*(nu0-length(dims)-1)
 	Mu0<-colMeans(data)
 	if(length(dims)!=ncol(Omega0)){
 		stop("Invalid dimensions of \"Omega0\". Received ",dim(Omega0)[1]," x ",dim(Omega0)[2]," but expecting ",length(dims)," x ",length(dims));
@@ -184,7 +184,7 @@ setMethod("mkPrior",signature("rectangleGate","flowFrame","missing","missing")
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);
 	dims<-dims[na.omit(match(parameters(data)@data$name,dims))]
 	data<-exprs(data[,dims])
-	Lambda0<-cov(data) #This is the covariance matrix, not the real Lambda0
+	Lambda0<-stats::cov(data) #This is the covariance matrix, not the real Lambda0
 	Mu0<-colMeans(data)
 	n<-dim(data)[1];
 	prior<-list(Mu0=Mu0,Lambda0=Lambda0,n=n)
@@ -202,7 +202,7 @@ setMethod("mkPrior",signature("polygonGate","flowFrame","missing","missing")
 	dims<-unlist(lapply(gate@parameters,function(x)x@parameters),use.names=FALSE);
 	dims<-dims[na.omit(match(parameters(data)@data$name,dims))]
 	data<-exprs(data[,dims])
-	Lambda0<-cov(data)
+	Lambda0<-stats::cov(data)
 	Mu0<-colMeans(data)
 	n<-dim(data)[1]
 	prior=list(Mu0=Mu0,Lambda0=Lambda0,n=n)
@@ -469,6 +469,12 @@ plotPrior<-function(data,prior,dims=NULL,...){
 # ==================================================================================================
 # = Estimate the hyperparameters of the prior given the means and covariances of multiple samples. =
 # ==================================================================================================
+#' @importFrom corpcor cov.shrink
+#' @importFrom stats cov var optimize qf qchisq quantile kmeans optim mahalanobis dist  na.omit qnorm
+#' @importFrom graphics hist curve stripchart lines points abline title contour image
+#' @importFrom grDevices gray heat.colors rainbow terrain.colors topo.colors cm.colors
+#' @importFrom ellipse ellipse
+#' @noRd
 .estimateHyperParameters<-function(priors,model.means,model.cov,nu0){
 	#Empirical Bayes Estimation of hyperparameters (except nu0)
 	d<-dim(priors[[1]]$Lambda0)[1]
@@ -482,11 +488,11 @@ plotPrior<-function(data,prior,dims=NULL,...){
 			# TODO Test this more thoroughly, i.e. case where n=1, and using covariance of the means at 1% of the covariance of the data.
 			OmegaG0<-solve(diag(diag(priors[[1]]$Lambda*0.01)))
 		}else if(nrow(cm)<ncol(cm)){
-			OmegaG0<-solve(cov.shrink(cm,verbose=FALSE));
+			OmegaG0<-solve(corpcor::cov.shrink(cm,verbose=FALSE));
 		}else{
-			OmegaG0<-try(solve(cov(cm)),silent=TRUE);
+			OmegaG0<-try(solve(stats::cov(cm)),silent=TRUE);
 			if(inherits(OmegaG0,"try-error")){
-				OmegaG0<-solve(cov.shrink(cm,verbose=FALSE))
+				OmegaG0<-solve(corpcor::cov.shrink(cm,verbose=FALSE))
 			}
 		}
 		#Sometimes the estimate is unstable and negative. In that case use a diagonal covariance parameterization
@@ -498,13 +504,13 @@ plotPrior<-function(data,prior,dims=NULL,...){
 	}else if(model.means=="DU"){
 		# TODO code to handle nrow = 1
 		d<-dim(priors[[1]]$Lambda0)[1]
-		OmegaG0<-solve(diag(diag(cov(do.call(rbind,lapply(priors,function(x)x$Mu0)))),d))
+		OmegaG0<-solve(diag(diag(stats::cov(do.call(rbind,lapply(priors,function(x)x$Mu0)))),d))
 #		if(OmegaG0[1,1]<0){
 #		}
 	}else if(model.means=="DE"){
 		# TODO code to handle nrow=1
 		d<-dim(priors[[1]]$Lambda0)[1]
-		OmegaG0<-solve(diag((det(cov(do.call(rbind,lapply(priors,function(x)x$Mu0)))))^(1/d),d))
+		OmegaG0<-solve(diag((det(stats::cov(do.call(rbind,lapply(priors,function(x)x$Mu0)))))^(1/d),d))
 	}
 	nuG0<-nu0	
 	if(model.cov=="full"){
@@ -512,7 +518,7 @@ plotPrior<-function(data,prior,dims=NULL,...){
 		if(is.na(nu0)){
 			X<-lapply(priors,function(x)x$Lambda0)
 			d<-dim(priors[[1]]$Lambda0)[1]		
-			nu0<-optimize(f=.LIW,interval=c(d+2,20000),X=X)$minimum
+			nu0<-stats::optimize(f=.LIW,interval=c(d+2,20000),X=X)$minimum
 			nuG0<-nu0
 		}
 		LambdaG0<-Reduce("+",lapply(priors,function(x)x$Lambda0))/length(priors)
@@ -534,7 +540,7 @@ plotPrior<-function(data,prior,dims=NULL,...){
 				d<-dim(priors[[1]]$Lambda0)[1]	
 				X<-lapply(priors,function(x)x$Lambda0)	#nu0<-(solve(diag(diag(Reduce("+",lapply(priors,function(x)(x$Lambda0)))),d))*d)/(sum(diag(Reduce("+",lapply(priors,function(x)solve(x$Lambda0)))))*(d-1))+1/(d-1)
 				# nu0<-det(nu0)^(-1/d)
-				nu0<-optimize(f=.LIW,interval=c(d+2,20000),X=X)$minimum
+				nu0<-stats::optimize(f=.LIW,interval=c(d+2,20000),X=X)$minimum
 				nuG0<-nu0
 			}
 			d<-dim(priors[[1]]$Lambda0)[1]	
@@ -650,12 +656,12 @@ setMethod("mkPrior",signature("missing","flowFrame",nu0="missing","missing"),fun
 	##Use all the dimensions, since they're not specified.
 	data<-exprs(data)
 	if(ncol(data)>=nrow(data)){
-		Lambda0<-cov.shrink(data,verbose=FALSE)
+		Lambda0<-corpcor::cov.shrink(data,verbose=FALSE)
 		class(Lambda0)<-"matrix"
 	}else{
 		#Lambda0<-cov.shrink(data,verbose=FALSE) #This is the covariance matrix, not the real Lambda0
 		#class(Lambda0)<-"matrix"
-		Lambda0<-cov(data) #This is the covariance matrix, not the real Lambda0
+		Lambda0<-stats::cov(data) #This is the covariance matrix, not the real Lambda0
 		
 	}
 	Mu0<-colMeans(data)
@@ -706,13 +712,37 @@ setMethod("mkPrior",signature("list","flowSet",nu0="ANY","missing"),function(gat
 	return(prior);
 })
 
+# From MCMCpack - want to remove this dependency.
+.ddirichlet <- function(x, alpha) 
+{
+	dirichlet1 <- function(x, alpha) {
+		logD <- sum(lgamma(alpha)) - lgamma(sum(alpha))
+		s <- sum((alpha - 1) * log(x))
+		exp(sum(s) - logD)
+	}
+	if (!is.matrix(x)) 
+		if (is.data.frame(x)) 
+			x <- as.matrix(x)
+		else x <- t(x)
+		if (!is.matrix(alpha)) 
+			alpha <- matrix(alpha, ncol = length(alpha), nrow = nrow(x), 
+								 byrow = TRUE)
+		if (any(dim(x) != dim(alpha))) 
+			stop("Mismatch between dimensions of x and alpha in ddirichlet().\n")
+		pd <- vector(length = nrow(x))
+		for (i in 1:nrow(x)) pd[i] <- dirichlet1(x[i, ], alpha[i, 
+																				 ])
+		pd[apply(x, 1, function(z) any(z < 0 | z > 1))] <- 0
+		pd[apply(x, 1, function(z) all.equal(sum(z), 1) != TRUE)] <- 0
+		return(pd)
+}
+
 # ====================================
 # = Log-likelihood for the dirichlet =
 # ====================================
-#' @importFrom MCMCpack ddirichlet
 .LD<-function(alpha,x){
 	
-	-sum(log(MCMCpack::ddirichlet(x,alpha)))
+	-sum(log(.ddirichlet(x,alpha)))
 }
 
 # =======================================================

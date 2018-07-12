@@ -13,10 +13,10 @@
 \alias{\%in\%,ANY,tmixFilterResult-method}
 \alias{\%in\%,ANY,flowClustList-method}
 \alias{\%in\%,ANY,tmixFilterResultList-method}
-\alias{[,flowFrame,flowClust,ANY,ANY-method}
-\alias{[,flowFrame,tmixFilterResult,ANY,ANY-method}
-\alias{[,flowFrame,flowClustList,ANY,ANY-method}
-\alias{[,flowFrame,tmixFilterResultList,ANY,ANY-method}
+\alias{[,flowFrame,flowClust-method}
+\alias{[,flowFrame,tmixFilterResult-method}
+\alias{[,flowFrame,flowClustList-method}
+\alias{[,flowFrame,tmixFilterResultList-method}
 \alias{[[,tmixFilterResultList,ANY-method}
 \alias{length,tmixFilterResultList-method}
 \alias{summarizeFilter,tmixFilterResult,tmixFilter-method}
@@ -36,15 +36,13 @@ tmixFilter(filterId = "tmixFilter", parameters = "", ...)
 
 \S4method{\%in\%}{ANY,tmixFilterResultList}(x, table)
 
-\S4method{[}{flowFrame,flowClust,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{flowFrame,flowClust}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{flowFrame,tmixFilterResult,ANY,ANY}(x, i, j, ...,
-  drop = FALSE)
+\S4method{[}{flowFrame,tmixFilterResult}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{flowFrame,flowClustList,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{flowFrame,flowClustList}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{flowFrame,tmixFilterResultList,ANY,ANY}(x, i, j, ...,
-  drop = FALSE)
+\S4method{[}{flowFrame,tmixFilterResultList}(x, i, j, ..., drop = FALSE)
 
 \S4method{[[}{tmixFilterResultList,ANY}(x, i, j, ..., exact = TRUE)
 
