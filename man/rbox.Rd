@@ -27,4 +27,3 @@ Box-Cox transformation in use.
 \code{\link{box}}
 }
 \keyword{math}
-

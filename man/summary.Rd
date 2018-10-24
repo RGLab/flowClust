@@ -2,13 +2,13 @@
 % Please edit documentation in R/SetMethods.R
 \docType{methods}
 \name{summary,flowClust-method}
-\alias{summary}
 \alias{summary,flowClust-method}
-\alias{summary,flowClustList-method}
+\alias{summary}
 \alias{summary,tmixFilterResult-method}
 \alias{summary,tmixFilterResultList-method}
 \alias{summary.flowClust}
 \alias{summary.tmixFilterResult}
+\alias{summary,flowClustList-method}
 \title{Summary Method for flowClust Object}
 \usage{
 summary(object, ...)
@@ -34,13 +34,12 @@ Transformation Parameter, Information Criteria, and Data Quality.  Under
 Data Quality, information about data filtering, outliers, and uncertainty is
 given.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \seealso{
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
 \code{\link[=show,flowClust-method]{show}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{print}
-

@@ -3,14 +3,14 @@
 \docType{methods}
 \name{mkPrior}
 \alias{mkPrior}
-\alias{mkPrior,list,flowSet,ANY,missing-method}
 \alias{mkPrior,list,flowSet,missing,missing-method}
-\alias{mkPrior,missing,flowFrame,missing,missing-method}
-\alias{mkPrior,missing,flowSet,ANY,missing-method}
-\alias{mkPrior,polygonGate,flowFrame,missing,missing-method}
 \alias{mkPrior,polygonGate,flowFrame,numeric,matrix-method}
-\alias{mkPrior,rectangleGate,flowFrame,missing,missing-method}
 \alias{mkPrior,rectangleGate,flowFrame,numeric,matrix-method}
+\alias{mkPrior,rectangleGate,flowFrame,missing,missing-method}
+\alias{mkPrior,polygonGate,flowFrame,missing,missing-method}
+\alias{mkPrior,missing,flowSet,ANY,missing-method}
+\alias{mkPrior,missing,flowFrame,missing,missing-method}
+\alias{mkPrior,list,flowSet,ANY,missing-method}
 \title{Generate a flowClust prior specification}
 \usage{
 mkPrior(gate, data, nu0, Omega0, ...)
@@ -27,16 +27,17 @@ mkPrior(gate, data, nu0, Omega0, ...)
 \S4method{mkPrior}{polygonGate,flowFrame,missing,missing}(gate, data,
   nu0 = NA, Omega0 = NA)
 
-\S4method{mkPrior}{list,flowSet,missing,missing}(gate, data, nu0 = NA, Omega0,
-  model.cov = "full", model.means = "full")
+\S4method{mkPrior}{list,flowSet,missing,missing}(gate, data, nu0 = NA,
+  Omega0, model.cov = "full", model.means = "full")
 
-\S4method{mkPrior}{missing,flowSet,ANY,missing}(gate, data, nu0 = NA, Omega0,
-  model.cov = "full", model.means = "full")
+\S4method{mkPrior}{missing,flowSet,ANY,missing}(gate, data, nu0 = NA,
+  Omega0, model.cov = "full", model.means = "full")
 
-\S4method{mkPrior}{missing,flowFrame,missing,missing}(gate, data, nu0, Omega0)
+\S4method{mkPrior}{missing,flowFrame,missing,missing}(gate, data, nu0,
+  Omega0)
 
-\S4method{mkPrior}{list,flowSet,ANY,missing}(gate, data, nu0 = NA, Omega0,
-  model.cov = "full", model.means = "full")
+\S4method{mkPrior}{list,flowSet,ANY,missing}(gate, data, nu0 = NA,
+  Omega0, model.cov = "full", model.means = "full")
 }
 \arguments{
 \item{gate}{A list of flowCore gates. The gates should represent the SAME
@@ -52,10 +53,10 @@ nu0=NA.}
 \item{Omega0}{The Omega0 hyperparameter. For estimation from data it can be
 missing.}
 
+\item{\dots}{Not currently used.}
+
 \item{model.cov, model.means}{model names used for cov and means. one of c("full","DE","DU").
 "full" is the default.}
-
-\item{\dots}{Not currently used.}
 }
 \value{
 Return values depend on the specific method called. Not meant for
@@ -75,12 +76,11 @@ Construct a prior specification. Generally not called by the user.
 
 ## The function is currently defined as
 }
-\author{
-Greg Finak \email{gfinak@fhcrc.org}
-}
 \references{
 \url{http://www.rglab.org}
 }
+\author{
+Greg Finak \email{gfinak@fhcrc.org}
+}
 \keyword{~kwd1}
 \keyword{~kwd2}
-

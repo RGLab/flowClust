@@ -52,15 +52,15 @@ Data Based on Clustering Results}
 \code{flowClust} Object} \item{list(list("tmixFilter"))}{Creating Filters
 and Filtering Flow Cytometry Data} }
 }
-\author{
-Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>
 
-Maintainer: Raphael Gottardo <raph@stat.ubc.ca>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \bold{73}, 321-332.
 }
-\keyword{package}
+\author{
+Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>
 
+Maintainer: Raphael Gottardo <raph@stat.ubc.ca>
+}
+\keyword{package}

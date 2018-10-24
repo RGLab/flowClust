@@ -4,11 +4,11 @@
 \name{show,flowClust-method}
 \alias{show,flowClust-method}
 \alias{show,flowClustList-method}
-\alias{show,tmixFilter-method}
+\alias{show.flowClust}
 \alias{show,tmixFilterResult-method}
 \alias{show,tmixFilterResultList-method}
-\alias{show.flowClust}
 \alias{show.tmixFilterResult}
+\alias{show,tmixFilter-method}
 \title{Show Method for flowClust / tmixFilterResult Object}
 \usage{
 \S4method{show}{flowClust}(object)
@@ -28,13 +28,12 @@
 \description{
 This method lists out the slots contained in a \code{flowClust} object.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \seealso{
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
 \code{\link[=summary.flowClust]{summary}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{print}
-

@@ -19,4 +19,3 @@ matching}
 Uses the hungarian algorithm to match peaks across samples, one at a time
 using a template sample.
 }
-

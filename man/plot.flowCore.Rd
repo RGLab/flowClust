@@ -5,8 +5,8 @@
 \alias{plot,flowFrame,tmixFilterResult-method}
 \alias{plot,flowFrame,tmixFilterResultList-method}
 \alias{plot,tmixFilterResult-method}
-\alias{plot.flowFrame}
 \alias{plot.flowFrame.tmixFilterResult}
+\alias{plot.flowFrame}
 \alias{plot.tmixFilterResult}
 \title{Scatterplot / 1-D Density Plot of Filtering (Clustering) Results}
 \usage{
@@ -46,10 +46,6 @@ package.  The actual implementation is done through the
 \code{\link[=plot,flowClust-method]{plot}} or \code{\link[=hist.flowClust]{hist}}
 method defined for a \code{flowClust} object.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -59,5 +55,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link[=tmixFilter]{filter}},
 \code{\link[=plot,flowClust-method]{plot}}, \code{\link[=hist.flowClust]{hist}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{graphs}
-

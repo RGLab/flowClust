@@ -5,9 +5,10 @@
 \alias{hist.flowClustList}
 \title{1-D Density Plot (Histogram) of Clustering Results}
 \usage{
-\method{hist}{flowClust}(x, data = NULL, subset = 1, include = 1:(x@K),
-  histogram = TRUE, labels = TRUE, ylab = "Density", main = NULL,
-  col = NULL, pch = 20, cex = 0.6, ...)
+\method{hist}{flowClust}(x, data = NULL, subset = 1,
+  include = 1:(x@K), histogram = TRUE, labels = TRUE,
+  ylab = "Density", main = NULL, col = NULL, pch = 20, cex = 0.6,
+  ...)
 
 \method{hist}{flowClustList}(x, ...)
 }
@@ -62,10 +63,6 @@ This method generates a one-dimensional density plot for the specified
 dimension (variable) based on the robust model-based clustering results.  A
 histogram of the actual data or cluster assignment is optional for display.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -75,5 +72,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link{flowClust}}, \code{\link[=plot,flowClust-method]{plot}},
 \code{\link[=density.flowClust]{density}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{graphs}
-

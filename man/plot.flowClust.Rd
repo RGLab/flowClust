@@ -2,21 +2,22 @@
 % Please edit documentation in R/plot.R
 \docType{methods}
 \name{plot,flowClust-method}
+\alias{plot,flowClust-method}
 \alias{plot}
 \alias{plot,flowClust,missing-method}
-\alias{plot,flowClust-method}
 \alias{plot,flowClustList,missing-method}
 \title{Scatterplot of Clustering Results}
 \usage{
 plot(x, y, ...)
 
-\S4method{plot}{flowClust,missing}(x, data, subset = c(1, 2), ellipse = T,
-  show.outliers = T, show.rm = F, include = 1:(x@K), main = NULL,
-  grayscale = F, col = (if (grayscale) gray(1/4) else 2:(length(include) +
-  1)), pch = ".", cex = 0.6, col.outliers = gray(3/4),
-  pch.outliers = ".", cex.outliers = cex, col.rm = 1, pch.rm = 1,
-  cex.rm = 0.6, ecol = 1, elty = 1, level = NULL, u.cutoff = NULL,
-  z.cutoff = NULL, npoints = 100, add = F, ...)
+\S4method{plot}{flowClust,missing}(x, data, subset = c(1, 2),
+  ellipse = T, show.outliers = T, show.rm = F, include = 1:(x@K),
+  main = NULL, grayscale = F, col = (if (grayscale) gray(1/4) else
+  2:(length(include) + 1)), pch = ".", cex = 0.6,
+  col.outliers = gray(3/4), pch.outliers = ".", cex.outliers = cex,
+  col.rm = 1, pch.rm = 1, cex.rm = 0.6, ecol = 1, elty = 1,
+  level = NULL, u.cutoff = NULL, z.cutoff = NULL, npoints = 100,
+  add = F, ...)
 
 \S4method{plot}{flowClustList,missing}(x, data, subset = c(1, 2),
   ellipse = T, show.outliers = T, show.rm = F, include = 1:(x@K),
@@ -31,6 +32,9 @@ plot(x, y, ...)
 \item{x}{Object returned from \code{\link{flowClust}}.}
 
 \item{y}{missing}
+
+\item{\dots}{Further graphical parameters passed to the generic function
+\code{plot}.}
 
 \item{data}{A matrix, data frame of observations, or object of class
 \code{flowFrame}. This is the object on which \code{flowClust} was
@@ -100,9 +104,6 @@ taken.  Otherwise, these arguments will be passed to
 \item{npoints}{The number of points used to draw each cluster boundary.}
 
 \item{add}{A logical value.  If \code{TRUE}, add to the current plot.}
-
-\item{\dots}{Further graphical parameters passed to the generic function
-\code{plot}.}
 }
 \description{
 This method generates scatterplot revealing the cluster assignment, cluster
@@ -113,10 +114,6 @@ information like outliers or filtered observations.
 The cluster boundaries need not be elliptical since Box-Cox
 transformation has been performed.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -125,5 +122,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \seealso{
 \code{\link{flowClust}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{graphs}
-

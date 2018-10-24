@@ -21,4 +21,3 @@ plot.  By default, all clusters are included.}
 \description{
 generate the curve that reflects the tmixture fitting outcome
 }
-

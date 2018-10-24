@@ -2,24 +2,24 @@
 % Please edit documentation in R/SetClasses.R, R/SetMethods.R, R/coerce.R
 \docType{class}
 \name{tmixFilter-class}
-\alias{[,flowFrame,flowClust,ANY,ANY-method}
-\alias{[,flowFrame,flowClustList,ANY,ANY-method}
-\alias{[,flowFrame,tmixFilterResult,ANY,ANY-method}
-\alias{[,flowFrame,tmixFilterResultList,ANY,ANY-method}
-\alias{[[,tmixFilterResultList,ANY-method}
-\alias{\%in\%,ANY,flowClust-method}
-\alias{\%in\%,ANY,flowClustList-method}
-\alias{\%in\%,ANY,tmixFilterResult-method}
-\alias{\%in\%,ANY,tmixFilterResultList-method}
-\alias{\%in\%,flowFrame,tmixFilter-method}
-\alias{\%in\%,flowFrame,tmixFilterResult-method}
-\alias{length,tmixFilterResultList-method}
-\alias{summarizeFilter,tmixFilterResult,tmixFilter-method}
-\alias{tmixFilter}
 \alias{tmixFilter-class}
-\alias{tmixFilterResult-class}
+\alias{tmixFilter}
 \alias{tmixFilterResultList}
 \alias{tmixFilterResultList-class}
+\alias{tmixFilterResult-class}
+\alias{\%in\%,ANY,flowClust-method}
+\alias{\%in\%,flowFrame,tmixFilterResult-method}
+\alias{\%in\%,flowFrame,tmixFilter-method}
+\alias{\%in\%,ANY,tmixFilterResult-method}
+\alias{\%in\%,ANY,flowClustList-method}
+\alias{\%in\%,ANY,tmixFilterResultList-method}
+\alias{[,flowFrame,flowClust,ANY,ANY-method}
+\alias{[,flowFrame,tmixFilterResult,ANY,ANY-method}
+\alias{[,flowFrame,flowClustList,ANY,ANY-method}
+\alias{[,flowFrame,tmixFilterResultList,ANY,ANY-method}
+\alias{[[,tmixFilterResultList,ANY-method}
+\alias{length,tmixFilterResultList-method}
+\alias{summarizeFilter,tmixFilterResult,tmixFilter-method}
 \title{Creating Filters and Filtering Flow Cytometry Data}
 \usage{
 tmixFilter(filterId = "tmixFilter", parameters = "", ...)
@@ -38,7 +38,8 @@ tmixFilter(filterId = "tmixFilter", parameters = "", ...)
 
 \S4method{[}{flowFrame,flowClust,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{flowFrame,tmixFilterResult,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{flowFrame,tmixFilterResult,ANY,ANY}(x, i, j, ...,
+  drop = FALSE)
 
 \S4method{[}{flowFrame,flowClustList,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
@@ -59,18 +60,6 @@ filtering.  When it is left unspecified, all the variables of the
 \code{flowFrame} object are used when running \code{filter}.  Note that its
 content will be passed to the \code{varNames} argument of
 \code{\link{flowClust}} when running \code{filter}.}
-
-\item{x}{flowFrame}
-
-\item{table}{tmixFilterResult}
-
-\item{i}{tmixFilterResult or tmixFilterResultList}
-
-\item{j, drop, exact}{not used}
-
-\item{result}{tmixFilterResult}
-
-\item{filter}{tmixFilter}
 
 \item{\dots}{Other arguments passed to the \code{\link{flowClust}} function
 when running \code{\link[flowCore]{filter}}, namely, \code{expName},
@@ -120,6 +109,18 @@ class.  Note that when a \code{tmixFilterResultList} object is used in place
 of a \code{tmixFilterResult} object, in most cases the list element
 corresponding to the best model will be extracted and passed to the
 method/function call.}
+
+\item{x}{flowFrame}
+
+\item{table}{tmixFilterResult}
+
+\item{i}{tmixFilterResult or tmixFilterResultList}
+
+\item{j, drop, exact}{not used}
+
+\item{result}{tmixFilterResult}
+
+\item{filter}{tmixFilter}
 }
 \description{
 The \code{tmixFilter} function creates a filter object which is then passed
@@ -216,4 +217,3 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 }
 \keyword{cluster}
 \keyword{models}
-

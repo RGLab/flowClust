@@ -2,14 +2,12 @@
 % Please edit documentation in R/SetMethods.R
 \docType{methods}
 \name{Map,flowClust-method}
-\alias{Map}
 \alias{Map,flowClust-method}
 \alias{Map,flowClustList-method}
 \alias{Map.flowClust}
+\alias{Map}
 \title{Cluster Assignment Based on Clustering Results}
 \usage{
-Map(f, ...)
-
 \S4method{Map}{flowClust}(f, rm.outliers = TRUE, ...)
 
 \S4method{Map}{flowClustList}(f, rm.outliers = TRUE, ...)
@@ -40,10 +38,6 @@ appear in the resultant vector due to the filtered observations; see the
 descriptions about the \code{min.count}, \code{max.count}, \code{min} and
 \code{max} arguments of \code{\link{flowClust}}.
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -53,5 +47,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link{flowClust}}, \code{\link[=tmixFilter]{filter}},
 \code{\link{posterior}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{cluster}
-

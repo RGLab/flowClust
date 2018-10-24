@@ -2,19 +2,19 @@
 % Please edit documentation in R/SetMethods.R
 \docType{methods}
 \name{Subset,flowClust-method}
-\alias{Subset}
-\alias{Subset,ANY,flowClustList-method}
-\alias{Subset,data.frame,flowClust-method}
 \alias{Subset,flowClust-method}
-\alias{Subset,flowFrame,flowClust-method}
-\alias{Subset,flowFrame,tmixFilterResult-method}
-\alias{Subset,flowFrame,tmixFilterResultList-method}
-\alias{Subset,matrix,flowClust-method}
-\alias{Subset,vector,flowClust-method}
 \alias{Subset.flowClust}
 \alias{Subset.flowFrame}
-\alias{Subset.flowFrame.tmixFilterResult}
 \alias{Subset.tmixFilterResult}
+\alias{Subset.flowFrame.tmixFilterResult}
+\alias{Subset,flowFrame,flowClust-method}
+\alias{Subset,flowFrame,tmixFilterResult-method}
+\alias{Subset,data.frame,flowClust-method}
+\alias{Subset,matrix,flowClust-method}
+\alias{Subset,vector,flowClust-method}
+\alias{Subset,ANY,flowClustList-method}
+\alias{Subset,flowFrame,tmixFilterResultList-method}
+\alias{Subset}
 \title{Subsetting Data Based on Clustering Results}
 \usage{
 \S4method{Subset}{flowFrame,flowClust}(x, subset, ...)
@@ -51,10 +51,7 @@ from the clustering (filtering) operations.
 \section{Usage}{
  Subset(x, subset, \dots{})
 }
-\author{
-Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
-<\email{c.lo@stat.ubc.ca}>
-}
+
 \references{
 Lo, K., Brinkman, R. R. and Gottardo, R. (2008) Automated Gating
 of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
@@ -64,5 +61,8 @@ of Flow Cytometry Data via Robust Model-based Clustering. \emph{Cytometry A}
 \code{\link{split}}, \code{\link{flowClust}},
 \code{\link[=tmixFilter]{filter}}
 }
+\author{
+Raphael Gottardo <\email{raph@stat.ubc.ca}>, Kenneth Lo
+<\email{c.lo@stat.ubc.ca}>
+}
 \keyword{manip}
-
