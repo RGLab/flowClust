@@ -553,27 +553,19 @@ setReplaceMethod("ruleOutliers", signature("flowClustList","list"),
 #' @keywords cluster
 #' @rdname Map
 #' @export 
-#' @importFrom BiocGenerics Map
-setMethod("Map", signature = c("flowClust"),
-          function(f, rm.outliers=TRUE, ...)
-      {
-		  # if(!any(is.na(f@prior))&f@ruleOutliers[1]==0){
-			# result<-.fcbMap(f,f@ruleOutliers[2]);
-			# if(rm.outliers)	result[which(f@flagOutliers)]<-NA
-			
-		  # }else{
-          	result <- max.col(f@z, "first")
-          	if (rm.outliers) result[which(f@flagOutliers)] <- NA
-		# }
-          result
-      })
+Map <- function(f, ...) UseMethod("Map", f)
+
+#' @export
+#' @rdname Map
+Map.flowClust <- function(f, rm.outliers=TRUE, ...){
+  result <- max.col(f@z, "first")
+  if (rm.outliers) result[which(f@flagOutliers)] <- NA
+  result
+}
+
 #' @export 
 #' @rdname Map
-setMethod("Map", signature("flowClustList"),
-          function(f, rm.outliers=TRUE, ...) Map(as(f,"flowClust"), rm.outliers, ...))
-
-
-
+Map.flowClustList <- function(f, rm.outliers=TRUE, ...) Map(as(f,"flowClust"), rm.outliers=rm.outliers, ...)
 
 
 #' Scatterplot / 1-D Density Plot of Filtering (Clustering) Results
