@@ -8,6 +8,8 @@
 \alias{Map}
 \title{Cluster Assignment Based on Clustering Results}
 \usage{
+Map(f, ...)
+
 \S4method{Map}{flowClust}(f, rm.outliers = TRUE, ...)
 
 \S4method{Map}{flowClustList}(f, rm.outliers = TRUE, ...)
@@ -16,10 +18,10 @@
 \item{f}{Object returned from \code{\link{flowClust}} or
 \code{\link[=tmixFilter]{filter}}.}
 
+\item{\dots}{Further arguments to be passed to or from other methods.}
+
 \item{rm.outliers}{A logical value indicating whether outliers will be left
 unassigned or not.}
-
-\item{\dots}{Further arguments to be passed to or from other methods.}
 }
 \value{
 A numeric vector of size \eqn{N} (the number of observations)
