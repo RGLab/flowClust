@@ -569,12 +569,10 @@ setMethod("Map", signature("flowClust"),
 		# }
           result
       })
+
 #' @rdname Map
 setMethod("Map", signature("flowClustList"),
           function(f, rm.outliers=TRUE, ...) Map(as(f,"flowClust"), rm.outliers, ...))
-
-
-
 
 
 #' Scatterplot / 1-D Density Plot of Filtering (Clustering) Results
