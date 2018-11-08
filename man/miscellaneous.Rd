@@ -11,14 +11,6 @@
 \alias{importance}
 \alias{uncertainty}
 \alias{getEstimates}
-\alias{criterion,flowClust-method}
-\alias{criterion,flowClustList-method}
-\alias{criterion<-}
-\alias{criterion<-,flowClustList,character-method}
-\alias{posterior}
-\alias{importance}
-\alias{uncertainty}
-\alias{getEstimates}
 \title{Various Functions for Retrieving Information from Clustering Results}
 \usage{
 criterion(object, ...)

@@ -9,10 +9,6 @@
 \alias{ruleOutliers<-,flowClust,list-method}
 \alias{ruleOutliers<-,flowClustList,list-method}
 \alias{ruleOutliers<-}
-\alias{ruleOutliers,flowClust-method}
-\alias{ruleOutliers,flowClustList-method}
-\alias{ruleOutliers<-}
-\alias{ruleOutliers<-,flowClust,list-method}
 \title{Showing or Modifying the Rule used to Identify Outliers}
 \usage{
 ruleOutliers(object)

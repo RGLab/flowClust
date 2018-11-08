@@ -17,16 +17,6 @@
 \alias{split.flowFrame}
 \alias{split.tmixFilterResult}
 \alias{split}
-\alias{split,data.frame,flowClust-method}
-\alias{split,matrix,flowClust-method}
-\alias{split,vector,flowClust-method}
-\alias{split,flowFrame,flowClust-method}
-\alias{split,flowFrame,tmixFilterResult-method}
-\alias{split,flowFrame,flowClustList-method}
-\alias{split,data.frame,flowClustList-method}
-\alias{split,matrix,flowClustList-method}
-\alias{split,vector,flowClustList-method}
-\alias{split,flowFrame,tmixFilterResultList-method}
 \title{Splitting Data Based on Clustering Results}
 \usage{
 split(x, f, drop = FALSE, ...)
@@ -34,14 +24,14 @@ split(x, f, drop = FALSE, ...)
 \S4method{split}{data.frame,flowClust}(x, f, drop = FALSE,
   population = NULL, split = NULL, rm.outliers = TRUE, ...)
 
-\S4method{split}{matrix,flowClust}(x, f, drop = FALSE, population = NULL,
-  split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{matrix,flowClust}(x, f, drop = FALSE,
+  population = NULL, split = NULL, rm.outliers = TRUE, ...)
 
-\S4method{split}{vector,flowClust}(x, f, drop = FALSE, population = NULL,
-  split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{vector,flowClust}(x, f, drop = FALSE,
+  population = NULL, split = NULL, rm.outliers = TRUE, ...)
 
-\S4method{split}{flowFrame,flowClust}(x, f, drop = FALSE, population = NULL,
-  split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{flowFrame,flowClust}(x, f, drop = FALSE,
+  population = NULL, split = NULL, rm.outliers = TRUE, ...)
 
 \S4method{split}{flowFrame,tmixFilterResult}(x, f, drop = FALSE,
   population = NULL, split = NULL, rm.outliers = TRUE, ...)

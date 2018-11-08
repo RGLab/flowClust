@@ -8,7 +8,6 @@
 \alias{plot.flowFrame.tmixFilterResult}
 \alias{plot.flowFrame}
 \alias{plot.tmixFilterResult}
-\alias{plot,flowFrame,tmixFilterResultList-method}
 \title{Scatterplot / 1-D Density Plot of Filtering (Clustering) Results}
 \usage{
 \S4method{plot}{flowFrame,tmixFilterResult}(x, y, z = NULL, ...)

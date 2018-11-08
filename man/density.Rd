@@ -6,9 +6,7 @@
 \alias{density,flowClust-method}
 \alias{density-method}
 \alias{density,flowClustList-method}
-\alias{flowDens-class}
 \alias{density.flowClust}
-\alias{density,flowClustList-method}
 \title{Grid of Density Values for the Fitted t Mixture Model with Box-Cox
 Transformation}
 \usage{

@@ -553,9 +553,10 @@ setReplaceMethod("ruleOutliers", signature("flowClustList","list"),
 #' @keywords cluster
 #' @rdname Map
 #' @export 
-setGeneric("Map")
+setGeneric("Map", function(f, ...) {standardGeneric("Map")})
+
 #' @rdname Map
-setMethod("Map", signature(f="flowClust"),
+setMethod("Map", signature("flowClust"),
           function(f, rm.outliers=TRUE, ...)
       {
 		  # if(!any(is.na(f@prior))&f@ruleOutliers[1]==0){
@@ -568,12 +569,10 @@ setMethod("Map", signature(f="flowClust"),
 		# }
           result
       })
+
 #' @rdname Map
-setMethod("Map", signature(f="flowClustList"),
+setMethod("Map", signature("flowClustList"),
           function(f, rm.outliers=TRUE, ...) Map(as(f,"flowClust"), rm.outliers, ...))
-
-
-
 
 
 #' Scatterplot / 1-D Density Plot of Filtering (Clustering) Results

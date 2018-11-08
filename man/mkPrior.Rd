@@ -8,7 +8,6 @@
 \alias{mkPrior,rectangleGate,flowFrame,numeric,matrix-method}
 \alias{mkPrior,rectangleGate,flowFrame,missing,missing-method}
 \alias{mkPrior,polygonGate,flowFrame,missing,missing-method}
-\alias{mkPrior,list,flowSet,missing,missing-method}
 \alias{mkPrior,missing,flowSet,ANY,missing-method}
 \alias{mkPrior,missing,flowFrame,missing,missing-method}
 \alias{mkPrior,list,flowSet,ANY,missing-method}
@@ -28,16 +27,17 @@ mkPrior(gate, data, nu0, Omega0, ...)
 \S4method{mkPrior}{polygonGate,flowFrame,missing,missing}(gate, data,
   nu0 = NA, Omega0 = NA)
 
-\S4method{mkPrior}{list,flowSet,missing,missing}(gate, data, nu0 = NA, Omega0,
-  model.cov = "full", model.means = "full")
+\S4method{mkPrior}{list,flowSet,missing,missing}(gate, data, nu0 = NA,
+  Omega0, model.cov = "full", model.means = "full")
 
-\S4method{mkPrior}{missing,flowSet,ANY,missing}(gate, data, nu0 = NA, Omega0,
-  model.cov = "full", model.means = "full")
+\S4method{mkPrior}{missing,flowSet,ANY,missing}(gate, data, nu0 = NA,
+  Omega0, model.cov = "full", model.means = "full")
 
-\S4method{mkPrior}{missing,flowFrame,missing,missing}(gate, data, nu0, Omega0)
+\S4method{mkPrior}{missing,flowFrame,missing,missing}(gate, data, nu0,
+  Omega0)
 
-\S4method{mkPrior}{list,flowSet,ANY,missing}(gate, data, nu0 = NA, Omega0,
-  model.cov = "full", model.means = "full")
+\S4method{mkPrior}{list,flowSet,ANY,missing}(gate, data, nu0 = NA,
+  Omega0, model.cov = "full", model.means = "full")
 }
 \arguments{
 \item{gate}{A list of flowCore gates. The gates should represent the SAME

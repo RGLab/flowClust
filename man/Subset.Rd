@@ -15,12 +15,6 @@
 \alias{Subset,ANY,flowClustList-method}
 \alias{Subset,flowFrame,tmixFilterResultList-method}
 \alias{Subset}
-\alias{Subset,flowFrame,tmixFilterResult-method}
-\alias{Subset,data.frame,flowClust-method}
-\alias{Subset,matrix,flowClust-method}
-\alias{Subset,vector,flowClust-method}
-\alias{Subset,ANY,flowClustList-method}
-\alias{Subset,flowFrame,tmixFilterResultList-method}
 \title{Subsetting Data Based on Clustering Results}
 \usage{
 \S4method{Subset}{flowFrame,flowClust}(x, subset, ...)

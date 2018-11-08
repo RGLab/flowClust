@@ -8,10 +8,7 @@
 \alias{show,tmixFilterResult-method}
 \alias{show,tmixFilterResultList-method}
 \alias{show.tmixFilterResult}
-\alias{show,flowClustList-method}
 \alias{show,tmixFilter-method}
-\alias{show,tmixFilterResult-method}
-\alias{show,tmixFilterResultList-method}
 \title{Show Method for flowClust / tmixFilterResult Object}
 \usage{
 \S4method{show}{flowClust}(object)

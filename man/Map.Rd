@@ -6,8 +6,6 @@
 \alias{Map,flowClustList-method}
 \alias{Map.flowClust}
 \alias{Map}
-\alias{Map,flowClust-method}
-\alias{Map,flowClustList-method}
 \title{Cluster Assignment Based on Clustering Results}
 \usage{
 Map(f, ...)

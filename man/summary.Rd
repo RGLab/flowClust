@@ -8,7 +8,6 @@
 \alias{summary,tmixFilterResultList-method}
 \alias{summary.flowClust}
 \alias{summary.tmixFilterResult}
-\alias{summary,flowClust-method}
 \alias{summary,flowClustList-method}
 \title{Summary Method for flowClust Object}
 \usage{

@@ -7,7 +7,6 @@
 \alias{tmixFilterResultList}
 \alias{tmixFilterResultList-class}
 \alias{tmixFilterResult-class}
-\alias{tmixFilter}
 \alias{\%in\%,ANY,flowClust-method}
 \alias{\%in\%,flowFrame,tmixFilterResult-method}
 \alias{\%in\%,flowFrame,tmixFilter-method}
@@ -21,11 +20,6 @@
 \alias{[[,tmixFilterResultList,ANY-method}
 \alias{length,tmixFilterResultList-method}
 \alias{summarizeFilter,tmixFilterResult,tmixFilter-method}
-\alias{tmixFilter}
-\alias{tmixFilter}
-\alias{tmixFilter}
-\alias{tmixFilter}
-\alias{tmixFilter}
 \title{Creating Filters and Filtering Flow Cytometry Data}
 \usage{
 tmixFilter(filterId = "tmixFilter", parameters = "", ...)

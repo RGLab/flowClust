@@ -6,17 +6,12 @@
 \alias{flowClustList-class}
 \alias{fowClust}
 \alias{flowClust}
-\alias{flowClust}
-\alias{flowClust}
-\alias{flowClust}
-\alias{flowClust}
-\alias{flowClust}
 \title{Robust Model-based Clustering for Flow Cytometry}
 \usage{
 flowClust(x, expName = "Flow Experiment", varNames = NULL, K, nu = 4,
-  lambda = 1, trans = 1, min.count = 10, max.count = 10, min = NULL,
-  max = NULL, randomStart = 0, prior = NULL, usePrior = "no",
-  criterion = "BIC", ...)
+  lambda = 1, trans = 1, min.count = 10, max.count = 10,
+  min = NULL, max = NULL, randomStart = 0, prior = NULL,
+  usePrior = "no", criterion = "BIC", ...)
 }
 \arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of
