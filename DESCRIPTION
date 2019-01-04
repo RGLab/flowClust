@@ -1,7 +1,7 @@
 Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
-Version: 3.21.0
+Version: 3.21.1
 Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
     Finak <gfinak@fhcrc.org>
 Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>
@@ -43,6 +43,6 @@ Collate:
     'split.R'
 License: Artistic-2.0
 Packaged: 2012-07-13 20:14:40 UTC; finak
-biocViews: Clustering, Visualization, FlowCytometry
+biocViews: ImmunoOncology, Clustering, Visualization, FlowCytometry
 SystemRequirements: GNU make
 RoxygenNote: 6.1.0
