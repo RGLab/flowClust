@@ -117,13 +117,9 @@ flowClust2Prior<-function(x,kappa,Nt=NULL,addCluster=NULL){
 #' user consumption.
 #' @author Greg Finak \email{gfinak@@fhcrc.org}
 #' @references \url{http://www.rglab.org}
-#' @keywords ~kwd1 ~kwd2
 #' @examples
 #' 
-#' ##---- Should be DIRECTLY executable !! ----
-#' ##-- ==>  Define data, use random,
-#' ##--	or do  help(data=index)  for the standard data sets.
-#' 
+#
 #' ## The function is currently defined as
 #' @rdname mkPrior
 #' @export 

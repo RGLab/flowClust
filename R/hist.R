@@ -107,7 +107,7 @@ hist.flowClust <- function(x, data=NULL, subset=1, include=1:(x@K)
       if (is(data, "data.frame")) data <- as.matrix(data[,x@varNames])  else
         if (is(data, "vector")) data <- matrix(data)
         
-        if (is.null(xlab) && x@varNames!="Not Available") xlab <- x@varNames[subset]
+        if (is.null(xlab) && all(x@varNames != "Not Available")) xlab <- x@varNames[subset]
         if (!is.numeric(subset)) subset <- match(subset, x@varNames)
         # look for highest density value
         data <- data[,subset]

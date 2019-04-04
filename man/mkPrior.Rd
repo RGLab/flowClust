@@ -70,10 +70,6 @@ Construct a prior specification. Generally not called by the user.
 }
 \examples{
 
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
 ## The function is currently defined as
 }
 \references{
@@ -82,5 +78,3 @@ Construct a prior specification. Generally not called by the user.
 \author{
 Greg Finak \email{gfinak@fhcrc.org}
 }
-\keyword{~kwd1}
-\keyword{~kwd2}

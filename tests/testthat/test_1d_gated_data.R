@@ -2,7 +2,7 @@ context("1d clustering on gated data")
 library(flowWorkspace)
 dataDir <- system.file("extdata",package="flowWorkspaceData")
 gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
-
+Sys.setenv("_R_CHECK_LIMIT_CORES_"="warn")
 options("mc.cores" = 4)
 test_that("singlets node:", {
   fr <- getData(gs[[1]], "singlets")
@@ -12,7 +12,7 @@ test_that("singlets node:", {
   fr <- fr[, channels]
   
   chnl <- "<B710-A>"
-  res <- flowClust(fr, varNames = chnl, tol = 1e-5, K = 1:4, randomStart = 0, min.count = -1, max.count = -1, trans = 0)
+  res <- flowClust(fr, varNames = chnl, tol = 1e-5, K = 1:4, randomStart = 0, min.count = -1, max.count = -1, trans = 0,)
   
   #3 mode and expect k = 3 is best
   scores <- sapply(res, slot, "ICL")

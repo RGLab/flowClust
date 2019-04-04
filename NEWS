@@ -1,3 +1,8 @@
+CHANGES in Version 3.21.2
+-------------------------
+* Fixed some tests and rewrote the vignette with Rmarkdown.
+
+
 CHANGES in VERSION 1.8
 ----------------------
 SIGNIFICANT USER-VISIBLE CHANGES

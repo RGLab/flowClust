@@ -438,7 +438,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 			if(!all(as.vector(Omega0[,,j])==0)){
 				#message(j)
 				#message(Omega0[,,j])
-				Omega0[,,j]<-try(solve((Omega0[,,j])))
+				Omega0[,,j]<-try(qr.solve((Omega0[,,j])))
 			}else{
 				#message(j);
 				#message(Omega0[,,j])
@@ -456,11 +456,41 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 			for(j in 1:dim(Lambda0)[3]){
 				#cat("Lambda0 value:",(Lambda0[,,j]),"\n")
 				#cat("initprec value:",initprec[,,j],"\n")
-				initprec[,,j]<-try(chol(solve(Lambda0[,,j])),silent=TRUE);
+				cholStatus <- try(u <- chol(Lambda0[,,j]),silent=TRUE);
+				cholError <- inherits(cholStatus,"try-error")
+				newMat <- Lambda0[,,j]
 				#cat("initprec class:",class(initprec[,,]))
 				#cat("solve initprec value:",initprec[,,j],"\n")
-				if(inherits(initprec[,,j],"try-error")){
+				iter<-0
+				while(cholError){
 					##Should do something here to catch the error.
+					iter <- iter + 1
+					cat("iteration ", iter, "\n")
+					
+					# replace -ve eigen values with small +ve number
+					newEig <- eigen(newMat)
+					newEig2 <- ifelse(newEig$values < 0, 0.1, newEig$values)
+					
+					# create modified matrix eqn 5 from Brissette et al 2007, inv = transp for
+					# eig vectors
+					newMat <- newEig$vectors %*% diag(newEig2) %*% t(newEig$vectors)
+					
+					# normalize modified matrix eqn 6 from Brissette et al 2007
+					newMat <- newMat/sqrt(diag(newMat) %*% t(diag(newMat)))
+					
+					# try chol again
+					cholStatus <- try(u <- chol(newMat), silent = TRUE)
+					cholError <- ifelse(class(cholStatus) == "try-error", TRUE, FALSE)
+					if(iter>10){
+						break;
+					}					
+				}
+				if(cholError){
+					initprec[,,j] <- qr.solve(Lambda0[,,j])
+					Lambda0[,,j] <- qr.solve(initprec[,,j])
+				}else{
+					initprec[,,j] <- chol2inv(u)
+					Lambda0[,,j] <- chol2inv(chol(initprec[,,j]))
 				}
 			}
 		}else{

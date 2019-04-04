@@ -4,6 +4,7 @@ fr <- GvHD[[1]]
 trans <- estimateLogicle(fr, c("FL1-H", "FL2-H", "FL3-H", "FL4-H", "FL2-A"))
 fr <- flowCore::transform(fr, trans)
 
+Sys.setenv("_R_CHECK_LIMIT_CORES_" = "warn")
 
 
 test_that("flowClust:SSH-H, 1 mode", {
@@ -21,9 +22,10 @@ test_that("flowClust:SSH-H, 1 mode", {
   expect_equal(res@w, c(0.286, 0.713), tol = 0.16)
   
   #fiddle with randomStart to change the fit
+  #order the result due to label switching.
   res <- flowClust(fr, varNames = chnl, tol = 1e-10, K = 2, randomStart = 10)
-  expect_equal(res@mu, matrix(c(5.27, 6.84), nrow = 2), tol = 5e-3)
-  expect_equal(res@w, c(0.286, 0.713), tol = 2e-3)
+  expect_equal(res@mu[order(res@mu), , drop = FALSE], matrix(c(5.27, 6.84), nrow = 2), tol = 5e-3)
+  expect_equal(sort(res@w), c(0.286, 0.713), tol = 2e-3)
   
   #tmixture
   g <- tmixFilter(parameters = chnl, tol = 1e-10, K = 2, randomStart = 10)
@@ -43,7 +45,7 @@ test_that("flowClust:SSH-H, 1 mode", {
   #k = 1 is expected to be the best fit
   scores <- sapply(res, slot, "ICL")
   #ICLs decrease as K increases
-  expect_true(all(diff(scores) <0))
+  expect_true(all(diff(scores) < 0))
   
   # par(mfrow=c(1,4))
   # for(obj in res)
@@ -53,7 +55,7 @@ test_that("flowClust:SSH-H, 1 mode", {
   # because of unable to cal covariance matrix for the edge spike signal
   res <- flowClust(fr, varNames = chnl, tol = 1e-10, K = 4, randomStart = 0, min.count = -1, max.count = -1)
   expect_true(is.na(res@BIC))
-  expect_true(is.na(res@sigma[4])||is.infinite(res@sigma[4]))
+  expect_true(is.na(res@sigma[4]) || is.infinite(res@sigma[4]))
 })
 
 
