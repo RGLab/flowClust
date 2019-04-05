@@ -24,7 +24,8 @@ Suggests:
     flowWorkspace,
     flowWorkspaceData,
     knitr,
-    rmarkdown
+    rmarkdown,
+    openCyto
 Description: Robust model-based clustering using a t-mixture model with
     Box-Cox transformation. Note: users should have GSL installed.
     Windows users: 'consult the README file available in the inst
