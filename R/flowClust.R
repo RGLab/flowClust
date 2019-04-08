@@ -438,7 +438,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 			if(!all(as.vector(Omega0[,,j])==0)){
 				#message(j)
 				#message(Omega0[,,j])
-				Omega0[,,j]<-try(qr.solve((Omega0[,,j])))
+				Omega0[,,j] <- tryCatch(qr.solve(Omega0[,,j]), error = function(e)solve(Omega0[,,j])) 
 			}else{
 				#message(j);
 				#message(Omega0[,,j])
