@@ -1,2 +1,1 @@
 library(flowCore)
-require(openCyto)
