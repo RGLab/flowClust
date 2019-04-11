@@ -7,6 +7,8 @@ Sys.setenv("_R_CHECK_LIMIT_CORES_" = "warn")
 
 test_that("flowClust 2d: prior", {
   set.seed(1)
+  require(openCyto)
+  
   prior <- prior_flowClust(fs ,c("FSC-A", "SSC-A"), K = 2)
   options("mc.cores" = 1)  
   g <-
