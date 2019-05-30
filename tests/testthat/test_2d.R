@@ -10,10 +10,10 @@ test_that("flowClust 2d: prior", {
   set.seed(1)
   require(openCyto)
   
-  prior <- prior_flowClust(fs ,c("FSC-A", "SSC-A"), K = 2)
+  prior <- prior_flowclust(fs ,c("FSC-A", "SSC-A"), K = 2)
   options("mc.cores" = 1)  
   g <-
-  	flowClust.2d(
+  	gate_flowclust_2d(
   		fs[[1]],
   		"FSC-A",
   		"SSC-A",
