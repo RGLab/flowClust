@@ -209,7 +209,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu,
 						&matrixLambda0.matrix);
 				gsl_vector_view zu = gsl_matrix_column(&Z.matrix,k);
 				status2 = ECMUpdateSigmaG2(&zu.vector,YTrans,MuGMatrix,
-						&matrixPrecision.matrix, gsl_vector_get(SumZ, k),nu0[k]);
+						&matrixPrecision.matrix, gsl_vector_get(SumZ, k),nu0[k]) || status2;
 				// Update weights, include priors.
 				gsl_vector_set(&W.vector, k, (gsl_vector_get(SumZ, k)+w0[k]) / (w0sum+*ly));
 				gsl_matrix_set_zero(MuGMatrix);
@@ -237,7 +237,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu,
 			status2 = up_date_precision(&matrixZUY.matrix, &rowMu.vector,
 					&matrixPrecision.matrix, gsl_vector_get(SumZ, k),
 					gsl_vector_get(SumZU, k), DiagOne, &rowMu0.vector,
-					&matrixLambda0.matrix, *kappa0, nu0[k]);
+					&matrixLambda0.matrix, *kappa0, nu0[k]) || status2;
 			/* Initialize Mixing Proportions */
 			gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ, k) / (*ly));
 		}
@@ -438,7 +438,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu,
 								&rowMu.vector, &matrixPrecision.matrix,
 								gsl_vector_get(SumZ, k), gsl_vector_get(SumZU,
 										k), DiagOne, &rowMu0.vector,
-										&matrixLambda0.matrix, *kappa0, nu0[k]);
+										&matrixLambda0.matrix, *kappa0, nu0[k]) || status2;
 
 						/* Update Mixing Proportions */
 						gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ, k)
@@ -500,7 +500,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu,
 							&rowMu.vector, &matrixPrecision.matrix,
 							gsl_vector_get(SumZ, k), gsl_vector_get(SumZU, k),
 							DiagOne, &rowMu0.vector, &matrixLambda0.matrix,
-							*kappa0, nu0[k]);
+							*kappa0, nu0[k]) || status2;
 					/* Update Mixing Proportions */
 					/* no prior */
 					gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ, k)
@@ -566,7 +566,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu,
 								&matrixLambda0.matrix);
 						gsl_vector_view vu = gsl_matrix_column(&U.matrix,k);
 						status2 = ECMUpdateSigmaG2(&vu.vector,YTrans,MuGMatrix,
-								&matrixPrecision.matrix, gsl_vector_get(SumZ, k),nu0[k]);
+								&matrixPrecision.matrix, gsl_vector_get(SumZ, k),nu0[k]) || status2;
 
 						/* update mixing proportions */
 						// gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ, k)
@@ -613,7 +613,7 @@ void flowClust(double *y, int *ly, int *py, int *K, double *w, double *mu,
 				status2 = up_date_precision(&matrixZUY.matrix, &rowMu.vector,
 						&matrixPrecision.matrix, gsl_vector_get(SumZ, k),
 						gsl_vector_get(SumZU, k), DiagOne, &rowMu0.vector,
-						&matrixLambda0.matrix, *kappa0, nu0[k]);
+						&matrixLambda0.matrix, *kappa0, nu0[k]) || status2;
 				/* Update Mixing Proportions */
 				gsl_vector_set(&W.vector, k, gsl_vector_get(SumZ, k) / (*ly));
 			}
