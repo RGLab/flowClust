@@ -5,7 +5,7 @@ gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 Sys.setenv("_R_CHECK_LIMIT_CORES_"="warn")
 options("mc.cores" = 4)
 test_that("singlets node:", {
-  fr <- getData(gs[[1]], "singlets")
+  fr <- gh_pop_get_data(gs[[1]], "singlets")
   pd <- pData(parameters(fr))
   pd <- pd[!is.na(pd[["desc"]]), ]
   channels <- pd[["name"]]
