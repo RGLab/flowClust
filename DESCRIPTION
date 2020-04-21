@@ -4,7 +4,7 @@ Title: Clustering for Flow Cytometry
 Version: 3.25.1
 Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
     Finak <gfinak@fhcrc.org>
-Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>
+Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>, Jake Wagner <jpwagner@fhcrc.org>
 Depends:
     R(>= 2.5.0)
 Imports:
