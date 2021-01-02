@@ -1,6 +1,7 @@
 library(testthat)
 library(flowClust)
-
+win32_flag = .Platform$OS.type == "windows" && .Machine$sizeof.pointer != 8
+if(!win32_flag)
 test_check("flowClust")
 
 #devtools::test("~/rglab/workspace/flowClust")
