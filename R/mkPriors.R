@@ -237,7 +237,8 @@ setMethod("mkPrior",signature("polygonGate","flowFrame","missing","missing")
 plotPrior<-function(data,prior,dims=NULL,...){
 	if(!"smooth"%in%names(list(...))){
 		sm=FALSE
-	}
+	}else
+	  stop('smooth argument is no longer supported!')
 	if(class(prior)=="flowClustPriorList"){
 		prior<-prior[[1]];
 	}
@@ -255,11 +256,9 @@ plotPrior<-function(data,prior,dims=NULL,...){
 	k<-nrow(prior$Mu0);
 	nd<-ncol(prior$Mu0)
 	if(nd>1){
-		if (exists("sm")){
-			flowViz:::fplot(data[,dims],smooth=sm,...);
-		}else{
-			flowViz:::fplot(data[,dims],...);
-		}			
+		
+			plot(exprs(data[,dims]), pch = ".", ...);
+				
 		for(i in 1:k){
 			points(t(as.matrix(prior$Mu0[i,dim.inds])),pch=20,col="red")
 			lines(ellipse(solve(prior$Omega0[i,dim.inds,dim.inds]),centre=prior$Mu0[i,dim.inds]),col="green",lwd=2,lty=2)
@@ -267,11 +266,8 @@ plotPrior<-function(data,prior,dims=NULL,...){
 		}
 	}else{
 		for(i in 1:k){
-			if (exists("sm")){
-				flowViz:::fplot(data[,dims],smooth=sm,breaks=256,...);
-			}else{
-				flowViz:::fplot(data[,dims],breaks=256,...);
-			}
+			
+			hist(exprs(data[,dims]),breaks=256,...);
 			abline(v=t(as.matrix(prior$Mu0[i,dim.inds])),col="red")
 			abline(v=t(as.matrix(prior$Mu0[i,dim.inds]))+qnorm(0.975)*sqrt(1/prior$Omega0[i,dim.inds,dim.inds]),col="red",lty=2);
 			abline(v=t(as.matrix(prior$Mu0[i,dim.inds]))+qnorm(0.025)*sqrt(1/prior$Omega0[i,dim.inds,dim.inds]),col="red",lty=2);

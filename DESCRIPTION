@@ -12,7 +12,6 @@ Imports:
     methods,
     Biobase,
     graph,
-    flowViz,
     flowCore,
     corpcor,
     mnormt,
