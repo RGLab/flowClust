@@ -12,7 +12,6 @@ Imports:
     methods,
     Biobase,
     graph,
-    ellipse,
     flowViz,
     flowCore,
     clue,
@@ -37,6 +36,7 @@ Collate:
     'SimulateMixture.R'
     'flowClust.R'
     'coerce.R'
+    'ellipse.R'
     'flowClust-package.R'
     'hist.R'
     'miscellaneous.R'
@@ -49,5 +49,5 @@ Packaged: 2012-07-13 20:14:40 UTC; finak
 biocViews: ImmunoOncology, Clustering, Visualization, FlowCytometry
 SystemRequirements: GNU make
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

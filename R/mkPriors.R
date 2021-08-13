@@ -341,7 +341,6 @@ plotPrior<-function(data,prior,dims=NULL,...){
 #' @importFrom stats cov var optimize qf qchisq quantile kmeans optim mahalanobis dist  na.omit qnorm
 #' @importFrom graphics hist curve stripchart lines points abline title contour image
 #' @importFrom grDevices gray heat.colors rainbow terrain.colors topo.colors cm.colors
-#' @importFrom ellipse ellipse
 #' @noRd
 .estimateHyperParameters<-function(priors,model.means,model.cov,nu0){
 	#Empirical Bayes Estimation of hyperparameters (except nu0)
