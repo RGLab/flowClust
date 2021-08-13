@@ -2,7 +2,7 @@ Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
 Version: 3.29.1
-Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
+Author: Raphael Gottardo, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
     Finak <greg@ozette.ai>
 Maintainer: Greg Finak <greg@ozette.ai>, Mike Jiang <mike@ozette.ai>
 Depends:
@@ -14,7 +14,6 @@ Imports:
     graph,
     flowViz,
     flowCore,
-    clue,
     corpcor,
     mnormt,
     parallel
@@ -41,7 +40,6 @@ Collate:
     'hist.R'
     'miscellaneous.R'
     'mkPriors.R'
-    'peakMatch.R'
     'plot.R'
     'split.R'
 License: Artistic-2.0
