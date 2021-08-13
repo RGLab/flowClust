@@ -13,16 +13,15 @@ Imports:
     Biobase,
     graph,
     flowCore,
-    corpcor,
-    mnormt,
-    parallel
+     parallel
 Suggests:
     testthat,
     flowWorkspace,
     flowWorkspaceData,
     knitr,
     rmarkdown,
-    openCyto
+    openCyto,
+    flowStats
 Description: Robust model-based clustering using a t-mixture model with
     Box-Cox transformation. Note: users should have GSL installed.
     Windows users: 'consult the README file available in the inst
@@ -31,14 +30,11 @@ Description: Robust model-based clustering using a t-mixture model with
 Collate:
     'SetClasses.R'
     'SetMethods.R'
-    'SimulateMixture.R'
     'flowClust.R'
     'coerce.R'
-    'ellipse.R'
     'flowClust-package.R'
     'hist.R'
     'miscellaneous.R'
-    'mkPriors.R'
     'plot.R'
     'split.R'
 License: Artistic-2.0

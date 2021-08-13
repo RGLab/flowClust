@@ -7,10 +7,17 @@
 \alias{plot.flowDens}
 \title{Contour or Image Plot of Clustering Results}
 \usage{
-\S4method{plot}{flowDens,missing}(x, type = c("contour", "image"),
-  nlevels = 30, scale = c("raw", "log", "sqrt"), color = c("rainbow",
-  "heat.colors", "terrain.colors", "topo.colors", "cm.colors", "gray"),
-  xlab = colnames(x@dx), ylab = colnames(x@dy), ...)
+\S4method{plot}{flowDens,missing}(
+  x,
+  type = c("contour", "image"),
+  nlevels = 30,
+  scale = c("raw", "log", "sqrt"),
+  color = c("rainbow", "heat.colors", "terrain.colors", "topo.colors", "cm.colors",
+    "gray"),
+  xlab = colnames(x@dx),
+  ylab = colnames(x@dy),
+  ...
+)
 }
 \arguments{
 \item{x}{The \code{flowDens} object returned from

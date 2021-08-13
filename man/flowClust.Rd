@@ -8,10 +8,24 @@
 \alias{flowClust}
 \title{Robust Model-based Clustering for Flow Cytometry}
 \usage{
-flowClust(x, expName = "Flow Experiment", varNames = NULL, K, nu = 4,
-  lambda = 1, trans = 1, min.count = 10, max.count = 10,
-  min = NULL, max = NULL, randomStart = 0, prior = NULL,
-  usePrior = "no", criterion = "BIC", ...)
+flowClust(
+  x,
+  expName = "Flow Experiment",
+  varNames = NULL,
+  K,
+  nu = 4,
+  lambda = 1,
+  trans = 1,
+  min.count = 10,
+  max.count = 10,
+  min = NULL,
+  max = NULL,
+  randomStart = 0,
+  prior = NULL,
+  usePrior = "no",
+  criterion = "BIC",
+  ...
+)
 }
 \arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of
@@ -192,7 +206,7 @@ If an optimized BLAS library is provided when compiling the package, the
 \pkg{flowClust} package will be able to run multi-threaded processes.
 
 Various operations have been defined for the object returned from
-\code{\link{flowClust}}.
+\code{\link{flowClust}}.  
 
 In addition, to facilitate the integration with the \pkg{flowCore} package
 for processing flow cytometry data, the \code{flowClust} operation can be

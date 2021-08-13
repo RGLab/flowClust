@@ -5,8 +5,7 @@
 \title{Density of the Multivariate t Mixture Distribution with Box-Cox
 Tranformation}
 \usage{
-dmvtmix(x, w, mu, sigma, nu, lambda, object, subset, include,
-  log = FALSE)
+dmvtmix(x, w, mu, sigma, nu, lambda, object, subset, include, log = FALSE)
 }
 \arguments{
 \item{x}{A matrix or data frame of size \eqn{N \times P}{N x P}, where

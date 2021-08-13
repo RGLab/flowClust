@@ -21,35 +21,105 @@
 \usage{
 split(x, f, drop = FALSE, ...)
 
-\S4method{split}{data.frame,flowClust}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{data.frame,flowClust}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{matrix,flowClust}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{matrix,flowClust}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{vector,flowClust}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{vector,flowClust}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{flowFrame,flowClust}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{flowFrame,flowClust}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{flowFrame,tmixFilterResult}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{flowFrame,tmixFilterResult}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{flowFrame,flowClustList}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{flowFrame,flowClustList}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{data.frame,flowClustList}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{data.frame,flowClustList}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{matrix,flowClustList}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{matrix,flowClustList}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{vector,flowClustList}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{vector,flowClustList}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 
-\S4method{split}{flowFrame,tmixFilterResultList}(x, f, drop = FALSE,
-  population = NULL, split = NULL, rm.outliers = TRUE, ...)
+\S4method{split}{flowFrame,tmixFilterResultList}(
+  x,
+  f,
+  drop = FALSE,
+  population = NULL,
+  split = NULL,
+  rm.outliers = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{A numeric vector, matrix, data frame of observations, or object of

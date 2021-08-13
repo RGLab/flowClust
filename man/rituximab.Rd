@@ -4,11 +4,13 @@
 \name{rituximab}
 \alias{rituximab}
 \title{The Rituximab Dataset}
-\format{An object of class \code{flowFrame} with 1545 cells (rows) and the
+\format{
+An object of class \code{flowFrame} with 1545 cells (rows) and the
 following eight variables (columns): \describe{ \item{FSC.H}{FSC-Height}
 \item{SSC.H}{Side Scatter} \item{FL1.H}{Anti-BrdU FITC} \item{FL2.H}{Channel
 not used} \item{FL3.H}{7 AAD} \item{FL1.A}{Channel not used}
-\item{FL1.W}{Channel not used} \item{Time}{Time} }}
+\item{FL1.W}{Channel not used} \item{Time}{Time} }
+}
 \source{
 Gasparetto, M., Gentry, T., Sebti, S., O'Bryan, E., Nimmanapalli,
 R., Blaskovich, M. A., Bhalla, K., Rizzieri, D., Haaland, P., Dunne, J. and

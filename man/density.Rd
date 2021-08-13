@@ -10,11 +10,25 @@
 \title{Grid of Density Values for the Fitted t Mixture Model with Box-Cox
 Transformation}
 \usage{
-\S4method{density}{flowClust}(x, data = NULL, subset = c(1, 2),
-  include = 1:(x@K), npoints = c(100, 100), from = NULL, to = NULL)
+\S4method{density}{flowClust}(
+  x,
+  data = NULL,
+  subset = c(1, 2),
+  include = 1:(x@K),
+  npoints = c(100, 100),
+  from = NULL,
+  to = NULL
+)
 
-\S4method{density}{flowClustList}(x, data = NULL, subset = c(1, 2),
-  include = 1:(x@K), npoints = c(100, 100), from = NULL, to = NULL)
+\S4method{density}{flowClustList}(
+  x,
+  data = NULL,
+  subset = c(1, 2),
+  include = 1:(x@K),
+  npoints = c(100, 100),
+  from = NULL,
+  to = NULL
+)
 }
 \arguments{
 \item{x}{Object returned from \code{\link{flowClust}} or from running
