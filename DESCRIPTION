@@ -21,7 +21,7 @@ Suggests:
     knitr,
     rmarkdown,
     openCyto,
-    flowStats
+    flowStats(>= 4.5.3)
 Description: Robust model-based clustering using a t-mixture model with
     Box-Cox transformation. Note: users should have GSL installed.
     Windows users: 'consult the README file available in the inst
