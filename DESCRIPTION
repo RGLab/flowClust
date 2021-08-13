@@ -12,8 +12,6 @@ Imports:
     methods,
     Biobase,
     graph,
-    ellipse,
-    flowViz,
     flowCore,
     corpcor,
     mnormt,
@@ -36,6 +34,7 @@ Collate:
     'SimulateMixture.R'
     'flowClust.R'
     'coerce.R'
+    'ellipse.R'
     'flowClust-package.R'
     'hist.R'
     'miscellaneous.R'

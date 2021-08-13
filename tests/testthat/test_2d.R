@@ -4,6 +4,24 @@ fcsFiles <- list.files(pattern = "CytoTrol", flowDataPath, full = TRUE)
 fs <- read.flowSet(fcsFiles)
 Sys.setenv("_R_CHECK_LIMIT_CORES_" = "warn")
 
+# test_that("construct ellipse from prior", {
+#   set.seed(1)
+#   require(openCyto)
+#   chnl <- c("FSC-A","SSC-A")
+#   prior <- prior_flowclust(fs ,chnl, K = 2)
+#   colnames(prior$Mu0) <- chnl
+#   cov <- prior$Lambda0[1,,]/(prior$nu0[1]-2-1)
+#   mu <- prior$Mu0[1,]
+#   
+#   mat1 <- ellipse::ellipse(cov,centre=mu, npoints = 50)
+#   
+#   mat2 <- ellipse(cov,centre=mu)
+#   expect_equivalent(mat1, mat2)
+#   plot(exprs(fs[[1]])[,chnl], pch = ".")
+#   lines(mat1, col = "green", lty = "dotted")
+#   lines(mat2, col = "red", , lty = "dashed")
+#   plotPrior(fs[[1]], prior)  
+# })
 
 test_that("flowClust 2d: prior", {
   skip_on_os("windows")#to temporarily bypass bioc check error for windows 
@@ -33,4 +51,5 @@ test_that("flowClust 2d: prior", {
   expect_equal(g@distance, 2.94, tolerance =1e-3)
   expect_equal(g@mean, c("FSC-A" = 87638, "SSC-A" = 62425), tolerance = 1e-5)
 })
+
 
