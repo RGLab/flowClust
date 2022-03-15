@@ -2,9 +2,9 @@ Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
 Version: 3.33.0
-Author: Raphael Gottardo <raph@stat.ubc.ca>, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
-    Finak <gfinak@fhcrc.org>
-Maintainer: Greg Finak <gfinak@fhcrc.org>, Mike Jiang <wjiang2@fhcrc.org>
+Author: Raphael Gottardo, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
+    Finak <greg@ozette.ai>
+Maintainer: Greg Finak <greg@ozette.ai>, Mike Jiang <mike@ozette.ai>
 Depends:
     R(>= 2.5.0)
 Imports:
@@ -12,20 +12,16 @@ Imports:
     methods,
     Biobase,
     graph,
-    ellipse,
-    flowViz,
     flowCore,
-    clue,
-    corpcor,
-    mnormt,
-    parallel
+     parallel
 Suggests:
     testthat,
     flowWorkspace,
     flowWorkspaceData,
     knitr,
     rmarkdown,
-    openCyto
+    openCyto,
+    flowStats(>= 4.5.3)
 Description: Robust model-based clustering using a t-mixture model with
     Box-Cox transformation. Note: users should have GSL installed.
     Windows users: 'consult the README file available in the inst
@@ -34,14 +30,11 @@ Description: Robust model-based clustering using a t-mixture model with
 Collate:
     'SetClasses.R'
     'SetMethods.R'
-    'SimulateMixture.R'
     'flowClust.R'
     'coerce.R'
     'flowClust-package.R'
     'hist.R'
     'miscellaneous.R'
-    'mkPriors.R'
-    'peakMatch.R'
     'plot.R'
     'split.R'
 License: Artistic-2.0
@@ -49,5 +42,5 @@ Packaged: 2012-07-13 20:14:40 UTC; finak
 biocViews: ImmunoOncology, Clustering, Visualization, FlowCytometry
 SystemRequirements: GNU make
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

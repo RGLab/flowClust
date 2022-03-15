@@ -10,23 +10,63 @@
 \usage{
 plot(x, y, ...)
 
-\S4method{plot}{flowClust,missing}(x, data, subset = c(1, 2),
-  ellipse = T, show.outliers = T, show.rm = F, include = 1:(x@K),
-  main = NULL, grayscale = F, col = (if (grayscale) gray(1/4) else
-  2:(length(include) + 1)), pch = ".", cex = 0.6,
-  col.outliers = gray(3/4), pch.outliers = ".", cex.outliers = cex,
-  col.rm = 1, pch.rm = 1, cex.rm = 0.6, ecol = 1, elty = 1,
-  level = NULL, u.cutoff = NULL, z.cutoff = NULL, npoints = 100,
-  add = F, ...)
+\S4method{plot}{flowClust,missing}(
+  x,
+  data,
+  subset = c(1, 2),
+  ellipse = T,
+  show.outliers = T,
+  show.rm = F,
+  include = 1:(x@K),
+  main = NULL,
+  grayscale = F,
+  col = (if (grayscale) gray(1/4) else 2:(length(include) + 1)),
+  pch = ".",
+  cex = 0.6,
+  col.outliers = gray(3/4),
+  pch.outliers = ".",
+  cex.outliers = cex,
+  col.rm = 1,
+  pch.rm = 1,
+  cex.rm = 0.6,
+  ecol = 1,
+  elty = 1,
+  level = NULL,
+  u.cutoff = NULL,
+  z.cutoff = NULL,
+  npoints = 100,
+  add = F,
+  ...
+)
 
-\S4method{plot}{flowClustList,missing}(x, data, subset = c(1, 2),
-  ellipse = T, show.outliers = T, show.rm = F, include = 1:(x@K),
-  main = NULL, grayscale = F, col = (if (grayscale) gray(1/4) else
-  2:(length(include) + 1)), pch = ".", cex = 0.6,
-  col.outliers = gray(3/4), pch.outliers = ".", cex.outliers = cex,
-  col.rm = 1, pch.rm = 1, cex.rm = 0.6, ecol = 1, elty = 1,
-  level = NULL, u.cutoff = NULL, z.cutoff = NULL, npoints = 501,
-  add = F, ...)
+\S4method{plot}{flowClustList,missing}(
+  x,
+  data,
+  subset = c(1, 2),
+  ellipse = T,
+  show.outliers = T,
+  show.rm = F,
+  include = 1:(x@K),
+  main = NULL,
+  grayscale = F,
+  col = (if (grayscale) gray(1/4) else 2:(length(include) + 1)),
+  pch = ".",
+  cex = 0.6,
+  col.outliers = gray(3/4),
+  pch.outliers = ".",
+  cex.outliers = cex,
+  col.rm = 1,
+  pch.rm = 1,
+  cex.rm = 0.6,
+  ecol = 1,
+  elty = 1,
+  level = NULL,
+  u.cutoff = NULL,
+  z.cutoff = NULL,
+  npoints = 501,
+  add = F,
+  ...
+)
 }
 \arguments{
 \item{x}{Object returned from \code{\link{flowClust}}.}

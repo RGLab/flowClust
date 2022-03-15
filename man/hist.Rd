@@ -5,10 +5,20 @@
 \alias{hist.flowClustList}
 \title{1-D Density Plot (Histogram) of Clustering Results}
 \usage{
-\method{hist}{flowClust}(x, data = NULL, subset = 1,
-  include = 1:(x@K), histogram = TRUE, labels = TRUE,
-  ylab = "Density", main = NULL, col = NULL, pch = 20, cex = 0.6,
-  ...)
+\method{hist}{flowClust}(
+  x,
+  data = NULL,
+  subset = 1,
+  include = 1:(x@K),
+  histogram = TRUE,
+  labels = TRUE,
+  ylab = "Density",
+  main = NULL,
+  col = NULL,
+  pch = 20,
+  cex = 0.6,
+  ...
+)
 
 \method{hist}{flowClustList}(x, ...)
 }
