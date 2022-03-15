@@ -1,0 +1,9 @@
+PKG_LIBS += -lgsl -lgslcblas -lm
+PKG_CPPFLAGS += -I$(RHOME)/src/include 
+
+all: clean 
+
+clean:
+	rm -f $(OBJECTS) $(SHLIB)
+
+.PHONY: all clean
