@@ -37,7 +37,7 @@ Collate:
     'miscellaneous.R'
     'plot.R'
     'split.R'
-License: Artistic-2.0
+License: MIT 
 Packaged: 2012-07-13 20:14:40 UTC; finak
 biocViews: ImmunoOncology, Clustering, Visualization, FlowCytometry
 SystemRequirements: GNU make
