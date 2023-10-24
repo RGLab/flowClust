@@ -1,7 +1,7 @@
 Package: flowClust
 Type: Package
 Title: Clustering for Flow Cytometry
-Version: 3.39.0
+Version: 3.40.0
 Author: Raphael Gottardo, Kenneth Lo <c.lo@stat.ubc.ca>, Greg
     Finak <greg@ozette.ai>
 Maintainer: Greg Finak <greg@ozette.ai>, Mike Jiang <mike@ozette.ai>
