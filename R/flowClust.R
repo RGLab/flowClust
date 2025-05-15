@@ -801,7 +801,7 @@ flowClust<-function(x, expName="Flow Experiment", varNames=NULL, K
 #		rm.max=sum(rm.max), logLike=obj$logLike, BIC=BIC, ICL=ICL);
 class(prior)<-"list";
 prior$order<-obj$oorder;
-	if(trans==1&obj$lambda==1){
+	if(all(trans==1&obj$lambda==1)){
 		obj$mu<-rbox(obj$mu,obj$lambda)
 	}
 	#do nothing in particular if trans>1
